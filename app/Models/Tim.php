@@ -12,8 +12,11 @@ class Tim extends Model
     protected $table = 'tims';
     
     protected $fillable = [
-        'nama_tim',
-        'tahun'
+        'direktorat', 
+        'tim_kode',   
+        'tim_nama',
+        'tahun',
+        'tim_ketua'   
     ];
     
     /**

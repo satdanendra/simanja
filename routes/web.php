@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\MasterPegawaiController;
+use App\Http\Controllers\MasterDirektoratController;
+use App\Http\Controllers\IkuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TimController;
 use App\Http\Controllers\UserController;
@@ -40,6 +42,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-pegawai/download-template', [MasterPegawaiController::class, 'downloadTemplate'])->name('master-pegawai.template.download');
     Route::post('/master-pegawai/{id}/deactivate', [MasterPegawaiController::class, 'deactivate'])->name('master-pegawai.deactivate');
     Route::post('/master-pegawai/{id}/activate', [MasterPegawaiController::class, 'activate'])->name('master-pegawai.activate');
+    Route::get('/master-direktorat', [MasterDirektoratController::class, 'index'])->name('master-direktorat');
+    Route::post('/master-direktorat', [MasterDirektoratController::class, 'store'])->name('master-direktorat.store');
+    Route::get('/master-direktorat/{masterDirektorat}/edit', [MasterDirektoratController::class, 'edit'])->name('master-direktorat.edit');
+    Route::put('/master-direktorat/{masterDirektorat}', [MasterDirektoratController::class, 'update'])->name('master-direktorat.update');
+    Route::delete('/master-direktorat/{masterDirektorat}', [MasterDirektoratController::class, 'destroy'])->name('master-direktorat.destroy');
+    Route::post('/master-direktorat/import', [MasterDirektoratController::class, 'import'])->name('master-direktorat.import');
+    Route::get('/master-direktorat/download-template', [MasterDirektoratController::class, 'downloadTemplate'])->name('master-direktorat.template.download');
+    Route::delete('/master-direktorat/batch-delete', [MasterDirektoratController::class, 'batchDelete'])->name('master-direktorat.batch-delete');
+    Route::get('/iku', [IkuController::class, 'index'])->name('iku');
+    Route::post('/iku', [IkuController::class, 'store'])->name('iku.store');
+    Route::get('/iku/{iku}/edit', [IkuController::class, 'edit'])->name('iku.edit');
+    Route::put('/iku/{iku}', [IkuController::class, 'update'])->name('iku.update');
+    Route::delete('/iku/{iku}', [IkuController::class, 'destroy'])->name('iku.destroy');
+    Route::post('/iku/import', [IkuController::class, 'import'])->name('iku.import');
+    Route::get('/iku/download-template', [IkuController::class, 'downloadTemplate'])->name('iku.template.download');
+    Route::delete('/iku/batch-delete', [IkuController::class, 'batchDelete'])->name('iku.batch-delete');
 });
 
 require __DIR__ . '/auth.php';
