@@ -54,7 +54,7 @@ class User extends Authenticatable
      */
     public function pegawai()
     {
-        return $this->belongsTo(MasterPegawai::class, 'id');
+        return $this->belongsTo(MasterPegawai::class, 'pegawai_id');
     }
 
     /**

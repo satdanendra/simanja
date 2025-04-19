@@ -57,15 +57,14 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold">Detail Tim</h3>
+                                <h3 class="text-xl font-bold">Daftar Anggota Tim</h3>
                                 <p class="text-blue-100 text-sm">{{ $tim->users->count() }} Anggota</p>
                             </div>
                         </div>
-                        <button 
-                            data-modal-target="tambahAnggotaModal" 
-                            data-modal-toggle="tambahAnggotaModal" 
-                            class="flex items-center px-4 py-2 bg-white text-blue-700 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 font-medium text-sm transition duration-150 ease-in-out"
-                        >
+                        <button
+                            data-modal-target="tambahAnggotaModal"
+                            data-modal-toggle="tambahAnggotaModal"
+                            class="flex items-center px-4 py-2 bg-white text-blue-700 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 font-medium text-sm transition duration-150 ease-in-out">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                             </svg>
@@ -76,18 +75,6 @@
 
                 <!-- Team Members List -->
                 <div class="p-6">
-                    <div class="mb-4 flex justify-between items-center">
-                        <h4 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                            Daftar Anggota Tim
-                        </h4>
-                        @if($tim->users->count() > 0)
-                        <div class="text-sm text-gray-500">Total: {{ $tim->users->count() }} anggota</div>
-                        @endif
-                    </div>
-
                     @if($tim->users->count() > 0)
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -158,6 +145,109 @@
                     </div>
                     @endif
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-md rounded-lg">
+            <!-- Team Overview Card -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 border-b border-blue-800">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div class="flex items-center text-white mb-4 md:mb-0">
+                        <div class="flex h-12 w-12 rounded-full bg-white/20 items-center justify-center mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Daftar Proyek</h3>
+                            <p class="text-blue-100 text-sm">{{ $tim->users->count() }} Proyek</p>
+                        </div>
+                    </div>
+                    <button
+                        data-modal-target="tambahAnggotaModal"
+                        data-modal-toggle="tambahAnggotaModal"
+                        class="flex items-center px-4 py-2 bg-white text-blue-700 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 font-medium text-sm transition duration-150 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                        Tambah Proyek
+                    </button>
+                </div>
+            </div>
+
+            <!-- Team Members List -->
+            <div class="p-6">
+                @if($tim->users->count() > 0)
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                            <tr>
+                                <th scope="col" class="px-6 py-4">Nama</th>
+                                <th scope="col" class="px-6 py-4">Email</th>
+                                <th scope="col" class="px-6 py-4">NIP Lama</th>
+                                <th scope="col" class="px-6 py-4">NIP Baru</th>
+                                <th scope="col" class="px-6 py-4 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($tim->users as $user)
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium">{{ $user->name }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                        {{ $user->email }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-mono text-sm">{{ $user->nip_lama ?: '-' }}</td>
+                                <td class="px-6 py-4 font-mono text-sm">{{ $user->nip_baru ?: '-' }}</td>
+                                <td class="px-6 py-4 text-center">
+                                    <form action="{{ route('tim.anggota.destroy', ['tim' => $tim->id, 'user' => $user->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini dari tim?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" />
+                                            </svg>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                <div class="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 p-12">
+                    <div class="h-16 w-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Belum ada anggota</h3>
+                    <p class="text-center text-gray-500 dark:text-gray-400 mb-6 max-w-md">Tim ini belum memiliki anggota. Tambahkan anggota untuk mulai berkolaborasi dan mengelola pekerjaan bersama.</p>
+                    <button data-modal-target="tambahAnggotaModal" data-modal-toggle="tambahAnggotaModal" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm transition duration-150 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                        Tambah Anggota Tim
+                    </button>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -284,7 +374,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
     <script>
-        
         document.addEventListener('DOMContentLoaded', function() {
             const modalBackdrop = document.getElementById('modalBackdrop');
             const checkboxAll = document.getElementById('checkbox-all');
@@ -360,7 +449,7 @@
                     targetModal.classList.remove('hidden');
                     targetModal.classList.add('flex', 'animate-fadeIn');
                     modalBackdrop.classList.remove('hidden');
-                    
+
                     // Reset search and selection when opening modal
                     if (userSearch) {
                         userSearch.value = '';
@@ -372,7 +461,7 @@
                         checkbox.checked = false;
                     });
                     updateSelectedCount();
-                    
+
                     // Show all rows
                     userRows.forEach(row => {
                         row.style.display = '';
@@ -384,7 +473,7 @@
             function closeModal(targetModal) {
                 if (targetModal && modalBackdrop) {
                     targetModal.classList.add('animate-fadeOut');
-                    
+
                     setTimeout(() => {
                         targetModal.classList.remove('animate-fadeIn', 'animate-fadeOut');
                         targetModal.classList.add('hidden');
@@ -437,7 +526,7 @@
                 // Add slide-out animation
                 popup.classList.add('transform', 'translate-x-full');
                 popup.classList.add('opacity-0');
-                
+
                 setTimeout(() => {
                     popup.style.display = 'none';
                 }, 300);
@@ -458,19 +547,33 @@
     <style>
         /* Animation classes */
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
-        
+
         @keyframes fadeOut {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 0; transform: scale(0.95); }
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
         }
-        
+
         .animate-fadeIn {
             animation: fadeIn 0.2s ease-out forwards;
         }
-        
+
         .animate-fadeOut {
             animation: fadeOut 0.2s ease-in forwards;
         }

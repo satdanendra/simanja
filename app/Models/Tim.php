@@ -14,7 +14,7 @@ class Tim extends Model
     protected $fillable = [
         'direktorat_id',
         'master_tim_id',
-        'ketua_tim',
+        'tim_ketua',
         'tahun',
     ];
     
@@ -39,7 +39,7 @@ class Tim extends Model
      */
     public function ketuaTim()
     {
-        return $this->belongsTo(User::class, 'ketua_tim');
+        return $this->belongsTo(User::class, 'tim_ketua');
     }
     
     /**
