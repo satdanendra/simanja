@@ -17,12 +17,17 @@ class TimController extends Controller
     public function index()
     {
         // Mengambil semua data tim dengan relasi
-        $tims = Tim::with(['direktorat', 'masterTim', 'ketuaTim'])->get();
+        $tims = Tim::with(['direktorat', 'masterTim', 'ketuaTim'])
+            ->join('master_tim', 'tims.master_tim_id', '=', 'master_tim.id')
+            ->orderBy('master_tim.tim_kode')
+            ->orderBy('tims.tahun')
+            ->select('tims.*')
+            ->get();
 
         // Mengambil data untuk dropdown form
-        $masterTims = MasterTim::all();
-        $direktorats = MasterDirektorat::all();
-        $users = User::all();
+        $masterTims = MasterTim::orderBy('tim_kode')->get();
+        $direktorats = MasterDirektorat::orderBy('kode')->get();
+        $users = User::orderBy('name')->get();
 
         return view('tim', compact('tims', 'masterTims', 'direktorats', 'users'));
     }
@@ -79,12 +84,15 @@ class TimController extends Controller
         }
 
         // Buat tim baru dengan data yang sudah divalidasi
-        Tim::create([
+        $tim = Tim::create([
             'direktorat_id' => $direktoratId,
             'master_tim_id' => $masterTimId,
             'tim_ketua' => $request->tim_ketua,
             'tahun' => $request->tahun,
         ]);
+
+        // Tambahkan ketua tim sebagai anggota tim
+        $tim->users()->attach($request->tim_ketua);
 
         return redirect()->route('tim')
             ->with('success', 'Tim berhasil dibuat');
@@ -125,7 +133,7 @@ class TimController extends Controller
         $validated = $request->validate([
             'direktorat_id' => 'required|exists:master_direktorats,id',
             'master_tim_id' => 'required|exists:master_tim,id',
-            'ketua_tim' => 'required|exists:users,id',
+            'tim_ketua' => 'required|exists:users,id',  // Perhatikan: berubah dari 'ketua_tim' ke 'tim_ketua'
             'tahun' => 'required|integer|min:2000|max:' . (date('Y') + 10),
         ]);
 
@@ -140,6 +148,10 @@ class TimController extends Controller
      */
     public function destroy(Tim $tim)
     {
+        // Hapus semua anggota tim terlebih dahulu
+        $tim->users()->detach();
+
+        // Hapus tim
         $tim->delete();
 
         return redirect()->route('tim')

@@ -70,11 +70,17 @@
                 <!-- Team Cards Grid -->
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($tims as $tim)
-                    <div class="tim-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300" data-name="{{ strtolower($tim->nama_tim) }}">
+                    <div class="tim-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300" data-name="{{ strtolower($tim->masterTim->tim_kode) }} {{ strtolower($tim->masterTim->tim_nama) }}">
                         <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-4">
-                            <div class="flex items-center justify-between">
-                                <h3 class="text-white font-bold truncate">{{ $tim->nama_tim }}</h3>
+                            <div class="flex items-center justify-between mb-1">
+                                <h3 class="text-white font-bold truncate">{{ $tim->masterTim->tim_kode }} - {{ $tim->masterTim->tim_nama }}</h3>
                                 <span class="text-blue-100 bg-blue-800 bg-opacity-50 text-xs font-semibold px-2.5 py-1 rounded-full">{{ $tim->tahun }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span class="text-blue-100 text-xs">Ketua: {{ $tim->ketuaTim->name }}</span>
                             </div>
                         </div>
                         <div class="p-5">
@@ -96,13 +102,24 @@
                                     </svg>
                                     <span>5 Pekerjaan</span>
                                 </div>
-
                                 <a href="{{ route('detailtim', $tim->id) }}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors duration-150">
                                     <span>Detail</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                     </svg>
                                 </a>
+                            </div>
+                            <div>
+                                <form action="{{ route('tims.destroy', $tim->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus tim ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 transition-colors duration-150">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        Hapus Tim
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -254,151 +271,173 @@
     </div>
 
     <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Fungsi untuk membuka modal
-                function openModal(modal) {
-                    modal.classList.remove("hidden");
-                    modal.classList.add("flex");
-                    document.getElementById("modalBackdrop").classList.remove("hidden");
-                }
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fungsi untuk membuka modal
+            function openModal(modal) {
+                modal.classList.remove("hidden");
+                modal.classList.add("flex");
+                document.getElementById("modalBackdrop").classList.remove("hidden");
+            }
 
-                // Fungsi untuk menutup modal
-                function closeModal(modal) {
-                    modal.classList.add("hidden");
-                    modal.classList.remove("flex");
-                    document.getElementById("modalBackdrop").classList.add("hidden");
-                }
+            // Fungsi untuk menutup modal
+            function closeModal(modal) {
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+                document.getElementById("modalBackdrop").classList.add("hidden");
+            }
 
-                // Modal handlers
-                const createTimButtons = document.querySelectorAll("[data-modal-show='createTimModal']");
-                const createTimModal = document.getElementById("createTimModal");
-                const closeModalButtons = document.querySelectorAll("[data-modal-hide='createTimModal']");
+            // Modal handlers
+            const createTimButtons = document.querySelectorAll("[data-modal-show='createTimModal']");
+            const createTimModal = document.getElementById("createTimModal");
+            const closeModalButtons = document.querySelectorAll("[data-modal-hide='createTimModal']");
 
-                // Tombol untuk membuka modal
-                createTimButtons.forEach(button => {
-                    button.addEventListener("click", function(event) {
-                        event.preventDefault();
-                        openModal(createTimModal);
-                    });
+            // Tombol untuk membuka modal
+            createTimButtons.forEach(button => {
+                button.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    openModal(createTimModal);
                 });
+            });
 
-                // Tombol untuk menutup modal
-                closeModalButtons.forEach(button => {
-                    button.addEventListener("click", function() {
-                        closeModal(createTimModal);
-                    });
+            // Tombol untuk menutup modal
+            closeModalButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    closeModal(createTimModal);
                 });
+            });
 
-                // Menutup modal saat klik di luar modal
-                createTimModal.addEventListener("click", function(e) {
-                    if (e.target === createTimModal) {
-                        closeModal(createTimModal);
-                    }
-                });
-
-                // Add keydown event for Escape key
-                document.addEventListener('keydown', function(event) {
-                    if (event.key === 'Escape' && !createTimModal.classList.contains('hidden')) {
-                        closeModal(createTimModal);
-                    }
-                });
-
-                // Handle Direktorat Lainnya
-                const direktoratSelect = document.getElementById('direktorat_id');
-                const direktoratLainnyaContainer = document.getElementById('direktorat_lainnya_container');
-
-                direktoratSelect.addEventListener('change', function() {
-                    if (this.value === 'lainnya') {
-                        direktoratLainnyaContainer.classList.remove('hidden');
-                    } else {
-                        direktoratLainnyaContainer.classList.add('hidden');
-                    }
-                });
-
-                // Handle Tim Lainnya
-                const timSelect = document.getElementById('master_tim_id');
-                const timLainnyaContainer = document.getElementById('tim_lainnya_container');
-
-                timSelect.addEventListener('change', function() {
-                    if (this.value === 'lainnya') {
-                        timLainnyaContainer.classList.remove('hidden');
-                    } else {
-                        timLainnyaContainer.classList.add('hidden');
-                    }
-                });
-
-                // Form validation before submit
-                const createTimForm = document.getElementById('createTimForm');
-                createTimForm.addEventListener('submit', function(event) {
-                    let isValid = true;
-
-                    // Validate Direktorat Lainnya if selected
-                    if (direktoratSelect.value === 'lainnya') {
-                        const direktoratKode = document.getElementById('direktorat_kode');
-                        const direktoratNama = document.getElementById('direktorat_nama');
-
-                        if (!direktoratKode.value.trim()) {
-                            isValid = false;
-                            highlightError(direktoratKode, 'Kode Direktorat wajib diisi');
-                        } else {
-                            removeError(direktoratKode);
-                        }
-
-                        if (!direktoratNama.value.trim()) {
-                            isValid = false;
-                            highlightError(direktoratNama, 'Nama Direktorat wajib diisi');
-                        } else {
-                            removeError(direktoratNama);
-                        }
-                    }
-
-                    // Validate Tim Lainnya if selected
-                    if (timSelect.value === 'lainnya') {
-                        const timKode = document.getElementById('tim_kode');
-                        const timNama = document.getElementById('tim_nama');
-
-                        if (!timKode.value.trim()) {
-                            isValid = false;
-                            highlightError(timKode, 'Kode Tim wajib diisi');
-                        } else {
-                            removeError(timKode);
-                        }
-
-                        if (!timNama.value.trim()) {
-                            isValid = false;
-                            highlightError(timNama, 'Nama Tim wajib diisi');
-                        } else {
-                            removeError(timNama);
-                        }
-                    }
-
-                    if (!isValid) {
-                        event.preventDefault();
-                    }
-                });
-
-                // Helpers for form validation
-                function highlightError(inputElement, message) {
-                    inputElement.classList.add('border-red-500');
-
-                    // Add error message if not already present
-                    if (!inputElement.nextElementSibling || !inputElement.nextElementSibling.classList.contains('text-red-500')) {
-                        const errorMsg = document.createElement('p');
-                        errorMsg.classList.add('text-red-500', 'text-xs', 'mt-1');
-                        errorMsg.textContent = message;
-                        inputElement.parentNode.insertBefore(errorMsg, inputElement.nextSibling);
-                    }
-                }
-
-                function removeError(inputElement) {
-                    inputElement.classList.remove('border-red-500');
-
-                    // Remove error message if present
-                    if (inputElement.nextElementSibling && inputElement.nextElementSibling.classList.contains('text-red-500')) {
-                        inputElement.nextElementSibling.remove();
-                    }
+            // Menutup modal saat klik di luar modal
+            createTimModal.addEventListener("click", function(e) {
+                if (e.target === createTimModal) {
+                    closeModal(createTimModal);
                 }
             });
+
+            // Add keydown event for Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !createTimModal.classList.contains('hidden')) {
+                    closeModal(createTimModal);
+                }
+            });
+
+            // Handle Direktorat Lainnya
+            const direktoratSelect = document.getElementById('direktorat_id');
+            const direktoratLainnyaContainer = document.getElementById('direktorat_lainnya_container');
+
+            direktoratSelect.addEventListener('change', function() {
+                if (this.value === 'lainnya') {
+                    direktoratLainnyaContainer.classList.remove('hidden');
+                } else {
+                    direktoratLainnyaContainer.classList.add('hidden');
+                }
+            });
+
+            // Handle Tim Lainnya
+            const timSelect = document.getElementById('master_tim_id');
+            const timLainnyaContainer = document.getElementById('tim_lainnya_container');
+
+            timSelect.addEventListener('change', function() {
+                if (this.value === 'lainnya') {
+                    timLainnyaContainer.classList.remove('hidden');
+                } else {
+                    timLainnyaContainer.classList.add('hidden');
+                }
+            });
+
+            // Form validation before submit
+            const createTimForm = document.getElementById('createTimForm');
+            createTimForm.addEventListener('submit', function(event) {
+                let isValid = true;
+
+                // Validate Direktorat Lainnya if selected
+                if (direktoratSelect.value === 'lainnya') {
+                    const direktoratKode = document.getElementById('direktorat_kode');
+                    const direktoratNama = document.getElementById('direktorat_nama');
+
+                    if (!direktoratKode.value.trim()) {
+                        isValid = false;
+                        highlightError(direktoratKode, 'Kode Direktorat wajib diisi');
+                    } else {
+                        removeError(direktoratKode);
+                    }
+
+                    if (!direktoratNama.value.trim()) {
+                        isValid = false;
+                        highlightError(direktoratNama, 'Nama Direktorat wajib diisi');
+                    } else {
+                        removeError(direktoratNama);
+                    }
+                }
+
+                // Validate Tim Lainnya if selected
+                if (timSelect.value === 'lainnya') {
+                    const timKode = document.getElementById('tim_kode');
+                    const timNama = document.getElementById('tim_nama');
+
+                    if (!timKode.value.trim()) {
+                        isValid = false;
+                        highlightError(timKode, 'Kode Tim wajib diisi');
+                    } else {
+                        removeError(timKode);
+                    }
+
+                    if (!timNama.value.trim()) {
+                        isValid = false;
+                        highlightError(timNama, 'Nama Tim wajib diisi');
+                    } else {
+                        removeError(timNama);
+                    }
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+
+            // Helpers for form validation
+            function highlightError(inputElement, message) {
+                inputElement.classList.add('border-red-500');
+
+                // Add error message if not already present
+                if (!inputElement.nextElementSibling || !inputElement.nextElementSibling.classList.contains('text-red-500')) {
+                    const errorMsg = document.createElement('p');
+                    errorMsg.classList.add('text-red-500', 'text-xs', 'mt-1');
+                    errorMsg.textContent = message;
+                    inputElement.parentNode.insertBefore(errorMsg, inputElement.nextSibling);
+                }
+            }
+
+            function removeError(inputElement) {
+                inputElement.classList.remove('border-red-500');
+
+                // Remove error message if present
+                if (inputElement.nextElementSibling && inputElement.nextElementSibling.classList.contains('text-red-500')) {
+                    inputElement.nextElementSibling.remove();
+                }
+            }
+
+            function closeSuccessPopup() {
+                const popup = document.getElementById('success-popup');
+                if (popup) {
+                    popup.classList.add('transform', 'translate-x-full', 'opacity-0');
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 300); // Tunggu animasi selesai (300ms)
+                }
+            }
+            const closeButton = document.querySelector('#success-popup button');
+            if (closeButton) {
+                closeButton.addEventListener('click', closeSuccessPopup);
+            }
+
+            // Auto close popup setelah 5 detik
+            const successPopup = document.getElementById('success-popup');
+            if (successPopup) {
+                setTimeout(() => {
+                    closeSuccessPopup();
+                }, 5000);
+            }
+        });
     </script>
 
     <style>
