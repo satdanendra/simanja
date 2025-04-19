@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('master_proyek', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rk_tim_id')->constrained('master_rk_tim')->onDelete('cascade');
+            $table->string('iku_kode')->nullable();
+            $table->text('iku_urai')->nullable();
             $table->string('proyek_kode');
             $table->text('proyek_urai');
             $table->string('rk_anggota')->nullable();

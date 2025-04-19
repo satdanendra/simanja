@@ -11,17 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('master_rk_tim', function (Blueprint $table) {
+        Schema::create('master_proyek', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tim_id')->constrained('master_tim')->onDelete('cascade');
-            $table->string('rk_tim_kode');
-            $table->text('rk_tim_urai');
+            $table->foreignId('rk_tim_id')->constrained('master_rk_tim')->onDelete('cascade');
             $table->string('iku_kode')->nullable();
             $table->text('iku_urai')->nullable();
+            $table->string('proyek_kode');
+            $table->text('proyek_urai');
+            $table->string('rk_anggota')->nullable();
+            $table->string('proyek_lapangan')->nullable();
             $table->timestamps();
             
-            // Ensure unique rk_tim_kode within each tim
-            $table->unique(['tim_id', 'rk_tim_kode']);
+            // Ensure unique proyek_kode within each rk_tim
+            $table->unique(['rk_tim_id', 'proyek_kode']);
         });
     }
 
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('master_rk_tim');
+        Schema::dropIfExists('master_proyek');
     }
 };

@@ -13,6 +13,8 @@ class MasterProyek extends Model
     
     protected $fillable = [
         'rk_tim_id',
+        'iku_kode',
+        'iku_urai',
         'proyek_kode',
         'proyek_urai',
         'rk_anggota',

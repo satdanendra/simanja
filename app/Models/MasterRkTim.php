@@ -15,8 +15,6 @@ class MasterRkTim extends Model
         'tim_id',
         'rk_tim_kode',
         'rk_tim_urai',
-        'iku_kode',
-        'iku_urai',
     ];
     
     /**

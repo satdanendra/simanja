@@ -121,8 +121,6 @@ class MasterRincianKegiatanController extends Controller
                     $groupedData[$timKode]['rk_tims'][$rkTimKey] = [
                         'rk_tim_kode' => $rkTimKode,
                         'rk_tim_urai' => $rkTimUrai,
-                        'iku_kode' => $ikuKode,
-                        'iku_urai' => $ikuUrai,
                         'proyeks' => []
                     ];
                 }
@@ -131,6 +129,8 @@ class MasterRincianKegiatanController extends Controller
                 $proyekKey = $rkTimKey . '|' . $proyekKode;
                 if (!isset($groupedData[$timKode]['rk_tims'][$rkTimKey]['proyeks'][$proyekKey])) {
                     $groupedData[$timKode]['rk_tims'][$rkTimKey]['proyeks'][$proyekKey] = [
+                        'iku_kode' => $ikuKode,
+                        'iku_urai' => $ikuUrai,
                         'proyek_kode' => $proyekKode,
                         'proyek_urai' => $proyekUrai,
                         'rk_anggota' => $rkAnggota,
@@ -190,9 +190,7 @@ class MasterRincianKegiatanController extends Controller
                             'rk_tim_kode' => $rkTimData['rk_tim_kode']
                         ],
                         [
-                            'rk_tim_urai' => $rkTimData['rk_tim_urai'],
-                            'iku_kode' => $rkTimData['iku_kode'],
-                            'iku_urai' => $rkTimData['iku_urai']
+                            'rk_tim_urai' => $rkTimData['rk_tim_urai']
                         ]
                     );
 
@@ -204,6 +202,8 @@ class MasterRincianKegiatanController extends Controller
                                 'proyek_kode' => $proyekData['proyek_kode']
                             ],
                             [
+                                'iku_kode' => $rkTimData['iku_kode'],
+                                'iku_urai' => $rkTimData['iku_urai'],
                                 'proyek_urai' => $proyekData['proyek_urai'],
                                 'rk_anggota' => $proyekData['rk_anggota'],
                                 'proyek_lapangan' => $proyekData['proyek_lapangan']
@@ -382,17 +382,18 @@ class MasterRincianKegiatanController extends Controller
         $instructionSheet->setCellValue('A7', '- Satu Kegiatan dapat memiliki banyak Rincian Kegiatan');
         $instructionSheet->setCellValue('A8', '- Tim dengan kode yang sama namun nama berbeda akan diupdate dengan nama terbaru');
         $instructionSheet->setCellValue('A9', '- Demikian juga untuk tingkatan lainnya, kode yang sama akan diupdate dengan detail terbaru');
+        $instructionSheet->setCellValue('A10', '- Kode IKU dan Uraian IKU terkait dengan Proyek');
 
-        $instructionSheet->setCellValue('A11', 'Kolom yang wajib diisi:');
-        $instructionSheet->setCellValue('A12', '- Tim Kode & Tim Nama: Kode dan nama Tim');
-        $instructionSheet->setCellValue('A13', '- RK Tim Kode & RK Tim Urai: Kode dan uraian RK Tim');
-        $instructionSheet->setCellValue('A14', '- Proyek Kode & Proyek Urai: Kode dan uraian Proyek');
-        $instructionSheet->setCellValue('A15', '- Kegiatan Kode & Kegiatan Urai: Kode dan uraian Kegiatan');
-        $instructionSheet->setCellValue('A16', '- Rincian Kegiatan Kode & Rincian Kegiatan Urai: Kode dan uraian Rincian Kegiatan');
+        $instructionSheet->setCellValue('A12', 'Kolom yang wajib diisi:');
+        $instructionSheet->setCellValue('A13', '- Tim Kode & Tim Nama: Kode dan nama Tim');
+        $instructionSheet->setCellValue('A14', '- RK Tim Kode & RK Tim Urai: Kode dan uraian RK Tim');
+        $instructionSheet->setCellValue('A15', '- Proyek Kode & Proyek Urai: Kode dan uraian Proyek');
+        $instructionSheet->setCellValue('A16', '- Kegiatan Kode & Kegiatan Urai: Kode dan uraian Kegiatan');
+        $instructionSheet->setCellValue('A17', '- Rincian Kegiatan Kode & Rincian Kegiatan Urai: Kode dan uraian Rincian Kegiatan');
 
         $instructionSheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
         $instructionSheet->getStyle('A3')->getFont()->setBold(true);
-        $instructionSheet->getStyle('A11')->getFont()->setBold(true);
+        $instructionSheet->getStyle('A12')->getFont()->setBold(true);
 
         // Set column widths
         $instructionSheet->getColumnDimension('A')->setWidth(50);
