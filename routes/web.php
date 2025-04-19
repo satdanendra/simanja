@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterDirektoratController;
+use App\Http\Controllers\MasterRincianKegiatanController;
 use App\Http\Controllers\IkuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TimController;
@@ -58,6 +59,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/iku/import', [IkuController::class, 'import'])->name('iku.import');
     Route::get('/iku/download-template', [IkuController::class, 'downloadTemplate'])->name('iku.template.download');
     Route::delete('/iku/batch-delete', [IkuController::class, 'batchDelete'])->name('iku.batch-delete');
+    Route::get('/master-rincian-kegiatan', [MasterRincianKegiatanController::class, 'index'])->name('master-rincian-kegiatan');
+    Route::post('/master-rincian-kegiatan/import', [MasterRincianKegiatanController::class, 'import'])->name('master-rincian-kegiatan.import');
+    Route::get('/master-rincian-kegiatan/download-template', [MasterRincianKegiatanController::class, 'downloadTemplate'])->name('master-rincian-kegiatan.template.download');
+    Route::delete('/master-rincian-kegiatan/{masterRincianKegiatan}', [MasterRincianKegiatanController::class, 'destroy'])->name('master-rincian-kegiatan.destroy');
+    Route::delete('/master-rincian-kegiatan/batch-delete', [MasterRincianKegiatanController::class, 'batchDelete'])->name('master-rincian-kegiatan.batch-delete');
 });
 
 require __DIR__ . '/auth.php';

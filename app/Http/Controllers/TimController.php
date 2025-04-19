@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Tim;
 use App\Models\User;
+use App\Models\MasterTim;
+use App\Models\MasterDirektorat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,16 +16,15 @@ class TimController extends Controller
      */
     public function index()
     {
-        $tims = Tim::all();
-        return view('tim', compact('tims'));
-    }
+        // Mengambil semua data tim dengan relasi
+        $tims = Tim::with(['direktorat', 'masterTim', 'ketuaTim'])->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('tim.create');
+        // Mengambil data untuk dropdown form
+        $masterTims = MasterTim::all();
+        $direktorats = MasterDirektorat::all();
+        $users = User::all();
+
+        return view('tim', compact('tims', 'masterTims', 'direktorats', 'users'));
     }
 
     /**
@@ -31,17 +32,62 @@ class TimController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama_tim' => 'required|string|max:255',
+        // Validasi data input
+        $request->validate([
+            'direktorat_id' => 'required',
+            'master_tim_id' => 'required',
+            'tim_ketua' => 'required|exists:users,id',
             'tahun' => 'required|integer|min:2000|max:2100',
         ]);
 
+        // Handle direktorat baru jika opsi 'lainnya' dipilih
+        if ($request->direktorat_id === 'lainnya') {
+            $request->validate([
+                'direktorat_kode' => 'required|string|max:50|unique:master_direktorats,kode',
+                'direktorat_nama' => 'required|string|max:255',
+            ]);
+
+            // Buat direktorat baru
+            $direktorat = MasterDirektorat::create([
+                'kode' => $request->direktorat_kode,
+                'nama' => $request->direktorat_nama,
+            ]);
+
+            // Gunakan ID direktorat baru
+            $direktoratId = $direktorat->id;
+        } else {
+            $direktoratId = $request->direktorat_id;
+        }
+
+        // Handle tim baru jika opsi 'lainnya' dipilih
+        if ($request->master_tim_id === 'lainnya') {
+            $request->validate([
+                'tim_kode' => 'required|string|max:50|unique:master_tim,tim_kode',
+                'tim_nama' => 'required|string|max:255',
+            ]);
+
+            // Buat tim baru
+            $masterTim = MasterTim::create([
+                'tim_kode' => $request->tim_kode,
+                'tim_nama' => $request->tim_nama,
+            ]);
+
+            // Gunakan ID tim baru
+            $masterTimId = $masterTim->id;
+        } else {
+            $masterTimId = $request->master_tim_id;
+        }
+
+        // Buat tim baru dengan data yang sudah divalidasi
         Tim::create([
-            'nama_tim' => $request->nama_tim,
+            'direktorat_id' => $direktoratId,
+            'master_tim_id' => $masterTimId,
+            'tim_ketua' => $request->tim_ketua,
             'tahun' => $request->tahun,
         ]);
 
-        return redirect()->route('tim')->with('success', 'Tim berhasil dibuat');
+        return redirect()->route('tim')
+            ->with('success', 'Tim berhasil dibuat');
     }
 
     /**
@@ -49,6 +95,7 @@ class TimController extends Controller
      */
     public function show(Tim $tim)
     {
+        $tim->load(['direktorat', 'masterTim', 'ketuaTim']);
         return view('tim.show', compact('tim'));
     }
 
@@ -57,7 +104,17 @@ class TimController extends Controller
      */
     public function edit(Tim $tim)
     {
-        return view('tim.edit', compact('tim'));
+        // Untuk API request
+        if (request()->ajax()) {
+            return response()->json($tim);
+        }
+
+        // Mengambil data untuk dropdown form
+        $masterTims = MasterTim::all();
+        $direktorats = MasterDirektorat::all();
+        $users = User::all();
+
+        return view('tim.edit', compact('tim', 'masterTims', 'direktorats', 'users'));
     }
 
     /**
@@ -66,7 +123,9 @@ class TimController extends Controller
     public function update(Request $request, Tim $tim)
     {
         $validated = $request->validate([
-            'nama_tim' => 'required|string|max:255',
+            'direktorat_id' => 'required|exists:master_direktorats,id',
+            'master_tim_id' => 'required|exists:master_tim,id',
+            'ketua_tim' => 'required|exists:users,id',
             'tahun' => 'required|integer|min:2000|max:' . (date('Y') + 10),
         ]);
 
@@ -92,7 +151,7 @@ class TimController extends Controller
      */
     public function anggota(Tim $tim)
     {
-        $tim->load('users'); // Eager load users yang berelasi dengan tim
+        $tim->load(['direktorat', 'masterTim', 'ketuaTim', 'users']); // Eager load relations
 
         // Dapatkan semua user yang belum menjadi anggota tim ini untuk modal
         $availableUsers = User::whereDoesntHave('tims', function ($query) use ($tim) {
