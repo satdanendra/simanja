@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tim;
+use App\Models\RkTim;
 use App\Models\User;
 use App\Models\MasterTim;
+use App\Models\MasterRkTim;
 use App\Models\MasterDirektorat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -159,7 +161,7 @@ class TimController extends Controller
     }
 
     /**
-     * Menampilkan anggota tim
+     * Menampilkan anggota tim dan RK Tim
      */
     public function anggota(Tim $tim)
     {
@@ -170,7 +172,109 @@ class TimController extends Controller
             $query->where('tim_id', $tim->id);
         })->get();
 
-        return view('detailtim', compact('tim', 'availableUsers'));
+        // Ambil RK Tim yang tersedia (yang belum ditambahkan ke tim ini)
+        $availableRkTims = MasterRkTim::whereDoesntHave('rkTims', function ($query) use ($tim) {
+            $query->where('tim_id', $tim->id);
+        })->get();
+
+        // Ambil RK Tim yang sudah ditambahkan ke tim ini
+        $rkTims = $tim->rkTims()->with('masterRkTim')->get()->pluck('masterRkTim');
+
+        return view('detailtim', compact('tim', 'availableUsers', 'availableRkTims', 'rkTims'));
+    }
+
+    /**
+     * Menyimpan RK Tim baru ke tim
+     */
+    public function simpanRkTim(Request $request, Tim $tim)
+    {
+        // Validasi request
+        $validator = Validator::make($request->all(), [
+            'rktim_ids' => 'array',
+            'rktim_ids.*' => 'exists:master_rk_tim,id',
+            'add_new_rktim' => 'nullable',
+            'new_rk_tim_kode' => 'required_if:add_new_rktim,1|string|max:50',
+            'new_rk_tim_urai' => 'required_if:add_new_rktim,1|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Proses RK Tim yang dipilih dari daftar
+        if ($request->has('rktim_ids') && !empty($request->rktim_ids)) {
+            foreach ($request->rktim_ids as $rkTimId) {
+                // Cek jika RK Tim sudah ada di tim ini
+                $exists = RkTim::where('tim_id', $tim->id)
+                    ->where('rk_tim_id', $rkTimId)
+                    ->exists();
+
+                if (!$exists) {
+                    RkTim::create([
+                        'tim_id' => $tim->id,
+                        'rk_tim_id' => $rkTimId,
+                    ]);
+                }
+            }
+        }
+
+        // Proses RK Tim baru yang diinput manual
+        if ($request->add_new_rktim) {
+            // Buat Master RK Tim baru
+            $masterRkTim = MasterRkTim::create([
+                'tim_id' => $tim->masterTim->id, // ID Tim Master
+                'rk_tim_kode' => $request->new_rk_tim_kode,
+                'rk_tim_urai' => $request->new_rk_tim_urai,
+            ]);
+
+            // Buat relasi RK Tim dengan Tim
+            RkTim::create([
+                'tim_id' => $tim->id,
+                'rk_tim_id' => $masterRkTim->id,
+            ]);
+        }
+
+        return redirect()->route('detailtim', $tim->id)
+            ->with('success', 'RK Tim berhasil ditambahkan');
+    }
+
+    /**
+     * Update RK Tim
+     */
+    public function updateRkTim(Request $request, Tim $tim, $rkTimId)
+    {
+        $validator = Validator::make($request->all(), [
+            'rk_tim_kode' => 'required|string|max:50',
+            'rk_tim_urai' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        $masterRkTim = MasterRkTim::findOrFail($rkTimId);
+
+        $masterRkTim->update([
+            'rk_tim_kode' => $request->rk_tim_kode,
+            'rk_tim_urai' => $request->rk_tim_urai,
+        ]);
+
+        return redirect()->route('detailtim', $tim->id)
+            ->with('success', 'RK Tim berhasil diperbarui');
+    }
+
+    /**
+     * Hapus RK Tim dari tim
+     */
+    public function hapusRkTim(Tim $tim, $rkTimId)
+    {
+        // Hapus relasi RK Tim dengan Tim
+        RkTim::where('tim_id', $tim->id)
+            ->where('rk_tim_id', $rkTimId)
+            ->delete();
+
+        return redirect()->route('detailtim', $tim->id)
+            ->with('success', 'RK Tim berhasil dihapus dari tim');
     }
 
     /**

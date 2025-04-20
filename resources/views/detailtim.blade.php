@@ -186,7 +186,6 @@
                             <tr>
                                 <th scope="col" class="px-6 py-4">Kode RK Tim</th>
                                 <th scope="col" class="px-6 py-4">Uraian RK Tim</th>
-                                <th scope="col" class="px-6 py-4">Kode IKU</th>
                                 <th scope="col" class="px-6 py-4 text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -195,16 +194,13 @@
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $rkTim->rk_tim_kode }}</td>
                                 <td class="px-6 py-4">{{ $rkTim->rk_tim_urai }}</td>
-                                <td class="px-6 py-4">{{ $rkTim->iku_kode ?: '-' }}</td>
                                 <td class="px-6 py-4 text-center">
-                                    <button 
-                                        data-modal-target="editRkTimModal" 
-                                        data-modal-toggle="editRkTimModal" 
-                                        data-rktim-id="{{ $rkTim->id }}" 
-                                        data-rktim-kode="{{ $rkTim->rk_tim_kode }}" 
-                                        data-rktim-urai="{{ $rkTim->rk_tim_urai }}" 
-                                        data-rktim-iku-kode="{{ $rkTim->iku_kode }}" 
-                                        data-rktim-iku-urai="{{ $rkTim->iku_urai }}" 
+                                    <button
+                                        data-modal-target="editRkTimModal"
+                                        data-modal-toggle="editRkTimModal"
+                                        data-rktim-id="{{ $rkTim->id }}"
+                                        data-rktim-kode="{{ $rkTim->rk_tim_kode }}"
+                                        data-rktim-urai="{{ $rkTim->rk_tim_urai }}"
                                         class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150 mr-2 edit-rktim-btn">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -431,24 +427,32 @@
                                         </th>
                                         <th scope="col" class="px-6 py-3">Kode RK Tim</th>
                                         <th scope="col" class="px-6 py-3">Uraian RK Tim</th>
-                                        <th scope="col" class="px-6 py-3">Kode IKU</th>
+                                        <th scope="col" class="px-6 py-3">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if(isset($availableRkTims) && count($availableRkTims) > 0)
-                                        @foreach($availableRkTims as $rkTim)
-                                        <tr class="rktim-row bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150" data-kode="{{ strtolower($rkTim->rk_tim_kode) }}" data-urai="{{ strtolower($rkTim->rk_tim_urai) }}">
-                                            <td class="w-4 p-4">
-                                                <div class="flex items-center">
-                                                    <input id="checkbox-rktim-{{ $rkTim->id }}" type="checkbox" name="rktim_ids[]" value="{{ $rkTim->id }}" class="rktim-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                    <label for="checkbox-rktim-{{ $rkTim->id }}" class="sr-only">checkbox</label>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $rkTim->rk_tim_kode }}</td>
-                                            <td class="px-6 py-4">{{ $rkTim->rk_tim_urai }}</td>
-                                            <td class="px-6 py-4">{{ $rkTim->iku_kode ?: '-' }}</td>
-                                        </tr>
-                                        @endforeach
+                                    @foreach($availableRkTims as $rkTim)
+                                    <tr class="rktim-row bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150" data-kode="{{ strtolower($rkTim->rk_tim_kode) }}" data-urai="{{ strtolower($rkTim->rk_tim_urai) }}">
+                                        <td class="w-4 p-4">
+                                            <div class="flex items-center">
+                                                <input id="checkbox-rktim-{{ $rkTim->id }}" type="checkbox" name="rktim_ids[]" value="{{ $rkTim->id }}" class="rktim-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <label for="checkbox-rktim-{{ $rkTim->id }}" class="sr-only">checkbox</label>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $rkTim->rk_tim_kode }}</td>
+                                        <td class="px-6 py-4">{{ $rkTim->rk_tim_urai }}</td>
+                                        <td class="px-6 py-4">
+                                            <button type="button" data-modal-target="editRkTimModal" data-modal-toggle="editRkTimModal"
+                                                data-rktim-id="{{ $rkTim->id }}"
+                                                data-rktim-kode="{{ $rkTim->rk_tim_kode }}"
+                                                data-rktim-urai="{{ $rkTim->rk_tim_urai }}"
+                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline me-3 edit-rktim-btn">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
                                     @endif
                                     <!-- Row for adding new RK Tim -->
                                     <tr class="bg-gray-50 border-b dark:bg-gray-700 dark:border-gray-600">
@@ -469,22 +473,14 @@
                         <!-- Form for new RK Tim (initially hidden) -->
                         <div id="new-rktim-form" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6 hidden">
                             <h4 class="text-base font-medium text-gray-900 dark:text-white mb-4">Detail RK Tim Baru</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 gap-4">
                                 <div>
                                     <label for="new_rk_tim_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode RK Tim</label>
                                     <input type="text" name="new_rk_tim_kode" id="new_rk_tim_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: RK631">
                                 </div>
                                 <div>
-                                    <label for="new_iku_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode IKU (Optional)</label>
-                                    <input type="text" name="new_iku_kode" id="new_iku_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: IKU-1.1">
-                                </div>
-                                <div class="md:col-span-2">
                                     <label for="new_rk_tim_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian RK Tim</label>
                                     <textarea name="new_rk_tim_urai" id="new_rk_tim_urai" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan uraian RK Tim"></textarea>
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label for="new_iku_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian IKU (Optional)</label>
-                                    <textarea name="new_iku_urai" id="new_iku_urai" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan uraian IKU"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -544,15 +540,7 @@
                             <label for="edit_rk_tim_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian RK Tim</label>
                             <textarea name="rk_tim_urai" id="edit_rk_tim_urai" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required></textarea>
                         </div>
-                        <div class="mb-4">
-                            <label for="edit_iku_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode IKU</label>
-                            <input type="text" name="iku_kode" id="edit_iku_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                        </div>
-                        <div class="mb-4">
-                            <label for="edit_iku_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian IKU</label>
-                            <textarea name="iku_urai" id="edit_iku_urai" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"></textarea>
-                        </div>
-                        
+
                         <div class="flex items-center justify-end space-x-3">
                             <button type="button" data-modal-hide="editRkTimModal" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 transition-colors duration-150">
                                 Batal
@@ -605,7 +593,7 @@
                 if (newRkTimCheckbox && newRkTimCheckbox.checked) {
                     count++;
                 }
-                
+
                 if (selectedRkTimCount) {
                     selectedRkTimCount.textContent = count + ' RK Tim dipilih';
                     if (count > 0) {
@@ -699,7 +687,7 @@
                         const rkTimKode = row.getAttribute('data-kode');
                         const rkTimUrai = row.getAttribute('data-urai');
 
-                        if ((rkTimKode && rkTimKode.includes(searchValue)) || 
+                        if ((rkTimKode && rkTimKode.includes(searchValue)) ||
                             (rkTimUrai && rkTimUrai.includes(searchValue))) {
                             row.style.display = '';
                         } else {
@@ -822,14 +810,13 @@
             // Handle Edit RK Tim
             const editRkTimButtons = document.querySelectorAll('.edit-rktim-btn');
             const editRkTimForm = document.getElementById('editRkTimForm');
-            
+
+            if (editRkTimButtons.length > 0 && editRkTimForm) {
             editRkTimButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const rkTimId = this.getAttribute('data-rktim-id');
                     const rkTimKode = this.getAttribute('data-rktim-kode');
                     const rkTimUrai = this.getAttribute('data-rktim-urai');
-                    const ikuKode = this.getAttribute('data-rktim-iku-kode');
-                    const ikuUrai = this.getAttribute('data-rktim-iku-urai');
                     
                     // Set form action
                     editRkTimForm.action = `/tim/${{{ $tim->id }}}/rktim/${rkTimId}`;
@@ -837,10 +824,20 @@
                     // Fill form fields
                     document.getElementById('edit_rk_tim_kode').value = rkTimKode;
                     document.getElementById('edit_rk_tim_urai').value = rkTimUrai;
-                    document.getElementById('edit_iku_kode').value = ikuKode || '';
-                    document.getElementById('edit_iku_urai').value = ikuUrai || '';
                 });
             });
+        }
+
+            // Handle success popup
+            const successPopup = document.getElementById('success-popup');
+            if (successPopup) {
+                const closeButton = successPopup.querySelector('.close-popup-btn');
+                if (closeButton) {
+                    closeButton.addEventListener('click', function() {
+                        closeSuccessPopup();
+                    });
+                }
+            }
         });
 
         function closeSuccessPopup() {

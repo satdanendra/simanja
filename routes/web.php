@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/tim/{tim}/anggota', [TimController::class, 'simpanAnggota'])->name('tim.simpan_anggota');
     Route::delete('/tim/{tim}/anggota/{user}', [TimController::class, 'hapusAnggota'])->name('tim.anggota.destroy');
     Route::post('/tim/{tim}/rktim', [TimController::class, 'simpanRkTim'])->name('tim.simpan_rktim');
+    Route::put('/tim/{tim}/rktim/{rktim}', [TimController::class, 'updateRkTim'])->name('tim.rktim.update');
+    Route::delete('/tim/{tim}/rktim/{rktim}', [TimController::class, 'hapusRkTim'])->name('tim.rktim.destroy');
     Route::get('/master-pegawai', [MasterPegawaiController::class, 'index'])->name('master-pegawai');
     Route::get('/master-pegawai/{masterPegawai}/edit', [MasterPegawaiController::class, 'edit'])->name('master-pegawai.edit');
     Route::put('/master-pegawai/{masterPegawai}', [MasterPegawaiController::class, 'update'])->name('master-pegawai.update');

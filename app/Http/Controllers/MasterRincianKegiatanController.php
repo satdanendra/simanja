@@ -202,8 +202,8 @@ class MasterRincianKegiatanController extends Controller
                                 'proyek_kode' => $proyekData['proyek_kode']
                             ],
                             [
-                                'iku_kode' => $rkTimData['iku_kode'],
-                                'iku_urai' => $rkTimData['iku_urai'],
+                                'iku_kode' => $proyekData['iku_kode'],
+                                'iku_urai' => $proyekData['iku_urai'],
                                 'proyek_urai' => $proyekData['proyek_urai'],
                                 'rk_anggota' => $proyekData['rk_anggota'],
                                 'proyek_lapangan' => $proyekData['proyek_lapangan']
