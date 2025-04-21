@@ -12,7 +12,7 @@ class MasterRincianKegiatan extends Model
     protected $table = 'master_rincian_kegiatan';
     
     protected $fillable = [
-        'kegiatan_id',
+        'master_kegiatan_id',
         'rincian_kegiatan_kode',
         'rincian_kegiatan_urai',
         'catatan',
@@ -20,10 +20,10 @@ class MasterRincianKegiatan extends Model
     ];
     
     /**
-     * Get the Kegiatan that owns this Rincian Kegiatan.
+     * Get the Master Kegiatan that owns this Master Rincian Kegiatan.
      */
     public function kegiatan()
     {
-        return $this->belongsTo(MasterKegiatan::class, 'kegiatan_id');
+        return $this->belongsTo(MasterKegiatan::class, 'master_kegiatan_id');
     }
 }

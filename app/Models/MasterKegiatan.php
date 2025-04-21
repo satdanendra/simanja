@@ -12,25 +12,25 @@ class MasterKegiatan extends Model
     protected $table = 'master_kegiatan';
     
     protected $fillable = [
-        'proyek_id',
+        'master_proyek_id',
         'iki',
         'kegiatan_kode',
         'kegiatan_urai',
     ];
     
     /**
-     * Get the Proyek that owns this Kegiatan.
+     * Get the Master Proyek that owns this Master Kegiatan.
      */
     public function proyek()
     {
-        return $this->belongsTo(MasterProyek::class, 'proyek_id');
+        return $this->belongsTo(MasterProyek::class, 'master_proyek_id');
     }
     
     /**
-     * Get the Rincian Kegiatans for this Kegiatan.
+     * Get the Master Rincian Kegiatans for this Master Kegiatan.
      */
     public function rincianKegiatans()
     {
-        return $this->hasMany(MasterRincianKegiatan::class, 'kegiatan_id');
+        return $this->hasMany(MasterRincianKegiatan::class, 'master_kegiatan_id');
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('master_proyek', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rk_tim_id')->constrained('master_rk_tim')->onDelete('cascade');
+            $table->foreignId('master_rk_tim_id')->constrained('master_rk_tim')->onDelete('cascade');
             $table->string('iku_kode')->nullable();
             $table->text('iku_urai')->nullable();
             $table->string('proyek_kode');
@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('proyek_lapangan')->nullable();
             $table->timestamps();
             
-            // Ensure unique proyek_kode within each rk_tim
-            $table->unique(['rk_tim_id', 'proyek_kode']);
+            // Ensure unique master_proyek_kode within each master_rk_tim
+            $table->unique(['master_rk_tim_id', 'proyek_kode']);
         });
     }
 

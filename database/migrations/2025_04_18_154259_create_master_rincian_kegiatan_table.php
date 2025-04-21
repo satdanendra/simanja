@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('master_rincian_kegiatan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kegiatan_id')->constrained('master_kegiatan')->onDelete('cascade');
+            $table->foreignId('master_kegiatan_id')->constrained('master_kegiatan')->onDelete('cascade');
             $table->string('rincian_kegiatan_kode');
             $table->text('rincian_kegiatan_urai');
             $table->text('catatan')->nullable();
             $table->string('rincian_kegiatan_satuan')->nullable();
             $table->timestamps();
             
-            // Ensure unique rincian_kegiatan_kode within each kegiatan
-            $table->unique(['kegiatan_id', 'rincian_kegiatan_kode']);
+            // Ensure unique master_rincian_kegiatan_kode within each master_kegiatan
+            $table->unique(['master_kegiatan_id', 'rincian_kegiatan_kode']);
         });
     }
 

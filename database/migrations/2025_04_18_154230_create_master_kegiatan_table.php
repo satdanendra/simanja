@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('master_kegiatan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('proyek_id')->constrained('master_proyek')->onDelete('cascade');
+            $table->foreignId('master_proyek_id')->constrained('master_proyek')->onDelete('cascade');
             $table->string('iki')->nullable();
             $table->string('kegiatan_kode');
             $table->text('kegiatan_urai');
             $table->timestamps();
             
-            // Ensure unique kegiatan_kode within each proyek
-            $table->unique(['proyek_id', 'kegiatan_kode']);
+            // Ensure unique master_kegiatan_kode within each master_proyek
+            $table->unique(['master_proyek_id', 'kegiatan_kode']);
         });
     }
 

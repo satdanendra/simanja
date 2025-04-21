@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('master_rk_tim', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tim_id')->constrained('master_tim')->onDelete('cascade');
+            $table->foreignId('master_tim_id')->constrained('master_tim')->onDelete('cascade');
             $table->string('rk_tim_kode');
             $table->text('rk_tim_urai');
             $table->timestamps();
             
             // Ensure unique rk_tim_kode within each tim
-            $table->unique(['tim_id', 'rk_tim_kode']);
+            $table->unique(['master_tim_id', 'rk_tim_kode']);
         });
     }
 

@@ -12,7 +12,7 @@ class MasterProyek extends Model
     protected $table = 'master_proyek';
     
     protected $fillable = [
-        'rk_tim_id',
+        'master_rk_tim_id',
         'iku_kode',
         'iku_urai',
         'proyek_kode',
@@ -22,18 +22,18 @@ class MasterProyek extends Model
     ];
     
     /**
-     * Get the RK Tim that owns this Proyek.
+     * Get the Master RK Tim that owns this Master Proyek.
      */
     public function rkTim()
     {
-        return $this->belongsTo(MasterRkTim::class, 'rk_tim_id');
+        return $this->belongsTo(MasterRkTim::class, 'master_rk_tim_id');
     }
     
     /**
-     * Get the Kegiatans for this Proyek.
+     * Get the Master Kegiatans for this Master Proyek.
      */
     public function kegiatans()
     {
-        return $this->hasMany(MasterKegiatan::class, 'proyek_id');
+        return $this->hasMany(MasterKegiatan::class, 'master_proyek_id');
     }
 }

@@ -173,7 +173,7 @@ class TimController extends Controller
         })->get();
 
         // Ambil RK Tim yang tersedia (yang belum ditambahkan ke tim ini)
-        $availableRkTims = MasterRkTim::where('tim_id', $tim->masterTim->id)
+        $availableRkTims = MasterRkTim::where('master_tim_id', $tim->masterTim->id)
             ->whereDoesntHave('rkTims', function ($query) use ($tim) {
                 $query->where('tim_id', $tim->id);
             })->get();

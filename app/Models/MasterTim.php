@@ -17,10 +17,10 @@ class MasterTim extends Model
     ];
     
     /**
-     * Get the RK Tims for this Tim.
+     * Get the Master RK Tims for this Master Tim.
      */
     public function rkTims()
     {
-        return $this->hasMany(MasterRkTim::class, 'tim_id');
+        return $this->hasMany(MasterRkTim::class, 'master_tim_id');
     }
 }

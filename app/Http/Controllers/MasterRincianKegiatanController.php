@@ -183,10 +183,10 @@ class MasterRincianKegiatanController extends Controller
                 );
 
                 foreach ($timData['rk_tims'] as $rkTimData) {
-                    // Find or create RK Tim
+                    // Find or create Master RK Tim
                     $rkTim = MasterRkTim::firstOrCreate(
                         [
-                            'tim_id' => $tim->id,
+                            'master_tim_id' => $tim->id,
                             'rk_tim_kode' => $rkTimData['rk_tim_kode']
                         ],
                         [
@@ -195,10 +195,10 @@ class MasterRincianKegiatanController extends Controller
                     );
 
                     foreach ($rkTimData['proyeks'] as $proyekData) {
-                        // Find or create Proyek
+                        // Find or create Master Proyek
                         $proyek = MasterProyek::firstOrCreate(
                             [
-                                'rk_tim_id' => $rkTim->id,
+                                'master_rk_tim_id' => $rkTim->id,
                                 'proyek_kode' => $proyekData['proyek_kode']
                             ],
                             [
@@ -211,10 +211,10 @@ class MasterRincianKegiatanController extends Controller
                         );
 
                         foreach ($proyekData['kegiatans'] as $kegiatanData) {
-                            // Find or create Kegiatan
+                            // Find or create Master Kegiatan
                             $kegiatan = MasterKegiatan::firstOrCreate(
                                 [
-                                    'proyek_id' => $proyek->id,
+                                    'master_proyek_id' => $proyek->id,
                                     'kegiatan_kode' => $kegiatanData['kegiatan_kode']
                                 ],
                                 [
@@ -224,10 +224,10 @@ class MasterRincianKegiatanController extends Controller
                             );
 
                             foreach ($kegiatanData['rincian_kegiatans'] as $rincianData) {
-                                // Find or create Rincian Kegiatan
+                                // Find or create Master Rincian Kegiatan
                                 $rincian = MasterRincianKegiatan::firstOrCreate(
                                     [
-                                        'kegiatan_id' => $kegiatan->id,
+                                        'master_kegiatan_id' => $kegiatan->id,
                                         'rincian_kegiatan_kode' => $rincianData['rincian_kegiatan_kode']
                                     ],
                                     [

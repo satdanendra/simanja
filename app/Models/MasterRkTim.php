@@ -12,21 +12,21 @@ class MasterRkTim extends Model
     protected $table = 'master_rk_tim';
 
     protected $fillable = [
-        'tim_id',
+        'master_tim_id',
         'rk_tim_kode',
         'rk_tim_urai',
     ];
 
     /**
-     * Get the Tim that owns this RK Tim.
+     * Get the Master Tim that owns this Master RK Tim.
      */
     public function tim()
     {
-        return $this->belongsTo(MasterTim::class, 'tim_id');
+        return $this->belongsTo(MasterTim::class, 'master_tim_id');
     }
 
     /**
-     * Get the rk_tims that belong to this master_rk_tim.
+     * Get the master_rk_tims that belong to this master_rk_tim.
      */
     public function rkTims()
     {
@@ -34,10 +34,10 @@ class MasterRkTim extends Model
     }
 
     /**
-     * Get the Proyeks for this RK Tim.
+     * Get the Master Proyeks for this Master RK Tim.
      */
     public function proyeks()
     {
-        return $this->hasMany(MasterProyek::class, 'rk_tim_id');
+        return $this->hasMany(MasterProyek::class, 'master_rk_tim_id');
     }
 }
