@@ -179,7 +179,7 @@ class TimController extends Controller
             })->get();
 
         // Ambil RK Tim yang sudah ditambahkan ke tim ini
-        $rkTims = RkTim::where('tim_id', $tim->id)->with('masterRkTim')->get()->pluck('masterRkTim');
+        $rkTims = RkTim::where('tim_id', $tim->id)->with('masterRkTim')->get()->pluck('masterRkTim')->sortBy('rk_tim_kode');
 
         return view('detailtim', compact('tim', 'availableUsers', 'availableRkTims', 'rkTims'));
     }
@@ -194,20 +194,20 @@ class TimController extends Controller
             'rktim_ids' => 'nullable|array',
             'rktim_ids.*' => 'exists:master_rk_tim,id',
         ])
-        ->after(function ($validator) use ($request) {
-            // Kalau array kosong dan user ingin menambah RK Tim baru, validasi kolom baru
-            $rktimIds = $request->input('rktim_ids', []);
-            $addNew = $request->input('add_new_rktim');
-        
-            if ((empty($rktimIds) || count($rktimIds) == 0) && $addNew) {
-                if (!$request->filled('new_rk_tim_kode')) {
-                    $validator->errors()->add('new_rk_tim_kode', 'Kolom kode RK Tim wajib diisi.');
+            ->after(function ($validator) use ($request) {
+                // Kalau array kosong dan user ingin menambah RK Tim baru, validasi kolom baru
+                $rktimIds = $request->input('rktim_ids', []);
+                $addNew = $request->input('add_new_rktim');
+
+                if ((empty($rktimIds) || count($rktimIds) == 0) && $addNew) {
+                    if (!$request->filled('new_rk_tim_kode')) {
+                        $validator->errors()->add('new_rk_tim_kode', 'Kolom kode RK Tim wajib diisi.');
+                    }
+                    if (!$request->filled('new_rk_tim_urai')) {
+                        $validator->errors()->add('new_rk_tim_urai', 'Kolom uraian RK Tim wajib diisi.');
+                    }
                 }
-                if (!$request->filled('new_rk_tim_urai')) {
-                    $validator->errors()->add('new_rk_tim_urai', 'Kolom uraian RK Tim wajib diisi.');
-                }
-            }
-        });
+            });
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -234,7 +234,7 @@ class TimController extends Controller
         if ($request->add_new_rktim) {
             // Buat Master RK Tim baru
             $masterRkTim = MasterRkTim::create([
-                'tim_id' => $tim->masterTim->id, // ID Tim Master
+                'master_tim_id' => $tim->masterTim->id, // ID Tim Master
                 'rk_tim_kode' => $request->new_rk_tim_kode,
                 'rk_tim_urai' => $request->new_rk_tim_urai,
             ]);
