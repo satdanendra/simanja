@@ -819,7 +819,7 @@
                     const rkTimUrai = this.getAttribute('data-rktim-urai');
                     
                     // Set form action
-                    editRkTimForm.action = `/tim/${{{ $tim->id }}}/rktim/${rkTimId}`;
+                    editRkTimForm.action = `/tim/{{ $tim->id }}/rktim/${rkTimId}`;
                     
                     // Fill form fields
                     document.getElementById('edit_rk_tim_kode').value = rkTimKode;

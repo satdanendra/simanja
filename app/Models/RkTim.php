@@ -13,7 +13,7 @@ class RkTim extends Model
     
     protected $fillable = [
         'tim_id',
-        'rk_tim_id',
+        'master_rk_tim_id',
     ];
     
     /**
@@ -29,6 +29,6 @@ class RkTim extends Model
      */
     public function masterRkTim()
     {
-        return $this->belongsTo(MasterRkTim::class, 'rk_tim_id');
+        return $this->belongsTo(MasterRkTim::class, 'master_rk_tim_id');
     }
 }

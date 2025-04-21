@@ -30,7 +30,7 @@ class MasterRkTim extends Model
      */
     public function rkTims()
     {
-        return $this->hasMany(RkTim::class, 'rk_tim_id');
+        return $this->hasMany(RkTim::class, 'master_rk_tim_id');
     }
 
     /**

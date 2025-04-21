@@ -173,12 +173,13 @@ class TimController extends Controller
         })->get();
 
         // Ambil RK Tim yang tersedia (yang belum ditambahkan ke tim ini)
-        $availableRkTims = MasterRkTim::whereDoesntHave('rkTims', function ($query) use ($tim) {
-            $query->where('tim_id', $tim->id);
-        })->get();
+        $availableRkTims = MasterRkTim::where('tim_id', $tim->masterTim->id)
+            ->whereDoesntHave('rkTims', function ($query) use ($tim) {
+                $query->where('tim_id', $tim->id);
+            })->get();
 
         // Ambil RK Tim yang sudah ditambahkan ke tim ini
-        $rkTims = $tim->rkTims()->with('masterRkTim')->get()->pluck('masterRkTim');
+        $rkTims = RkTim::where('tim_id', $tim->id)->with('masterRkTim')->get()->pluck('masterRkTim');
 
         return view('detailtim', compact('tim', 'availableUsers', 'availableRkTims', 'rkTims'));
     }
@@ -190,12 +191,23 @@ class TimController extends Controller
     {
         // Validasi request
         $validator = Validator::make($request->all(), [
-            'rktim_ids' => 'array',
+            'rktim_ids' => 'nullable|array',
             'rktim_ids.*' => 'exists:master_rk_tim,id',
-            'add_new_rktim' => 'nullable',
-            'new_rk_tim_kode' => 'required_if:add_new_rktim,1|string|max:50',
-            'new_rk_tim_urai' => 'required_if:add_new_rktim,1|string',
-        ]);
+        ])
+        ->after(function ($validator) use ($request) {
+            // Kalau array kosong dan user ingin menambah RK Tim baru, validasi kolom baru
+            $rktimIds = $request->input('rktim_ids', []);
+            $addNew = $request->input('add_new_rktim');
+        
+            if ((empty($rktimIds) || count($rktimIds) == 0) && $addNew) {
+                if (!$request->filled('new_rk_tim_kode')) {
+                    $validator->errors()->add('new_rk_tim_kode', 'Kolom kode RK Tim wajib diisi.');
+                }
+                if (!$request->filled('new_rk_tim_urai')) {
+                    $validator->errors()->add('new_rk_tim_urai', 'Kolom uraian RK Tim wajib diisi.');
+                }
+            }
+        });
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -206,13 +218,13 @@ class TimController extends Controller
             foreach ($request->rktim_ids as $rkTimId) {
                 // Cek jika RK Tim sudah ada di tim ini
                 $exists = RkTim::where('tim_id', $tim->id)
-                    ->where('rk_tim_id', $rkTimId)
+                    ->where('master_rk_tim_id', $rkTimId)
                     ->exists();
 
                 if (!$exists) {
                     RkTim::create([
                         'tim_id' => $tim->id,
-                        'rk_tim_id' => $rkTimId,
+                        'master_rk_tim_id' => $rkTimId,
                     ]);
                 }
             }
@@ -230,7 +242,7 @@ class TimController extends Controller
             // Buat relasi RK Tim dengan Tim
             RkTim::create([
                 'tim_id' => $tim->id,
-                'rk_tim_id' => $masterRkTim->id,
+                'master_rk_tim_id' => $masterRkTim->id,
             ]);
         }
 
@@ -270,7 +282,7 @@ class TimController extends Controller
     {
         // Hapus relasi RK Tim dengan Tim
         RkTim::where('tim_id', $tim->id)
-            ->where('rk_tim_id', $rkTimId)
+            ->where('master_rk_tim_id', $rkTimId)
             ->delete();
 
         return redirect()->route('detailtim', $tim->id)

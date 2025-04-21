@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('rk_tim', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tim_id')->constrained('tims')->onDelete('cascade');
-            $table->foreignId('rk_tim_id')->constrained('master_rk_tim')->onDelete('cascade');
+            $table->foreignId('master_rk_tim_id')->constrained('master_rk_tim')->onDelete('cascade');
             $table->timestamps();
             
-            // Memastikan tidak ada duplikasi kombinasi tim_id dan rk_tim_id
-            $table->unique(['tim_id', 'rk_tim_id']);
+            // Memastikan tidak ada duplikasi kombinasi tim_id dan master_rk_tim_id
+            $table->unique(['tim_id', 'master_rk_tim_id']);
         });
     }
 
