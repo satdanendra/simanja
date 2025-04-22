@@ -193,8 +193,17 @@
                             <tbody>
                                 @foreach($rkTims as $rkTim)
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
-                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $rkTim->rk_tim_kode }}</td>
-                                    <td class="px-6 py-4">{{ $rkTim->rk_tim_urai }}</td>
+                                    <!-- Bagian dalam table di detailtim.blade.php, di kolom kode RK Tim dan Uraian RK Tim -->
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                        <a href="{{ route('detailrktim', $rkTim->id) }}" class="hover:text-blue-600 hover:underline">
+                                            {{ $rkTim->rk_tim_kode }}
+                                        </a>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <a href="{{ route('detailrktim', $rkTim->id) }}" class="hover:text-blue-600 hover:underline">
+                                            {{ $rkTim->rk_tim_urai }}
+                                        </a>
+                                    </td>
                                     <td class="px-6 py-4 text-center">
                                         <button
                                             data-modal-target="editRkTimModal"

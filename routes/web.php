@@ -6,6 +6,7 @@ use App\Http\Controllers\MasterRincianKegiatanController;
 use App\Http\Controllers\IkuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TimController;
+use App\Http\Controllers\RkTimController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/tim/{tim}/rktim', [TimController::class, 'simpanRkTim'])->name('tim.simpan_rktim');
     Route::put('/tim/{tim}/rktim/{rktim}', [TimController::class, 'updateRkTim'])->name('tim.rktim.update');
     Route::delete('/tim/{tim}/rktim/{rktim}', [TimController::class, 'hapusRkTim'])->name('tim.rktim.destroy');
+    Route::get('/rktim/{rktim}', [RkTimController::class, 'detailRkTim'])->name('detailrktim');
+    Route::post('/rktim/{rktim}/proyek', [RkTimController::class, 'simpanProyek'])->name('rktim.simpan_proyek');
+    Route::put('/rktim/{rktim}/proyek/{proyek}', [RkTimController::class, 'updateProyek'])->name('rktim.proyek.update');
+    Route::delete('/rktim/{rktim}/proyek/{proyek}', [RkTimController::class, 'hapusProyek'])->name('rktim.proyek.destroy');
     Route::get('/master-pegawai', [MasterPegawaiController::class, 'index'])->name('master-pegawai');
     Route::get('/master-pegawai/{masterPegawai}/edit', [MasterPegawaiController::class, 'edit'])->name('master-pegawai.edit');
     Route::put('/master-pegawai/{masterPegawai}', [MasterPegawaiController::class, 'update'])->name('master-pegawai.update');

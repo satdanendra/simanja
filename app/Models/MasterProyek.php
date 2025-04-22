@@ -10,7 +10,7 @@ class MasterProyek extends Model
     use HasFactory;
 
     protected $table = 'master_proyek';
-    
+
     protected $fillable = [
         'master_rk_tim_id',
         'iku_kode',
@@ -20,7 +20,7 @@ class MasterProyek extends Model
         'rk_anggota',
         'proyek_lapangan',
     ];
-    
+
     /**
      * Get the Master RK Tim that owns this Master Proyek.
      */
@@ -28,12 +28,20 @@ class MasterProyek extends Model
     {
         return $this->belongsTo(MasterRkTim::class, 'master_rk_tim_id');
     }
-    
+
     /**
      * Get the Master Kegiatans for this Master Proyek.
      */
     public function kegiatans()
     {
         return $this->hasMany(MasterKegiatan::class, 'master_proyek_id');
+    }
+
+    /**
+     * Get the Proyek records for this Master Proyek.
+     */
+    public function proyeks()
+    {
+        return $this->hasMany(Proyek::class, 'master_proyek_id');
     }
 }
