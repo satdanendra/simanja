@@ -196,12 +196,12 @@
                                     <!-- Bagian dalam table di detailtim.blade.php, di kolom kode RK Tim dan Uraian RK Tim -->
                                     <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
                                         <a href="{{ route('detailrktim', $rkTim->id) }}" class="hover:text-blue-600 hover:underline">
-                                            {{ $rkTim->rk_tim_kode }}
+                                            {{ $rkTim->masterRkTim->rk_tim_kode }}
                                         </a>
                                     </td>
                                     <td class="px-6 py-4">
                                         <a href="{{ route('detailrktim', $rkTim->id) }}" class="hover:text-blue-600 hover:underline">
-                                            {{ $rkTim->rk_tim_urai }}
+                                            {{ $rkTim->masterRkTim->rk_tim_urai }}
                                         </a>
                                     </td>
                                     <td class="px-6 py-4 text-center">

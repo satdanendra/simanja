@@ -7,14 +7,14 @@
                 </svg>
                 <div>
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                        {{ $rkTim->masterRkTim->rk_tim_kode }} - {{ $rkTim->masterRkTim->rk_tim_urai }}
+                        {{ $rktim->masterRkTim->rk_tim_kode }} - {{ $rktim->masterRkTim->rk_tim_urai }}
                     </h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        Tim: {{ $rkTim->tim->masterTim->tim_kode }} - {{ $rkTim->tim->masterTim->tim_nama }} ({{ $rkTim->tim->tahun }})
+                        Tim: {{ $rktim->tim->masterTim->tim_kode }} - {{ $rktim->tim->masterTim->tim_nama }} ({{ $rktim->tim->tahun }})
                     </p>
                 </div>
             </div>
-            <a href="{{ route('detailtim', $rkTim->tim_id) }}" class="flex items-center text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition duration-150 ease-in-out">
+            <a href="{{ route('detailtim', $rktim->tim_id) }}" class="flex items-center text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition duration-150 ease-in-out">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
                 </svg>
@@ -128,7 +128,7 @@
                                             </svg>
                                             Edit
                                         </button>
-                                        <form action="{{ route('rktim.proyek.destroy', ['rktim' => $rkTim->id, 'proyek' => $proyek->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus proyek ini?')" class="inline">
+                                        <form action="{{ route('rktim.proyek.destroy', ['rktim' => $rktim->id, 'proyek' => $proyek->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus proyek ini?')" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150">
@@ -195,13 +195,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <div>
-                                <p class="font-medium">{{ $rkTim->tim->masterTim->tim_kode }} - {{ $rkTim->tim->masterTim->tim_nama }}</p>
-                                <p class="text-sm">{{ $rkTim->masterRkTim->rk_tim_kode }} - {{ $rkTim->masterRkTim->rk_tim_urai }}</p>
+                                <p class="font-medium">{{ $rktim->tim->masterTim->tim_kode }} - {{ $rktim->tim->masterTim->tim_nama }}</p>
+                                <p class="text-sm">{{ $rktim->masterRkTim->rk_tim_kode }} - {{ $rktim->masterRkTim->rk_tim_urai }}</p>
                             </div>
                         </div>
                     </div>
 
-                    <form action="{{ route('rktim.simpan_proyek', $rkTim->id) }}" method="POST">
+                    <form action="{{ route('rktim.simpan_proyek', $rktim->id) }}" method="POST">
                         @csrf
                         <div class="mb-6">
                             <label for="proyek_search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white flex items-center">
@@ -602,7 +602,7 @@
                         const proyekLapangan = this.getAttribute('data-proyek-lapangan');
 
                         // Set form action
-                        editProyekForm.action = `/rktim/{{ $rkTim->id }}/proyek/${proyekId}`;
+                        editProyekForm.action = `/rktim/{{ $rktim->id }}/proyek/${proyekId}`;
 
                         // Fill form fields
                         document.getElementById('edit_proyek_kode').value = proyekKode || '';

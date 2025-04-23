@@ -179,7 +179,12 @@ class TimController extends Controller
             })->get();
 
         // Ambil RK Tim yang sudah ditambahkan ke tim ini
-        $rkTims = RkTim::where('tim_id', $tim->id)->with('masterRkTim')->get()->pluck('masterRkTim')->sortBy('rk_tim_kode');
+        $rkTims = RkTim::where('tim_id', $tim->id)
+            ->with('masterRkTim')
+            ->get()
+            ->sortBy(function ($rkTim) {
+                return $rkTim->masterRkTim->rk_tim_kode;
+            });
 
         return view('detailtim', compact('tim', 'availableUsers', 'availableRkTims', 'rkTims'));
     }

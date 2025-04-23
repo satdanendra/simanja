@@ -16,18 +16,19 @@ class RkTimController extends Controller
     public function detailRkTim(RkTim $rktim)
     {
         $rktim->load(['tim', 'tim.masterTim', 'masterRkTim']);
-        
+
         // Dapatkan semua proyek yang terkait dengan RK Tim ini
         $proyeks = Proyek::where('rk_tim_id', $rktim->id)->with('masterProyek')->get();
-        
+
         // Ambil Master Proyek yang tersedia (yang belum ditambahkan ke RK Tim ini)
-        $availableProyeks = MasterProyek::whereDoesntHave('proyeks', function ($query) use ($rktim) {
-            $query->where('rk_tim_id', $rktim->id);
-        })->get();
-        
+        $availableProyeks = MasterProyek::where('master_rk_tim_id', $rktim->masterRkTim->id)
+            ->whereDoesntHave('proyeks', function ($query) use ($rktim) {
+                $query->where('rk_tim_id', $rktim->id);
+            })->get();
+
         return view('detailrktim', compact('rktim', 'proyeks', 'availableProyeks'));
     }
-    
+
     /**
      * Menyimpan Proyek baru ke RK Tim
      */
@@ -97,7 +98,7 @@ class RkTimController extends Controller
         return redirect()->route('detailrktim', $rktim->id)
             ->with('success', 'Proyek berhasil ditambahkan');
     }
-    
+
     /**
      * Update Proyek
      */
