@@ -95,20 +95,20 @@
                                     <td class="px-6 py-4">{{ $proyek->masterProyek->proyek_urai }}</td>
                                     <td class="px-6 py-4">
                                         @if($proyek->masterProyek->iku_kode)
-                                            <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-blue-100 text-blue-800">
-                                                {{ $proyek->masterProyek->iku_kode }}
-                                            </span>
-                                            <div class="text-xs text-gray-500 mt-1">{{ $proyek->masterProyek->iku_urai }}</div>
+                                        <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-blue-100 text-blue-800">
+                                            {{ $proyek->masterProyek->iku_kode }}
+                                        </span>
+                                        <div class="text-xs text-gray-500 mt-1">{{ $proyek->masterProyek->iku_urai }}</div>
                                         @else
-                                            <span class="text-gray-400">-</span>
+                                        <span class="text-gray-400">-</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">{{ $proyek->masterProyek->rk_anggota ?: '-' }}</td>
                                     <td class="px-6 py-4">
                                         @if($proyek->masterProyek->proyek_lapangan)
-                                            <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800">Ya</span>
+                                        <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800">Ya</span>
                                         @else
-                                            <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-gray-100 text-gray-800">Tidak</span>
+                                        <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-gray-100 text-gray-800">Tidak</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-center">
@@ -250,11 +250,11 @@
                                         <td class="px-6 py-4">{{ $proyek->proyek_urai }}</td>
                                         <td class="px-6 py-4">
                                             @if($proyek->iku_kode)
-                                                <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-blue-100 text-blue-800">
-                                                    {{ $proyek->iku_kode }}
-                                                </span>
+                                            <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-blue-100 text-blue-800">
+                                                {{ $proyek->iku_kode }}
+                                            </span>
                                             @else
-                                                <span class="text-gray-400">-</span>
+                                            <span class="text-gray-400">-</span>
                                             @endif
                                         </td>
                                         <td class="px-6 py-4">
@@ -301,13 +301,19 @@
                                     <label for="new_proyek_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian Proyek</label>
                                     <input type="text" name="new_proyek_urai" id="new_proyek_urai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan uraian proyek">
                                 </div>
-                                <div>
-                                    <label for="new_iku_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode IKU</label>
-                                    <input type="text" name="new_iku_kode" id="new_iku_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: IKU-1.1">
-                                </div>
-                                <div>
-                                    <label for="new_iku_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian IKU</label>
-                                    <input type="text" name="new_iku_urai" id="new_iku_urai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan uraian IKU">
+                                <div class="col-span-2">
+                                    <label for="new_iku_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">IKU</label>
+                                    <select name="new_iku_id" id="new_iku_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                        <option value="">-- Pilih IKU --</option>
+                                        @foreach($ikus as $iku)
+                                        <option value="{{ $iku->id }}" data-kode="{{ $iku->iku_kode }}" data-urai="{{ $iku->iku_urai }}">
+                                            {{ $iku->iku_kode }} - {{ $iku->iku_urai }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    <!-- Hidden fields to store the selected IKU kode and urai -->
+                                    <input type="hidden" name="new_iku_kode" id="new_iku_kode">
+                                    <input type="hidden" name="new_iku_urai" id="new_iku_urai">
                                 </div>
                                 <div>
                                     <label for="new_rk_anggota" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">RK Anggota</label>
@@ -316,8 +322,8 @@
                                 <div>
                                     <label for="new_proyek_lapangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Proyek Lapangan</label>
                                     <select name="new_proyek_lapangan" id="new_proyek_lapangan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                                        <option value="0">Tidak</option>
-                                        <option value="1">Ya</option>
+                                        <option value="Tidak">Tidak</option>
+                                        <option value="Ya">Ya</option>
                                     </select>
                                 </div>
                             </div>
@@ -379,13 +385,19 @@
                                 <label for="edit_proyek_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian Proyek</label>
                                 <input type="text" name="proyek_urai" id="edit_proyek_urai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
                             </div>
-                            <div>
-                                <label for="edit_iku_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode IKU</label>
-                                <input type="text" name="iku_kode" id="edit_iku_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            </div>
-                            <div>
-                                <label for="edit_iku_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian IKU</label>
-                                <input type="text" name="iku_urai" id="edit_iku_urai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <div class="col-span-2">
+                                <label for="edit_iku_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">IKU</label>
+                                <select name="edit_iku_id" id="edit_iku_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                    <option value="">-- Pilih IKU --</option>
+                                    @foreach($ikus as $iku)
+                                    <option value="{{ $iku->id }}" data-kode="{{ $iku->iku_kode }}" data-urai="{{ $iku->iku_urai }}">
+                                        {{ $iku->iku_kode }} - {{ $iku->iku_urai }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                <!-- Hidden fields to store the selected IKU kode and urai -->
+                                <input type="hidden" name="iku_kode" id="edit_iku_kode">
+                                <input type="hidden" name="iku_urai" id="edit_iku_urai">
                             </div>
                             <div>
                                 <label for="edit_rk_anggota" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">RK Anggota</label>
@@ -394,8 +406,8 @@
                             <div>
                                 <label for="edit_proyek_lapangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Proyek Lapangan</label>
                                 <select name="proyek_lapangan" id="edit_proyek_lapangan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                                    <option value="0">Tidak</option>
-                                    <option value="1">Ya</option>
+                                    <option value="Tidak">Tidak</option>
+                                    <option value="Ya">Ya</option>
                                 </select>
                             </div>
                         </div>
@@ -423,6 +435,9 @@
             const proyekRows = document.querySelectorAll('.proyek-row');
             const newProyekCheckbox = document.querySelector('.new-proyek-checkbox');
             const newProyekForm = document.getElementById('new-proyek-form');
+            const newIkuSelect = document.getElementById('new_iku_id');
+            const newIkuKodeInput = document.getElementById('new_iku_kode');
+            const newIkuUraiInput = document.getElementById('new_iku_urai');
 
             // Fungsi untuk mengupdate counter proyek
             function updateSelectedProyekCount() {
@@ -494,6 +509,19 @@
                     if (checkboxAllProyek) {
                         checkboxAllProyek.checked = false;
                         updateSelectedProyekCount();
+                    }
+                });
+            }
+
+            if (newIkuSelect && newIkuKodeInput && newIkuUraiInput) {
+                newIkuSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        newIkuKodeInput.value = selectedOption.getAttribute('data-kode');
+                        newIkuUraiInput.value = selectedOption.getAttribute('data-urai');
+                    } else {
+                        newIkuKodeInput.value = '';
+                        newIkuUraiInput.value = '';
                     }
                 });
             }
@@ -589,6 +617,22 @@
             // Handle Edit Proyek
             const editProyekButtons = document.querySelectorAll('.edit-proyek-btn');
             const editProyekForm = document.getElementById('editProyekForm');
+            const editIkuSelect = document.getElementById('edit_iku_id');
+            const editIkuKodeInput = document.getElementById('edit_iku_kode');
+            const editIkuUraiInput = document.getElementById('edit_iku_urai');
+
+            if (editIkuSelect && editIkuKodeInput && editIkuUraiInput) {
+                editIkuSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        editIkuKodeInput.value = selectedOption.getAttribute('data-kode');
+                        editIkuUraiInput.value = selectedOption.getAttribute('data-urai');
+                    } else {
+                        editIkuKodeInput.value = '';
+                        editIkuUraiInput.value = '';
+                    }
+                });
+            }
 
             if (editProyekButtons.length > 0 && editProyekForm) {
                 editProyekButtons.forEach(button => {
@@ -610,33 +654,64 @@
                         document.getElementById('edit_iku_kode').value = ikuKode || '';
                         document.getElementById('edit_iku_urai').value = ikuUrai || '';
                         document.getElementById('edit_rk_anggota').value = rkAnggota || '';
-                        document.getElementById('edit_proyek_lapangan').value = proyekLapangan === '1' ? '1' : '0';
+                        document.getElementById('edit_proyek_lapangan').value = proyekLapangan || '';
                     });
                 });
             }
 
-            // Handle success popup
-            function closeSuccessPopup() {
-                const popup = document.getElementById('success-popup');
-                if (popup) {
-                    // Add slide-out animation
-                    popup.classList.add('transform', 'translate-x-full');
-                    popup.classList.add('opacity-0');
+            if (editProyekButtons.length > 0 && editIkuSelect) {
+                editProyekButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Get existing IKU values
+                        const ikuKode = this.getAttribute('data-iku-kode');
+                        const ikuUrai = this.getAttribute('data-iku-urai');
 
-                    setTimeout(() => {
-                        popup.style.display = 'none';
-                    }, 300);
-                }
-            }
+                        // Find matching option in dropdown
+                        let optionFound = false;
+                        for (let i = 0; i < editIkuSelect.options.length; i++) {
+                            const option = editIkuSelect.options[i];
+                            if (option.getAttribute('data-kode') === ikuKode) {
+                                editIkuSelect.selectedIndex = i;
+                                optionFound = true;
+                                break;
+                            }
+                        }
 
-            // Auto close popup after 5 seconds
-            const successPopup = document.getElementById('success-popup');
-            if (successPopup) {
-                setTimeout(() => {
-                    closeSuccessPopup();
-                }, 5000);
+                        // If no matching option, clear the selection
+                        if (!optionFound) {
+                            editIkuSelect.selectedIndex = 0;
+                        }
+
+                        // Set the hidden inputs
+                        editIkuKodeInput.value = ikuKode || '';
+                        editIkuUraiInput.value = ikuUrai || '';
+                    });
+                });
             }
         });
+
+        // Handle success popup
+        function closeSuccessPopup() {
+            const popup = document.getElementById('success-popup');
+            if (popup) {
+                // Add slide-out animation
+                popup.classList.add('transform', 'translate-x-full');
+                popup.classList.add('opacity-0');
+
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                }, 300);
+            }
+        }
+
+        // Auto close popup after 5 seconds
+        const successPopup = document.getElementById('success-popup');
+        if (successPopup) {
+            setTimeout(() => {
+                closeSuccessPopup();
+            }, 5000);
+        }
+
     </script>
 
     <style>

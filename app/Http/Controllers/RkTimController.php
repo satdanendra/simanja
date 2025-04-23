@@ -26,7 +26,10 @@ class RkTimController extends Controller
                 $query->where('rk_tim_id', $rktim->id);
             })->get();
 
-        return view('detailrktim', compact('rktim', 'proyeks', 'availableProyeks'));
+        // Ambil semua data IKU untuk dropdown
+        $ikus = \App\Models\Iku::all();
+
+        return view('detailrktim', compact('rktim', 'proyeks', 'availableProyeks', 'ikus'));
     }
 
     /**
@@ -110,7 +113,7 @@ class RkTimController extends Controller
             'iku_kode' => 'nullable|string|max:50',
             'iku_urai' => 'nullable|string',
             'rk_anggota' => 'nullable|string',
-            'proyek_lapangan' => 'required|boolean',
+            'proyek_lapangan' => 'required|string|in:Ya,Tidak',
         ]);
 
         if ($validator->fails()) {
