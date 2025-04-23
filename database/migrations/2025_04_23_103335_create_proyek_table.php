@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('rk_tim_id')->constrained('rk_tim')->onDelete('cascade');
             $table->foreignId('master_proyek_id')->constrained('master_proyek')->onDelete('cascade');
+            $table->foreignId('pic')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             
             // Add unique constraint to prevent duplicate entries

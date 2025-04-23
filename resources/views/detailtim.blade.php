@@ -255,6 +255,142 @@
         </div>
     </div>
 
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-md rounded-lg">
+                <!-- Proyek Overview Card -->
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 border-b border-blue-800">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="flex items-center text-white mb-4 md:mb-0">
+                            <div class="flex h-12 w-12 rounded-full bg-white/20 items-center justify-center mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Daftar Proyek</h3>
+                                <p class="text-blue-100 text-sm">{{ isset($proyeks) ? count($proyeks) : 0 }} Proyek</p>
+                            </div>
+                        </div>
+                        <button
+                            data-modal-target="tambahProyekModal"
+                            data-modal-toggle="tambahProyekModal"
+                            class="flex items-center px-4 py-2 bg-white text-blue-700 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 font-medium text-sm transition duration-150 ease-in-out">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Tambah Proyek
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Proyek List -->
+                <div class="p-6">
+                    @if(isset($proyeks) && count($proyeks) > 0)
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                                <tr>
+                                    <th scope="col" class="px-6 py-4">Kode Proyek</th>
+                                    <th scope="col" class="px-6 py-4">Uraian Proyek</th>
+                                    <th scope="col" class="px-6 py-4">IKU Terkait</th>
+                                    <th scope="col" class="px-6 py-4">RK Anggota</th>
+                                    <th scope="col" class="px-6 py-4">Lapangan</th>
+                                    <th scope="col" class="px-6 py-4">PIC Proyek</th>
+                                    <th scope="col" class="px-6 py-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($proyeks as $proyek)
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->proyek_kode }}</td>
+                                    <td class="px-6 py-4">{{ $proyek->masterProyek->proyek_urai }}</td>
+                                    <td class="px-6 py-4">
+                                        @if($proyek->masterProyek->iku_kode)
+                                        <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-blue-100 text-blue-800">
+                                            {{ $proyek->masterProyek->iku_kode }}
+                                        </span>
+                                        <div class="text-xs text-gray-500 mt-1">{{ $proyek->masterProyek->iku_urai }}</div>
+                                        @else
+                                        <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4">{{ $proyek->masterProyek->rk_anggota ?: '-' }}</td>
+                                    <td class="px-6 py-4">
+                                        @if($proyek->masterProyek->proyek_lapangan)
+                                        <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800">Ya</span>
+                                        @else
+                                        <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-gray-100 text-gray-800">Tidak</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        @if($proyek->picUser)
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+                                                {{ strtoupper(substr($proyek->picUser->name, 0, 1)) }}
+                                            </div>
+                                            <span class="ml-2">{{ $proyek->picUser->name }}</span>
+                                        </div>
+                                        @else
+                                        <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button
+                                            data-modal-target="editProyekModal"
+                                            data-modal-toggle="editProyekModal"
+                                            data-proyek-id="{{ $proyek->id }}"
+                                            data-proyek-kode="{{ $proyek->masterProyek->proyek_kode }}"
+                                            data-proyek-urai="{{ $proyek->masterProyek->proyek_urai }}"
+                                            data-iku-kode="{{ $proyek->masterProyek->iku_kode }}"
+                                            data-iku-urai="{{ $proyek->masterProyek->iku_urai }}"
+                                            data-rk-anggota="{{ $proyek->masterProyek->rk_anggota }}"
+                                            data-proyek-lapangan="{{ $proyek->masterProyek->proyek_lapangan }}"
+                                            data-pic-id="{{ $proyek->pic }}"
+                                            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150 mr-2 edit-proyek-btn">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                            Edit
+                                        </button>
+                                        <form action="{{ route('rktim.proyek.destroy', ['rktim' => $rktim->id, 'proyek' => $proyek->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus proyek ini?')" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    @else
+                    <div class="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 p-12">
+                        <div class="h-16 w-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Belum ada proyek</h3>
+                        <p class="text-center text-gray-500 dark:text-gray-400 mb-6 max-w-md">RK Tim ini belum memiliki proyek. Tambahkan proyek untuk mulai mengelola kegiatan.</p>
+                        <button data-modal-target="tambahProyekModal" data-modal-toggle="tambahProyekModal" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm transition duration-150 ease-in-out">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Tambah Proyek
+                        </button>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Tambah Anggota -->
     <div id="tambahAnggotaModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-w-4xl max-h-full">

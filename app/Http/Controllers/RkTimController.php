@@ -29,7 +29,10 @@ class RkTimController extends Controller
         // Ambil semua data IKU untuk dropdown
         $ikus = \App\Models\Iku::all();
 
-        return view('detailrktim', compact('rktim', 'proyeks', 'availableProyeks', 'ikus'));
+        // Ambil semua anggota tim untuk dropdown PIC proyek
+        $anggotaTim = $rktim->tim->users()->get();
+
+        return view('detailrktim', compact('rktim', 'proyeks', 'availableProyeks', 'ikus', 'anggotaTim'));
     }
 
     /**
@@ -41,6 +44,7 @@ class RkTimController extends Controller
         $validator = Validator::make($request->all(), [
             'proyek_ids' => 'nullable|array',
             'proyek_ids.*' => 'exists:master_proyek,id',
+            'new_pic_proyek' => 'nullable|exists:users,id'
         ])
             ->after(function ($validator) use ($request) {
                 // Kalau array kosong dan user ingin menambah Proyek baru, validasi kolom baru
@@ -73,6 +77,7 @@ class RkTimController extends Controller
                     Proyek::create([
                         'rk_tim_id' => $rktim->id,
                         'master_proyek_id' => $proyekId,
+                        'pic' => $request->filled('new_pic_proyek') ? $request->new_pic_proyek : null,
                     ]);
                 }
             }
@@ -95,6 +100,7 @@ class RkTimController extends Controller
             Proyek::create([
                 'rk_tim_id' => $rktim->id,
                 'master_proyek_id' => $masterProyek->id,
+                'pic' => $request->filled('new_pic_proyek') ? $request->new_pic_proyek : null,
             ]);
         }
 
@@ -114,6 +120,7 @@ class RkTimController extends Controller
             'iku_urai' => 'nullable|string',
             'rk_anggota' => 'nullable|string',
             'proyek_lapangan' => 'required|string|in:Ya,Tidak',
+            'pic' => 'nullable|exists:users,id',
         ]);
 
         if ($validator->fails()) {
@@ -132,6 +139,11 @@ class RkTimController extends Controller
             'iku_urai' => $request->iku_urai,
             'rk_anggota' => $request->rk_anggota,
             'proyek_lapangan' => $request->proyek_lapangan,
+        ]);
+
+        // Update PIC proyek
+        $proyek->update([
+            'pic' => $request->pic,
         ]);
 
         return redirect()->route('detailrktim', $rktim->id)

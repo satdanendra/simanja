@@ -14,6 +14,7 @@ class Proyek extends Model
     protected $fillable = [
         'rk_tim_id',
         'master_proyek_id',
+        'pic',
     ];
     
     /**
@@ -30,5 +31,13 @@ class Proyek extends Model
     public function masterProyek()
     {
         return $this->belongsTo(MasterProyek::class, 'master_proyek_id');
+    }
+
+    /**
+     * Get the PIC (Person In Charge) for this Proyek.
+     */
+    public function picUser()
+    {
+        return $this->belongsTo(User::class, 'pic');
     }
 }

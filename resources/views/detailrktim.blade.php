@@ -85,6 +85,7 @@
                                     <th scope="col" class="px-6 py-4">IKU Terkait</th>
                                     <th scope="col" class="px-6 py-4">RK Anggota</th>
                                     <th scope="col" class="px-6 py-4">Lapangan</th>
+                                    <th scope="col" class="px-6 py-4">PIC Proyek</th>
                                     <th scope="col" class="px-6 py-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -111,6 +112,18 @@
                                         <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-gray-100 text-gray-800">Tidak</span>
                                         @endif
                                     </td>
+                                    <td class="px-6 py-4">
+                                        @if($proyek->picUser)
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+                                                {{ strtoupper(substr($proyek->picUser->name, 0, 1)) }}
+                                            </div>
+                                            <span class="ml-2">{{ $proyek->picUser->name }}</span>
+                                        </div>
+                                        @else
+                                        <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
                                     <td class="px-6 py-4 text-center">
                                         <button
                                             data-modal-target="editProyekModal"
@@ -122,6 +135,7 @@
                                             data-iku-urai="{{ $proyek->masterProyek->iku_urai }}"
                                             data-rk-anggota="{{ $proyek->masterProyek->rk_anggota }}"
                                             data-proyek-lapangan="{{ $proyek->masterProyek->proyek_lapangan }}"
+                                            data-pic-id="{{ $proyek->pic }}"
                                             class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150 mr-2 edit-proyek-btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -326,6 +340,15 @@
                                         <option value="Ya">Ya</option>
                                     </select>
                                 </div>
+                                <div>
+                                    <label for="new_pic_proyek" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">PIC Proyek</label>
+                                    <select name="new_pic_proyek" id="new_pic_proyek" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                        <option value="">-- Pilih PIC Proyek --</option>
+                                        @foreach($anggotaTim as $anggota)
+                                        <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -408,6 +431,15 @@
                                 <select name="proyek_lapangan" id="edit_proyek_lapangan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                                     <option value="Tidak">Tidak</option>
                                     <option value="Ya">Ya</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="edit_pic_proyek" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">PIC Proyek</label>
+                                <select name="pic" id="edit_pic_proyek" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                    <option value="">-- Pilih PIC Proyek --</option>
+                                    @foreach($anggotaTim as $anggota)
+                                    <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -655,6 +687,14 @@
                         document.getElementById('edit_iku_urai').value = ikuUrai || '';
                         document.getElementById('edit_rk_anggota').value = rkAnggota || '';
                         document.getElementById('edit_proyek_lapangan').value = proyekLapangan || '';
+
+                        // Set nilai dropdown PIC proyek
+                        const picId = this.getAttribute('data-pic-id');
+                        if (picId) {
+                            document.getElementById('edit_pic_proyek').value = picId;
+                        } else {
+                            document.getElementById('edit_pic_proyek').selectedIndex = 0;
+                        }
                     });
                 });
             }
@@ -711,7 +751,6 @@
                 closeSuccessPopup();
             }, 5000);
         }
-
     </script>
 
     <style>
