@@ -353,7 +353,7 @@
                                             </svg>
                                             Edit
                                         </button>
-                                        <form action="{{ route('tim.proyek.destroy', ['rktim' => $rktim->id, 'proyek' => $proyek->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus proyek ini?')" class="inline">
+                                        <form action="{{ route('tim.proyek.destroy', ['tim' => $tim->id, 'proyek' => $proyek->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus proyek ini?')" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150">
@@ -722,21 +722,9 @@
 
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
-                    <!-- Tim and RK Tim Info Banner -->
-                    <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 rounded">
-                        <div class="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <div>
-                                <p class="font-medium">{{ $rktim->tim->masterTim->tim_kode }} - {{ $rktim->tim->masterTim->tim_nama }}</p>
-                                <p class="text-sm">{{ $rktim->masterRkTim->rk_tim_kode }} - {{ $rktim->masterRkTim->rk_tim_urai }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <form action="{{ route('rktim.simpan_proyek', $rktim->id) }}" method="POST">
+                    <form action="{{ route('tim.simpan_proyek', $tim->id) }}" method="POST">
                         @csrf
+                        <input type="hidden" name="rk_tim_id" value="{{ $selectedRkTimId ?? '' }}">
                         <div class="mb-6">
                             <label for="proyek_search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -764,6 +752,7 @@
                                                 <label for="checkbox-all-proyek" class="sr-only">checkbox</label>
                                             </div>
                                         </th>
+                                        <th scope="col" class="px-6 py-3">Kode RK Tim</th>
                                         <th scope="col" class="px-6 py-3">Kode Proyek</th>
                                         <th scope="col" class="px-6 py-3">Uraian Proyek</th>
                                         <th scope="col" class="px-6 py-3">IKU Terkait</th>
@@ -779,6 +768,9 @@
                                                 <input id="checkbox-proyek-{{ $proyek->id }}" type="checkbox" name="proyek_ids[]" value="{{ $proyek->id }}" class="proyek-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="checkbox-proyek-{{ $proyek->id }}" class="sr-only">checkbox</label>
                                             </div>
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-gray-900">
+                                            {{ $proyek->rkTim->rk_tim_kode }}
                                         </td>
                                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $proyek->proyek_kode }}</td>
                                         <td class="px-6 py-4">{{ $proyek->proyek_urai }}</td>
@@ -827,6 +819,15 @@
                         <div id="new-proyek-form" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6 hidden">
                             <h4 class="text-base font-medium text-gray-900 dark:text-white mb-4">Detail Proyek Baru</h4>
                             <div class="grid grid-cols-2 gap-4">
+                                <div class="col-span-2">
+                                    <label for="rk_tim_id" class="block mb-2 text-sm font-medium text-gray-900">RK Tim</label>
+                                    <select name="rk_tim_id" id="rk_tim_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                        <option value="">-- Pilih RK Tim --</option>
+                                        @foreach($rkTims as $rkTimItem)
+                                        <option value="{{ $rkTimItem->id }}">{{ $rkTimItem->masterRkTim->rk_tim_kode }} - {{ $rkTimItem->masterRkTim->rk_tim_urai }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div>
                                     <label for="new_proyek_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Proyek</label>
                                     <input type="text" name="new_proyek_kode" id="new_proyek_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: P1.1.1">
@@ -920,6 +921,16 @@
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="col-span-2">
+                                <label for="edit_rk_tim_id" class="block mb-2 text-sm font-medium text-gray-900">RK Tim</label>
+                                <select name="rk_tim_id" id="edit_rk_tim_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                    <option value="">-- Pilih RK Tim --</option>
+                                    @foreach($rkTims as $rkTimItem)
+                                    <option value="{{ $rkTimItem->id }}">{{ $rkTimItem->masterRkTim->rk_tim_kode }} - {{ $rkTimItem->masterRkTim->rk_tim_urai }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div>
                                 <label for="edit_proyek_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Proyek</label>
                                 <input type="text" name="proyek_kode" id="edit_proyek_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
@@ -980,13 +991,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modalBackdrop = document.getElementById('modalBackdrop');
+
+            // Variabel untuk menangani user/anggota tim
             const checkboxAll = document.getElementById('checkbox-all');
             const userCheckboxes = document.querySelectorAll('.user-checkbox');
             const selectedCount = document.getElementById('selected-count');
             const userSearch = document.getElementById('user_search');
             const userRows = document.querySelectorAll('.user-row');
 
-            // Checkbox RK Tim
+            // Variabel untuk menangani RK Tim
             const checkboxAllRkTim = document.getElementById('checkbox-all-rktim');
             const rkTimCheckboxes = document.querySelectorAll('.rktim-checkbox');
             const selectedRkTimCount = document.getElementById('selected-rktim-count');
@@ -994,6 +1007,117 @@
             const rkTimRows = document.querySelectorAll('.rktim-row');
             const newRkTimCheckbox = document.querySelector('.new-rktim-checkbox');
             const newRkTimForm = document.getElementById('new-rktim-form');
+
+            // Variabel untuk menangani Proyek
+            const checkboxAllProyek = document.getElementById('checkbox-all-proyek');
+            const proyekCheckboxes = document.querySelectorAll('.proyek-checkbox');
+            const selectedProyekCount = document.getElementById('selected-proyek-count');
+            const proyekSearch = document.getElementById('proyek_search');
+            const proyekRows = document.querySelectorAll('.proyek-row');
+            const newProyekCheckbox = document.querySelector('.new-proyek-checkbox');
+            const newProyekForm = document.getElementById('new-proyek-form');
+            const newIkuSelect = document.getElementById('new_iku_id');
+            const newIkuKodeInput = document.getElementById('new_iku_kode');
+            const newIkuUraiInput = document.getElementById('new_iku_urai');
+
+            // Fungsi untuk membuka modal
+            function openModal(targetModal) {
+                if (targetModal && modalBackdrop) {
+                    targetModal.classList.remove("hidden");
+                    targetModal.classList.add("flex", "animate-fadeIn");
+                    modalBackdrop.classList.remove("hidden");
+
+                    // Reset search and selection when opening modal
+                    if (targetModal.id === 'tambahAnggotaModal') {
+                        resetAnggotaModal();
+                    } else if (targetModal.id === 'tambahRkTimModal') {
+                        resetRkTimModal();
+                    } else if (targetModal.id === 'tambahProyekModal') {
+                        resetProyekModal();
+                    }
+                }
+            }
+
+            // Fungsi untuk menutup modal
+            function closeModal(targetModal) {
+                if (targetModal && modalBackdrop) {
+                    targetModal.classList.add('animate-fadeOut');
+
+                    setTimeout(() => {
+                        targetModal.classList.remove('animate-fadeIn', 'animate-fadeOut');
+                        targetModal.classList.add('hidden');
+                        targetModal.classList.remove('flex');
+                        modalBackdrop.classList.add('hidden');
+                    }, 200);
+                }
+            }
+
+            // Reset modal functions
+            function resetAnggotaModal() {
+                if (userSearch) {
+                    userSearch.value = '';
+                }
+                if (checkboxAll) {
+                    checkboxAll.checked = false;
+                }
+                userCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateSelectedCount();
+
+                // Show all rows
+                userRows.forEach(row => {
+                    row.style.display = '';
+                });
+            }
+
+            function resetRkTimModal() {
+                if (rkTimSearch) {
+                    rkTimSearch.value = '';
+                }
+                if (checkboxAllRkTim) {
+                    checkboxAllRkTim.checked = false;
+                }
+                rkTimCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                if (newRkTimCheckbox) {
+                    newRkTimCheckbox.checked = false;
+                }
+                if (newRkTimForm) {
+                    newRkTimForm.classList.add('hidden');
+                }
+                updateSelectedRkTimCount();
+
+                // Show all rows
+                rkTimRows.forEach(row => {
+                    row.style.display = '';
+                });
+            }
+
+            function resetProyekModal() {
+                if (proyekSearch) {
+                    proyekSearch.value = '';
+                }
+                if (checkboxAllProyek) {
+                    checkboxAllProyek.checked = false;
+                }
+                proyekCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                if (newProyekCheckbox) {
+                    newProyekCheckbox.checked = false;
+                }
+                if (newProyekForm) {
+                    newProyekForm.classList.add('hidden');
+                }
+                updateSelectedProyekCount();
+
+                // Show all rows
+                proyekRows.forEach(row => {
+                    row.style.display = '';
+                });
+            }
 
             // Fungsi untuk mengupdate counter anggota
             function updateSelectedCount() {
@@ -1029,6 +1153,25 @@
                 }
             }
 
+            // Fungsi untuk mengupdate counter proyek
+            function updateSelectedProyekCount() {
+                let count = document.querySelectorAll('.proyek-checkbox:checked').length;
+                if (newProyekCheckbox && newProyekCheckbox.checked) {
+                    count++;
+                }
+
+                if (selectedProyekCount) {
+                    selectedProyekCount.textContent = count + ' Proyek dipilih';
+                    if (count > 0) {
+                        selectedProyekCount.classList.add('bg-blue-100', 'text-blue-800');
+                        selectedProyekCount.classList.remove('bg-gray-100', 'text-gray-800');
+                    } else {
+                        selectedProyekCount.classList.remove('bg-blue-100', 'text-blue-800');
+                        selectedProyekCount.classList.add('bg-gray-100', 'text-gray-800');
+                    }
+                }
+            }
+
             // Fungsi untuk menampilkan/menyembunyikan form RK Tim baru
             if (newRkTimCheckbox && newRkTimForm) {
                 newRkTimCheckbox.addEventListener('change', function() {
@@ -1038,6 +1181,18 @@
                         newRkTimForm.classList.add('hidden');
                     }
                     updateSelectedRkTimCount();
+                });
+            }
+
+            // Fungsi untuk menampilkan/menyembunyikan form Proyek baru
+            if (newProyekCheckbox && newProyekForm) {
+                newProyekCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        newProyekForm.classList.remove('hidden');
+                    } else {
+                        newProyekForm.classList.add('hidden');
+                    }
+                    updateSelectedProyekCount();
                 });
             }
 
@@ -1067,6 +1222,19 @@
                 });
             }
 
+            // Event listener untuk checkbox utama Proyek
+            if (checkboxAllProyek) {
+                checkboxAllProyek.addEventListener('change', function() {
+                    proyekCheckboxes.forEach(checkbox => {
+                        // Hanya memilih checkbox di baris yang terlihat
+                        if (checkbox.closest('tr').style.display !== 'none') {
+                            checkbox.checked = checkboxAllProyek.checked;
+                        }
+                    });
+                    updateSelectedProyekCount();
+                });
+            }
+
             // Event listener untuk checkbox anggota individu
             userCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateSelectedCount);
@@ -1075,6 +1243,11 @@
             // Event listener untuk checkbox RK Tim individu
             rkTimCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateSelectedRkTimCount);
+            });
+
+            // Event listener untuk checkbox Proyek individu
+            proyekCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedProyekCount);
             });
 
             // Pencarian user
@@ -1126,73 +1299,48 @@
                 });
             }
 
-            // Modal functions
+            // Pencarian Proyek
+            if (proyekSearch) {
+                proyekSearch.addEventListener('input', function() {
+                    const searchValue = proyekSearch.value.toLowerCase().trim();
+
+                    proyekRows.forEach(row => {
+                        const proyekKode = row.getAttribute('data-kode');
+                        const proyekUrai = row.getAttribute('data-urai');
+
+                        if ((proyekKode && proyekKode.includes(searchValue)) ||
+                            (proyekUrai && proyekUrai.includes(searchValue))) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    // Reset checkbox utama ketika melakukan pencarian
+                    if (checkboxAllProyek) {
+                        checkboxAllProyek.checked = false;
+                        updateSelectedProyekCount();
+                    }
+                });
+            }
+
+            // IKU Select handling for new project
+            if (newIkuSelect && newIkuKodeInput && newIkuUraiInput) {
+                newIkuSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        newIkuKodeInput.value = selectedOption.getAttribute('data-kode');
+                        newIkuUraiInput.value = selectedOption.getAttribute('data-urai');
+                    } else {
+                        newIkuKodeInput.value = '';
+                        newIkuUraiInput.value = '';
+                    }
+                });
+            }
+
+            // Modal functions for opens and closes
             const modalButtons = document.querySelectorAll('[data-modal-toggle]');
             const modalCloseButtons = document.querySelectorAll('[data-modal-hide]');
-
-            // Function to open modal
-            function openModal(targetModal) {
-                if (targetModal && modalBackdrop) {
-                    targetModal.classList.remove('hidden');
-                    targetModal.classList.add('flex', 'animate-fadeIn');
-                    modalBackdrop.classList.remove('hidden');
-
-                    // Reset search and selection when opening modal
-                    if (targetModal.id === 'tambahAnggotaModal') {
-                        if (userSearch) {
-                            userSearch.value = '';
-                        }
-                        if (checkboxAll) {
-                            checkboxAll.checked = false;
-                        }
-                        userCheckboxes.forEach(checkbox => {
-                            checkbox.checked = false;
-                        });
-                        updateSelectedCount();
-
-                        // Show all rows
-                        userRows.forEach(row => {
-                            row.style.display = '';
-                        });
-                    } else if (targetModal.id === 'tambahRkTimModal') {
-                        if (rkTimSearch) {
-                            rkTimSearch.value = '';
-                        }
-                        if (checkboxAllRkTim) {
-                            checkboxAllRkTim.checked = false;
-                        }
-                        rkTimCheckboxes.forEach(checkbox => {
-                            checkbox.checked = false;
-                        });
-                        if (newRkTimCheckbox) {
-                            newRkTimCheckbox.checked = false;
-                        }
-                        if (newRkTimForm) {
-                            newRkTimForm.classList.add('hidden');
-                        }
-                        updateSelectedRkTimCount();
-
-                        // Show all rows
-                        rkTimRows.forEach(row => {
-                            row.style.display = '';
-                        });
-                    }
-                }
-            }
-
-            // Function to close modal
-            function closeModal(targetModal) {
-                if (targetModal && modalBackdrop) {
-                    targetModal.classList.add('animate-fadeOut');
-
-                    setTimeout(() => {
-                        targetModal.classList.remove('animate-fadeIn', 'animate-fadeOut');
-                        targetModal.classList.add('hidden');
-                        targetModal.classList.remove('flex');
-                        modalBackdrop.classList.add('hidden');
-                    }, 200);
-                }
-            }
 
             modalButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -1240,9 +1388,10 @@
                         const rkTimId = this.getAttribute('data-rktim-id');
                         const rkTimKode = this.getAttribute('data-rktim-kode');
                         const rkTimUrai = this.getAttribute('data-rktim-urai');
+                        const timId = document.querySelector('input[name="tim_id"]') ? document.querySelector('input[name="tim_id"]').value : '';
 
                         // Set form action
-                        editRkTimForm.action = `/tim/{{ $tim->id }}/rktim/${rkTimId}`;
+                        editRkTimForm.action = `/tim/${timId}/rktim/${rkTimId}`;
 
                         // Fill form fields
                         document.getElementById('edit_rk_tim_kode').value = rkTimKode;
@@ -1251,33 +1400,102 @@
                 });
             }
 
-            // Handle success popup
-            const successPopup = document.getElementById('success-popup');
-            if (successPopup) {
-                const closeButton = successPopup.querySelector('.close-popup-btn');
-                if (closeButton) {
-                    closeButton.addEventListener('click', function() {
-                        closeSuccessPopup();
+            // Handle Edit Proyek
+            const editProyekButtons = document.querySelectorAll('.edit-proyek-btn');
+            const editProyekForm = document.getElementById('editProyekForm');
+            const editIkuSelect = document.getElementById('edit_iku_id');
+            const editIkuKodeInput = document.getElementById('edit_iku_kode');
+            const editIkuUraiInput = document.getElementById('edit_iku_urai');
+
+            if (editIkuSelect && editIkuKodeInput && editIkuUraiInput) {
+                editIkuSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        editIkuKodeInput.value = selectedOption.getAttribute('data-kode');
+                        editIkuUraiInput.value = selectedOption.getAttribute('data-urai');
+                    } else {
+                        editIkuKodeInput.value = '';
+                        editIkuUraiInput.value = '';
+                    }
+                });
+            }
+
+            if (editProyekButtons.length > 0 && editProyekForm) {
+                editProyekButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const proyekId = this.getAttribute('data-proyek-id');
+                        const proyekKode = this.getAttribute('data-proyek-kode');
+                        const proyekUrai = this.getAttribute('data-proyek-urai');
+                        const ikuKode = this.getAttribute('data-iku-kode');
+                        const ikuUrai = this.getAttribute('data-iku-urai');
+                        const rkAnggota = this.getAttribute('data-rk-anggota');
+                        const proyekLapangan = this.getAttribute('data-proyek-lapangan');
+                        const picId = this.getAttribute('data-pic-id');
+                        const timId = document.querySelector('input[name="tim_id"]') ? document.querySelector('input[name="tim_id"]').value : '';
+
+                        // Set form action - Adapt to the appropriate route
+                        editProyekForm.action = `/tim/${timId}/proyek/${proyekId}`;
+
+                        // Fill form fields
+                        document.getElementById('edit_proyek_kode').value = proyekKode || '';
+                        document.getElementById('edit_proyek_urai').value = proyekUrai || '';
+                        document.getElementById('edit_iku_kode').value = ikuKode || '';
+                        document.getElementById('edit_iku_urai').value = ikuUrai || '';
+                        document.getElementById('edit_rk_anggota').value = rkAnggota || '';
+                        document.getElementById('edit_proyek_lapangan').value = proyekLapangan || 'Tidak';
+
+                        // Set nilai dropdown PIC proyek
+                        if (picId && document.getElementById('edit_pic_proyek')) {
+                            document.getElementById('edit_pic_proyek').value = picId;
+                        } else if (document.getElementById('edit_pic_proyek')) {
+                            document.getElementById('edit_pic_proyek').selectedIndex = 0;
+                        }
+
+                        // Handle IKU dropdown
+                        if (editIkuSelect) {
+                            // Find matching option in dropdown
+                            let optionFound = false;
+                            for (let i = 0; i < editIkuSelect.options.length; i++) {
+                                const option = editIkuSelect.options[i];
+                                if (option.getAttribute('data-kode') === ikuKode) {
+                                    editIkuSelect.selectedIndex = i;
+                                    optionFound = true;
+                                    break;
+                                }
+                            }
+
+                            // If no matching option, clear the selection
+                            if (!optionFound) {
+                                editIkuSelect.selectedIndex = 0;
+                            }
+                        }
+                        // Atur dropdown RK Tim
+                        const rkTimId = this.getAttribute('data-rktim-id');
+                        if (rkTimId && document.getElementById('edit_rk_tim_id')) {
+                            document.getElementById('edit_rk_tim_id').value = rkTimId;
+                        }
                     });
+                });
+            }
+
+            // Handle success popup
+            function closeSuccessPopup() {
+                const popup = document.getElementById('success-popup');
+                if (popup) {
+                    // Add slide-out animation
+                    popup.classList.add('transform', 'translate-x-full');
+                    popup.classList.add('opacity-0');
+
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 300);
                 }
             }
-        });
 
-        function closeSuccessPopup() {
-            const popup = document.getElementById('success-popup');
-            if (popup) {
-                // Add slide-out animation
-                popup.classList.add('transform', 'translate-x-full');
-                popup.classList.add('opacity-0');
+            // Make closeSuccessPopup function global
+            window.closeSuccessPopup = closeSuccessPopup;
 
-                setTimeout(() => {
-                    popup.style.display = 'none';
-                }, 300);
-            }
-        }
-
-        // Auto close popup setelah 5 detik
-        document.addEventListener("DOMContentLoaded", function() {
+            // Auto close popup after 5 seconds
             const successPopup = document.getElementById('success-popup');
             if (successPopup) {
                 setTimeout(() => {
