@@ -353,7 +353,7 @@
                                             </svg>
                                             Edit
                                         </button>
-                                        <form action="{{ route('rktim.proyek.destroy', ['rktim' => $rktim->id, 'proyek' => $proyek->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus proyek ini?')" class="inline">
+                                        <form action="{{ route('tim.proyek.destroy', ['rktim' => $rktim->id, 'proyek' => $proyek->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus proyek ini?')" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150">
@@ -690,6 +690,282 @@
 
                         <div class="flex items-center justify-end space-x-3">
                             <button type="button" data-modal-hide="editRkTimModal" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 transition-colors duration-150">
+                                Batal
+                            </button>
+                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-150">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Proyek -->
+    <div id="tambahProyekModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-4xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700 animate-fadeIn">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-600 bg-gradient-to-r from-blue-600 to-indigo-700">
+                    <h3 class="text-xl font-semibold text-white flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Tambah Proyek
+                    </h3>
+                    <button type="button" class="text-white bg-blue-500 hover:bg-blue-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="tambahProyekModal">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <!-- Tim and RK Tim Info Banner -->
+                    <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 rounded">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p class="font-medium">{{ $rktim->tim->masterTim->tim_kode }} - {{ $rktim->tim->masterTim->tim_nama }}</p>
+                                <p class="text-sm">{{ $rktim->masterRkTim->rk_tim_kode }} - {{ $rktim->masterRkTim->rk_tim_urai }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form action="{{ route('rktim.simpan_proyek', $rktim->id) }}" method="POST">
+                        @csrf
+                        <div class="mb-6">
+                            <label for="proyek_search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                Cari Proyek
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <input type="text" id="proyek_search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Cari berdasarkan kode atau uraian...">
+                            </div>
+                        </div>
+
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-6 max-h-96 overflow-y-auto">
+                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300 sticky top-0">
+                                    <tr>
+                                        <th scope="col" class="p-4">
+                                            <div class="flex items-center">
+                                                <input id="checkbox-all-proyek" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <label for="checkbox-all-proyek" class="sr-only">checkbox</label>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">Kode Proyek</th>
+                                        <th scope="col" class="px-6 py-3">Uraian Proyek</th>
+                                        <th scope="col" class="px-6 py-3">IKU Terkait</th>
+                                        <th scope="col" class="px-6 py-3">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(isset($availableProyeks) && count($availableProyeks) > 0)
+                                    @foreach($availableProyeks as $proyek)
+                                    <tr class="proyek-row bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150" data-kode="{{ strtolower($proyek->proyek_kode) }}" data-urai="{{ strtolower($proyek->proyek_urai) }}">
+                                        <td class="w-4 p-4">
+                                            <div class="flex items-center">
+                                                <input id="checkbox-proyek-{{ $proyek->id }}" type="checkbox" name="proyek_ids[]" value="{{ $proyek->id }}" class="proyek-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <label for="checkbox-proyek-{{ $proyek->id }}" class="sr-only">checkbox</label>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $proyek->proyek_kode }}</td>
+                                        <td class="px-6 py-4">{{ $proyek->proyek_urai }}</td>
+                                        <td class="px-6 py-4">
+                                            @if($proyek->iku_kode)
+                                            <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-blue-100 text-blue-800">
+                                                {{ $proyek->iku_kode }}
+                                            </span>
+                                            @else
+                                            <span class="text-gray-400">-</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <button type="button" data-modal-target="editProyekModal" data-modal-toggle="editProyekModal"
+                                                data-proyek-id="{{ $proyek->id }}"
+                                                data-proyek-kode="{{ $proyek->proyek_kode }}"
+                                                data-proyek-urai="{{ $proyek->proyek_urai }}"
+                                                data-iku-kode="{{ $proyek->iku_kode }}"
+                                                data-iku-urai="{{ $proyek->iku_urai }}"
+                                                data-rk-anggota="{{ $proyek->rk_anggota }}"
+                                                data-proyek-lapangan="{{ $proyek->proyek_lapangan }}"
+                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline me-3 edit-proyek-btn">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    @endif
+                                    <!-- Row for adding new Proyek -->
+                                    <tr class="bg-gray-50 border-b dark:bg-gray-700 dark:border-gray-600">
+                                        <td class="w-4 p-4">
+                                            <div class="flex items-center">
+                                                <input id="checkbox-new-proyek" type="checkbox" name="add_new_proyek" value="1" class="new-proyek-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <label for="checkbox-new-proyek" class="sr-only">checkbox</label>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4" colspan="4">
+                                            <div class="font-medium text-blue-600 dark:text-blue-500">+ Tambah Proyek baru</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Form for new Proyek (initially hidden) -->
+                        <div id="new-proyek-form" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6 hidden">
+                            <h4 class="text-base font-medium text-gray-900 dark:text-white mb-4">Detail Proyek Baru</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="new_proyek_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Proyek</label>
+                                    <input type="text" name="new_proyek_kode" id="new_proyek_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: P1.1.1">
+                                </div>
+                                <div>
+                                    <label for="new_proyek_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian Proyek</label>
+                                    <input type="text" name="new_proyek_urai" id="new_proyek_urai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan uraian proyek">
+                                </div>
+                                <div class="col-span-2">
+                                    <label for="new_iku_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">IKU</label>
+                                    <select name="new_iku_id" id="new_iku_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                        <option value="">-- Pilih IKU --</option>
+                                        @foreach($ikus as $iku)
+                                        <option value="{{ $iku->id }}" data-kode="{{ $iku->iku_kode }}" data-urai="{{ $iku->iku_urai }}">
+                                            {{ $iku->iku_kode }} - {{ $iku->iku_urai }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    <!-- Hidden fields to store the selected IKU kode and urai -->
+                                    <input type="hidden" name="new_iku_kode" id="new_iku_kode">
+                                    <input type="hidden" name="new_iku_urai" id="new_iku_urai">
+                                </div>
+                                <div>
+                                    <label for="new_rk_anggota" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">RK Anggota</label>
+                                    <input type="text" name="new_rk_anggota" id="new_rk_anggota" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: Seluruh Anggota">
+                                </div>
+                                <div>
+                                    <label for="new_proyek_lapangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Proyek Lapangan</label>
+                                    <select name="new_proyek_lapangan" id="new_proyek_lapangan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                        <option value="Tidak">Tidak</option>
+                                        <option value="Ya">Ya</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="new_pic_proyek" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">PIC Proyek</label>
+                                    <select name="new_pic_proyek" id="new_pic_proyek" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                        <option value="">-- Pilih PIC Proyek --</option>
+                                        @foreach($anggotaTim as $anggota)
+                                        <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <div class="flex items-center">
+                                <span id="selected-proyek-count" class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">0 Proyek dipilih</span>
+                            </div>
+                            <div class="flex gap-3">
+                                <button type="button" data-modal-hide="tambahProyekModal" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 transition-colors duration-150">
+                                    Batal
+                                </button>
+                                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-150 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    Tambahkan
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Proyek -->
+    <div id="editProyekModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700 animate-fadeIn">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-600 bg-gradient-to-r from-blue-600 to-indigo-700">
+                    <h3 class="text-xl font-semibold text-white flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit Proyek
+                    </h3>
+                    <button type="button" class="text-white bg-blue-500 hover:bg-blue-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="editProyekModal">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <form id="editProyekForm" action="" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="edit_proyek_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Proyek</label>
+                                <input type="text" name="proyek_kode" id="edit_proyek_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                            </div>
+                            <div>
+                                <label for="edit_proyek_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian Proyek</label>
+                                <input type="text" name="proyek_urai" id="edit_proyek_urai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                            </div>
+                            <div class="col-span-2">
+                                <label for="edit_iku_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">IKU</label>
+                                <select name="edit_iku_id" id="edit_iku_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                    <option value="">-- Pilih IKU --</option>
+                                    @foreach($ikus as $iku)
+                                    <option value="{{ $iku->id }}" data-kode="{{ $iku->iku_kode }}" data-urai="{{ $iku->iku_urai }}">
+                                        {{ $iku->iku_kode }} - {{ $iku->iku_urai }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                <!-- Hidden fields to store the selected IKU kode and urai -->
+                                <input type="hidden" name="iku_kode" id="edit_iku_kode">
+                                <input type="hidden" name="iku_urai" id="edit_iku_urai">
+                            </div>
+                            <div>
+                                <label for="edit_rk_anggota" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">RK Anggota</label>
+                                <input type="text" name="rk_anggota" id="edit_rk_anggota" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="edit_proyek_lapangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Proyek Lapangan</label>
+                                <select name="proyek_lapangan" id="edit_proyek_lapangan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                    <option value="Tidak">Tidak</option>
+                                    <option value="Ya">Ya</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="edit_pic_proyek" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">PIC Proyek</label>
+                                <select name="pic" id="edit_pic_proyek" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                    <option value="">-- Pilih PIC Proyek --</option>
+                                    @foreach($anggotaTim as $anggota)
+                                    <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end space-x-3">
+                            <button type="button" data-modal-hide="editProyekModal" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 transition-colors duration-150">
                                 Batal
                             </button>
                             <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-150">Simpan</button>
