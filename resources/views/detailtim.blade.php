@@ -339,6 +339,7 @@
                                         <button
                                             data-modal-target="editProyekModal"
                                             data-modal-toggle="editProyekModal"
+                                            data-rktim-id="{{ $proyek->rk_tim_id }}"
                                             data-proyek-id="{{ $proyek->id }}"
                                             data-proyek-kode="{{ $proyek->masterProyek->proyek_kode }}"
                                             data-proyek-urai="{{ $proyek->masterProyek->proyek_urai }}"
@@ -346,7 +347,6 @@
                                             data-iku-urai="{{ $proyek->masterProyek->iku_urai }}"
                                             data-rk-anggota="{{ $proyek->masterProyek->rk_anggota }}"
                                             data-proyek-lapangan="{{ $proyek->masterProyek->proyek_lapangan }}"
-                                            data-pic-id="{{ $proyek->pic }}"
                                             class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150 mr-2 edit-proyek-btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -724,6 +724,7 @@
                 <div class="p-6 space-y-6">
                     <form action="{{ route('tim.simpan_proyek', $tim->id) }}" method="POST">
                         @csrf
+                        <input type="hidden" name="rk_tim_id" id="selected_rk_tim_id" value="{{ $rkTims->first()->id ?? '' }}">
                         <div class="mb-6">
                             <label for="proyek_search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -785,7 +786,7 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             <select name="pic_ids[{{ $proyek->id }}]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                                                <option value="">Pilih</option>
+                                                <option value=""></option>
                                                 @foreach($anggotaTim as $anggota)
                                                 <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
                                                 @endforeach
@@ -1345,6 +1346,33 @@
                     }
                 });
             }
+
+            function checkFormValidity() {
+                const submitButton = document.querySelector('#tambahProyekModal button[type="submit"]');
+                const selectedCheckboxes = document.querySelectorAll('#tambahProyekModal .proyek-checkbox:checked').length;
+                const newProyekSelected = document.querySelector('#tambahProyekModal .new-proyek-checkbox')?.checked || false;
+
+                // Jika ada proyek yang dipilih atau opsi tambah proyek baru dicentang
+                if (selectedCheckboxes > 0 || newProyekSelected) {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    submitButton.disabled = true;
+                    submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+
+            // Tambahkan listener untuk semua checkbox
+            document.querySelectorAll('#tambahProyekModal .proyek-checkbox, #tambahProyekModal .new-proyek-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', checkFormValidity);
+            });
+
+            // Panggil saat modal terbuka
+            document.querySelectorAll('[data-modal-toggle="tambahProyekModal"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(checkFormValidity, 100);
+                });
+            });
 
             // Modal functions for opens and closes
             const modalButtons = document.querySelectorAll('[data-modal-toggle]');
