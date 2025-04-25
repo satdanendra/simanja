@@ -724,7 +724,6 @@
                 <div class="p-6 space-y-6">
                     <form action="{{ route('tim.simpan_proyek', $tim->id) }}" method="POST">
                         @csrf
-                        <input type="hidden" name="rk_tim_id" value="{{ $selectedRkTimId ?? '' }}">
                         <div class="mb-6">
                             <label for="proyek_search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -756,6 +755,7 @@
                                         <th scope="col" class="px-6 py-3">Kode Proyek</th>
                                         <th scope="col" class="px-6 py-3">Uraian Proyek</th>
                                         <th scope="col" class="px-6 py-3">IKU Terkait</th>
+                                        <th scope="col" class="px-6 py-3">PIC Proyek</th>
                                         <th scope="col" class="px-6 py-3">Aksi</th>
                                     </tr>
                                 </thead>
@@ -782,6 +782,14 @@
                                             @else
                                             <span class="text-gray-400">-</span>
                                             @endif
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <select name="pic_ids[{{ $proyek->id }}]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                                <option value="">Pilih</option>
+                                                @foreach($anggotaTim as $anggota)
+                                                <option value="{{ $anggota->id }}">{{ $anggota->name }}</option>
+                                                @endforeach
+                                            </select>
                                         </td>
                                         <td class="px-6 py-4">
                                             <button type="button" data-modal-target="editProyekModal" data-modal-toggle="editProyekModal"
