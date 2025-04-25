@@ -36,4 +36,12 @@ class MasterProyek extends Model
     {
         return $this->hasMany(MasterKegiatan::class, 'master_proyek_id');
     }
+
+    /**
+     * Get all proyeks that reference this master proyek.
+     */
+    public function proyeks()
+    {
+        return $this->hasMany(Proyek::class, 'master_proyek_id');
+    }
 }
