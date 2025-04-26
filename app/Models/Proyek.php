@@ -26,26 +26,18 @@ class Proyek extends Model
     }
     
     /**
-     * Get the Master Proyek that this Proyek references.
+     * Get the Master Proyek for this Proyek.
      */
     public function masterProyek()
     {
         return $this->belongsTo(MasterProyek::class, 'master_proyek_id');
     }
-    
+
     /**
-     * Get the user (PIC) for this Proyek.
+     * Get the PIC (Person In Charge) for this Proyek.
      */
-    public function pic()
+    public function picUser()
     {
         return $this->belongsTo(User::class, 'pic');
     }
-    
-    /**
-     * Get all the kegiatan for this proyek.
-     */
-    // public function kegiatans()
-    // {
-    //     return $this->hasMany(Kegiatan::class);
-    // }
 }
