@@ -10,14 +10,14 @@ class MasterKegiatan extends Model
     use HasFactory;
 
     protected $table = 'master_kegiatan';
-    
+
     protected $fillable = [
         'master_proyek_id',
         'iki',
         'kegiatan_kode',
         'kegiatan_urai',
     ];
-    
+
     /**
      * Get the Master Proyek that owns this Master Kegiatan.
      */
@@ -25,12 +25,20 @@ class MasterKegiatan extends Model
     {
         return $this->belongsTo(MasterProyek::class, 'master_proyek_id');
     }
-    
+
     /**
      * Get the Master Rincian Kegiatans for this Master Kegiatan.
      */
     public function rincianKegiatans()
     {
         return $this->hasMany(MasterRincianKegiatan::class, 'master_kegiatan_id');
+    }
+
+    /**
+     * Get the kegiatans for this master kegiatan.
+     */
+    public function kegiatans()
+    {
+        return $this->hasMany(Kegiatan::class, 'master_kegiatan_id');
     }
 }

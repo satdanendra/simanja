@@ -61,7 +61,7 @@
                                 <p class="text-blue-100 text-sm">{{ $proyek->masterProyek->proyek_urai }}</p>
                             </div>
                         </div>
-                        
+
                         <button
                             data-modal-target="editProyekModal"
                             data-modal-toggle="editProyekModal"
@@ -86,65 +86,65 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                             <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-4 border-b pb-2">Informasi Umum</h4>
-                            
+
                             <div class="space-y-3">
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">RK Tim</p>
                                     <p class="font-medium text-gray-900 dark:text-white">{{ $proyek->rkTim->masterRkTim->rk_tim_kode }} - {{ $proyek->rkTim->masterRkTim->rk_tim_urai }}</p>
                                 </div>
-                                
+
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Kode Proyek</p>
                                     <p class="font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->proyek_kode }}</p>
                                 </div>
-                                
+
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Uraian Proyek</p>
                                     <p class="font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->proyek_urai }}</p>
                                 </div>
-                                
+
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">IKU</p>
                                     @if($proyek->masterProyek->iku_kode)
-                                        <p class="font-medium text-gray-900 dark:text-white">
-                                            {{ $proyek->masterProyek->iku_kode }} - {{ $proyek->masterProyek->iku_urai }}
-                                        </p>
+                                    <p class="font-medium text-gray-900 dark:text-white">
+                                        {{ $proyek->masterProyek->iku_kode }} - {{ $proyek->masterProyek->iku_urai }}
+                                    </p>
                                     @else
-                                        <p class="text-gray-400 dark:text-gray-500">-</p>
+                                    <p class="text-gray-400 dark:text-gray-500">-</p>
                                     @endif
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                             <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-4 border-b pb-2">Detail Pengerjaan</h4>
-                            
+
                             <div class="space-y-3">
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">RK Anggota</p>
                                     <p class="font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->rk_anggota ?: '-' }}</p>
                                 </div>
-                                
+
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Proyek Lapangan</p>
                                     @if($proyek->masterProyek->proyek_lapangan)
-                                        <span class="font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ya</span>
+                                    <span class="font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ya</span>
                                     @else
-                                        <span class="font-medium px-2.5 py-0.5 rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Tidak</span>
+                                    <span class="font-medium px-2.5 py-0.5 rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Tidak</span>
                                     @endif
                                 </div>
-                                
+
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">PIC</p>
                                     @if($proyek->picUser)
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
-                                                {{ strtoupper(substr($proyek->picUser->name, 0, 1)) }}
-                                            </div>
-                                            <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ $proyek->picUser->name }}</span>
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+                                            {{ strtoupper(substr($proyek->picUser->name, 0, 1)) }}
                                         </div>
+                                        <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ $proyek->picUser->name }}</span>
+                                    </div>
                                     @else
-                                        <p class="text-gray-400 dark:text-gray-500">-</p>
+                                    <p class="text-gray-400 dark:text-gray-500">-</p>
                                     @endif
                                 </div>
                             </div>
@@ -608,3 +608,241 @@
 
                 // Show all rows
                 kegiatanRows.forEach(row => {
+                    row.style.display = '';
+                });
+            }
+
+            // Fungsi untuk mengupdate counter kegiatan
+            function updateSelectedKegiatanCount() {
+                let count = document.querySelectorAll('.kegiatan-checkbox:checked').length;
+                if (newKegiatanCheckbox && newKegiatanCheckbox.checked) {
+                    count++;
+                }
+
+                if (selectedKegiatanCount) {
+                    selectedKegiatanCount.textContent = count + ' Kegiatan dipilih';
+                    if (count > 0) {
+                        selectedKegiatanCount.classList.add('bg-blue-100', 'text-blue-800');
+                        selectedKegiatanCount.classList.remove('bg-gray-100', 'text-gray-800');
+                    } else {
+                        selectedKegiatanCount.classList.remove('bg-blue-100', 'text-blue-800');
+                        selectedKegiatanCount.classList.add('bg-gray-100', 'text-gray-800');
+                    }
+                }
+            }
+
+            // Fungsi untuk menampilkan/menyembunyikan form Kegiatan baru
+            if (newKegiatanCheckbox && newKegiatanForm) {
+                newKegiatanCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        newKegiatanForm.classList.remove('hidden');
+                    } else {
+                        newKegiatanForm.classList.add('hidden');
+                    }
+                    updateSelectedKegiatanCount();
+                });
+            }
+
+            // Event listener untuk checkbox utama Kegiatan
+            if (checkboxAllKegiatan) {
+                checkboxAllKegiatan.addEventListener('change', function() {
+                    kegiatanCheckboxes.forEach(checkbox => {
+                        // Hanya memilih checkbox di baris yang terlihat
+                        if (checkbox.closest('tr').style.display !== 'none') {
+                            checkbox.checked = checkboxAllKegiatan.checked;
+                        }
+                    });
+                    updateSelectedKegiatanCount();
+                });
+            }
+
+            // Event listener untuk checkbox Kegiatan individu
+            kegiatanCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedKegiatanCount);
+            });
+
+            // Pencarian Kegiatan
+            if (kegiatanSearch) {
+                kegiatanSearch.addEventListener('input', function() {
+                    const searchValue = kegiatanSearch.value.toLowerCase().trim();
+
+                    kegiatanRows.forEach(row => {
+                        const kegiatanKode = row.getAttribute('data-kode');
+                        const kegiatanUrai = row.getAttribute('data-urai');
+
+                        if ((kegiatanKode && kegiatanKode.includes(searchValue)) ||
+                            (kegiatanUrai && kegiatanUrai.includes(searchValue))) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    // Reset checkbox utama ketika melakukan pencarian
+                    if (checkboxAllKegiatan) {
+                        checkboxAllKegiatan.checked = false;
+                        updateSelectedKegiatanCount();
+                    }
+                });
+            }
+
+            // Handle Edit Proyek
+            const editProyekButtons = document.querySelectorAll('.edit-proyek-btn');
+            const editProyekForm = document.getElementById('editProyekForm');
+            const editIkuSelect = document.getElementById('edit_iku_id');
+            const editIkuKodeInput = document.getElementById('edit_iku_kode');
+            const editIkuUraiInput = document.getElementById('edit_iku_urai');
+
+            if (editIkuSelect && editIkuKodeInput && editIkuUraiInput) {
+                editIkuSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        editIkuKodeInput.value = selectedOption.getAttribute('data-kode');
+                        editIkuUraiInput.value = selectedOption.getAttribute('data-urai');
+                    } else {
+                        editIkuKodeInput.value = '';
+                        editIkuUraiInput.value = '';
+                    }
+                });
+            }
+
+            if (editProyekButtons.length > 0 && editProyekForm) {
+                editProyekButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const proyekId = this.getAttribute('data-proyek-id');
+                        const proyekKode = this.getAttribute('data-proyek-kode');
+                        const proyekUrai = this.getAttribute('data-proyek-urai');
+                        const ikuKode = this.getAttribute('data-iku-kode');
+                        const ikuUrai = this.getAttribute('data-iku-urai');
+                        const rkAnggota = this.getAttribute('data-rk-anggota');
+                        const proyekLapangan = this.getAttribute('data-proyek-lapangan');
+                        const picId = this.getAttribute('data-pic-id');
+
+                        // Fill form fields
+                        document.getElementById('edit_proyek_kode').value = proyekKode || '';
+                        document.getElementById('edit_proyek_urai').value = proyekUrai || '';
+                        document.getElementById('edit_iku_kode').value = ikuKode || '';
+                        document.getElementById('edit_iku_urai').value = ikuUrai || '';
+                        document.getElementById('edit_rk_anggota').value = rkAnggota || '';
+                        document.getElementById('edit_proyek_lapangan').value = proyekLapangan || 'Tidak';
+
+                        // Set nilai dropdown PIC proyek
+                        if (picId && document.getElementById('edit_pic_proyek')) {
+                            document.getElementById('edit_pic_proyek').value = picId;
+                        } else if (document.getElementById('edit_pic_proyek')) {
+                            document.getElementById('edit_pic_proyek').selectedIndex = 0;
+                        }
+
+                        // Handle IKU dropdown
+                        if (editIkuSelect) {
+                            // Find matching option in dropdown
+                            let optionFound = false;
+                            for (let i = 0; i < editIkuSelect.options.length; i++) {
+                                const option = editIkuSelect.options[i];
+                                if (option.getAttribute('data-kode') === ikuKode) {
+                                    editIkuSelect.selectedIndex = i;
+                                    optionFound = true;
+                                    break;
+                                }
+                            }
+
+                            // If no matching option, clear the selection
+                            if (!optionFound) {
+                                editIkuSelect.selectedIndex = 0;
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Handle Edit Kegiatan
+            const editKegiatanButtons = document.querySelectorAll('.edit-kegiatan-btn');
+            const editKegiatanForm = document.getElementById('editKegiatanForm');
+
+            if (editKegiatanButtons.length > 0 && editKegiatanForm) {
+                editKegiatanButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const kegiatanId = this.getAttribute('data-kegiatan-id');
+                        const kegiatanKode = this.getAttribute('data-kegiatan-kode');
+                        const kegiatanUrai = this.getAttribute('data-kegiatan-urai');
+                        const iki = this.getAttribute('data-iki');
+                        const proyekId = '{{ $proyek->id }}'; // Ambil dari halaman
+
+                        // Set form action
+                        editKegiatanForm.action = `/proyek/${proyekId}/kegiatan/${kegiatanId}`;
+
+                        // Fill form fields
+                        document.getElementById('edit_kegiatan_kode').value = kegiatanKode || '';
+                        document.getElementById('edit_kegiatan_urai').value = kegiatanUrai || '';
+                        document.getElementById('edit_iki').value = iki || '';
+                    });
+                });
+            }
+
+            // Modal functions for opens and closes
+            const modalButtons = document.querySelectorAll('[data-modal-toggle]');
+            const modalCloseButtons = document.querySelectorAll('[data-modal-hide]');
+
+            modalButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetModalId = button.getAttribute('data-modal-target');
+                    const targetModal = document.getElementById(targetModalId);
+                    openModal(targetModal);
+                });
+            });
+
+            modalCloseButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetModal = button.closest('.fixed.top-0.left-0.right-0.z-50');
+                    closeModal(targetModal);
+                });
+            });
+
+            // Close modal when clicking outside the modal content
+            const modals = document.querySelectorAll('.z-50.fixed');
+            modals.forEach(modal => {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+            });
+
+            // Add keydown event for Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    modals.forEach(modal => {
+                        if (!modal.classList.contains('hidden')) {
+                            closeModal(modal);
+                        }
+                    });
+                }
+            });
+
+            // Handle success popup
+            function closeSuccessPopup() {
+                const popup = document.getElementById('success-popup');
+                if (popup) {
+                    // Add slide-out animation
+                    popup.classList.add('transform', 'translate-x-full');
+                    popup.classList.add('opacity-0');
+
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 300);
+                }
+            }
+
+            // Make closeSuccessPopup function global
+            window.closeSuccessPopup = closeSuccessPopup;
+
+            // Auto close popup after 5 seconds
+            const successPopup = document.getElementById('success-popup');
+            if (successPopup) {
+                setTimeout(() => {
+                    closeSuccessPopup();
+                }, 5000);
+            }
+        });
+    </script>
+</x-app-layout>
