@@ -4,14 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Tim;
 use App\Models\RkTim;
-use App\Models\Proyek;
-use App\Models\Iku;
 use App\Models\User;
 use App\Models\Proyek;
 use App\Models\MasterProyek;
 use App\Models\MasterTim;
 use App\Models\MasterRkTim;
-use App\Models\MasterProyek;
 use App\Models\MasterDirektorat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -166,7 +163,7 @@ class TimController extends Controller
     }
 
     /**
-     * Menampilkan anggota tim, RK Tim, dan Proyek
+     * Menampilkan anggota tim dan RK Tim
      */
     public function anggota(Tim $tim)
     {
@@ -344,5 +341,185 @@ class TimController extends Controller
 
         return redirect()->route('detailtim', $tim->id)
             ->with('success', 'Anggota tim berhasil dihapus');
+    }
+
+    /**
+     * Menyimpan Proyek baru ke Tim
+     */
+    public function simpanProyek(Request $request, Tim $tim)
+    {
+        // Cek apakah ini penambahan proyek dari checkbox atau proyek baru
+        $isAddingExistingProyeks = $request->has('proyek_ids') && !empty($request->proyek_ids);
+        $isAddingNewProyek = $request->has('add_new_proyek') && $request->add_new_proyek;
+
+        // Atur validasi dinamis berdasarkan input
+        $rules = [];
+
+        // Jika menambahkan proyek baru, wajib ada rk_tim_id
+        if ($isAddingNewProyek) {
+            $rules['rk_tim_id'] = 'required|exists:rk_tim,id';
+            $rules['new_proyek_kode'] = 'required|string|max:50';
+            $rules['new_proyek_urai'] = 'required|string';
+        }
+
+        // Aturan validasi umum
+        $rules['proyek_ids'] = 'nullable|array';
+        $rules['proyek_ids.*'] = 'exists:master_proyek,id';
+        $rules['pic_ids'] = 'nullable|array';
+        $rules['pic_ids.*'] = 'nullable|exists:users,id';
+        $rules['new_pic_proyek'] = 'nullable|exists:users,id';
+
+        // Validasi data
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Proses Proyek yang dipilih dari daftar
+        if ($isAddingExistingProyeks) {
+            foreach ($request->proyek_ids as $proyekId) {
+                // Dapatkan master proyek untuk mendapatkan rk_tim_id yang tepat
+                $masterProyek = MasterProyek::findOrFail($proyekId);
+
+                // Dapatkan RK Tim yang terkait dengan master proyek dan tim saat ini
+                $rkTim = RkTim::where('tim_id', $tim->id)
+                    ->where('master_rk_tim_id', $masterProyek->master_rk_tim_id)
+                    ->first();
+
+                if (!$rkTim) {
+                    // Jika tidak ada RK Tim yang cocok, lanjutkan ke proyek berikutnya
+                    continue;
+                }
+
+                // Cek jika Proyek sudah ada di RK Tim ini
+                $exists = Proyek::where('rk_tim_id', $rkTim->id)
+                    ->where('master_proyek_id', $proyekId)
+                    ->exists();
+
+                if (!$exists) {
+                    // Set PIC jika ada
+                    $pic = null;
+                    if ($request->has('pic_ids') && isset($request->pic_ids[$proyekId])) {
+                        $pic = $request->pic_ids[$proyekId];
+                    }
+
+                    Proyek::create([
+                        'rk_tim_id' => $rkTim->id,
+                        'master_proyek_id' => $proyekId,
+                        'pic' => $pic,
+                    ]);
+                }
+            }
+        }
+
+        // Proses Proyek baru yang diinput manual
+        if ($isAddingNewProyek) {
+            // Dapatkan RK Tim
+            $rkTim = RkTim::findOrFail($request->rk_tim_id);
+
+            // Verifikasi bahwa RK Tim adalah milik Tim yang diberikan
+            if ($rkTim->tim_id != $tim->id) {
+                return redirect()->back()->with('error', 'RK Tim tidak terkait dengan Tim ini.');
+            }
+
+            // Buat Master Proyek baru
+            $masterProyek = MasterProyek::create([
+                'master_rk_tim_id' => $rkTim->masterRkTim->id,
+                'proyek_kode' => $request->new_proyek_kode,
+                'proyek_urai' => $request->new_proyek_urai,
+                'iku_kode' => $request->new_iku_kode,
+                'iku_urai' => $request->new_iku_urai,
+                'rk_anggota' => $request->new_rk_anggota,
+                'proyek_lapangan' => $request->new_proyek_lapangan,
+            ]);
+
+            // Buat relasi Proyek dengan RK Tim
+            Proyek::create([
+                'rk_tim_id' => $rkTim->id,
+                'master_proyek_id' => $masterProyek->id,
+                'pic' => $request->filled('new_pic_proyek') ? $request->new_pic_proyek : null,
+            ]);
+        }
+
+        return redirect()->route('detailtim', $tim->id)
+            ->with('success', 'Proyek berhasil ditambahkan');
+    }
+
+    /**
+     * Update Proyek
+     */
+    public function updateProyek(Request $request, Tim $tim, $proyekId)
+    {
+        $validator = Validator::make($request->all(), [
+            'rk_tim_id' => 'required|exists:rk_tim,id',  // Tambahan validasi untuk RK Tim
+            'proyek_kode' => 'required|string|max:50',
+            'proyek_urai' => 'required|string',
+            'iku_kode' => 'nullable|string|max:50',
+            'iku_urai' => 'nullable|string',
+            'rk_anggota' => 'nullable|string',
+            'proyek_lapangan' => 'required|string|in:Ya,Tidak',
+            'pic' => 'nullable|exists:users,id',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Cari proyek berdasarkan ID
+        $proyek = Proyek::findOrFail($proyekId);
+
+        // Dapatkan RK Tim baru
+        $rktim = RkTim::findOrFail($request->rk_tim_id);
+
+        // Verifikasi bahwa RK Tim baru adalah milik Tim yang diberikan
+        if ($rktim->tim_id != $tim->id) {
+            return redirect()->back()->with('error', 'RK Tim tidak terkait dengan Tim ini.');
+        }
+
+        // Verifikasi bahwa Proyek terkait dengan Tim ini (melalui RK Tim lama)
+        if ($proyek->rkTim->tim_id != $tim->id) {
+            return redirect()->back()->with('error', 'Proyek tidak terkait dengan Tim ini.');
+        }
+
+        $masterProyek = $proyek->masterProyek;
+
+        // Update data master proyek
+        $masterProyek->update([
+            'proyek_kode' => $request->proyek_kode,
+            'proyek_urai' => $request->proyek_urai,
+            'iku_kode' => $request->iku_kode,
+            'iku_urai' => $request->iku_urai,
+            'rk_anggota' => $request->rk_anggota,
+            'proyek_lapangan' => $request->proyek_lapangan,
+        ]);
+
+        // Update PIC & RK Tim proyek
+        $proyek->update([
+            'pic' => $request->pic,
+            'rk_tim_id' => $request->rk_tim_id, // Update RK Tim jika berubah
+        ]);
+
+        return redirect()->route('detailtim', $tim->id)
+            ->with('success', 'Proyek berhasil diperbarui');
+    }
+
+    /**
+     * Hapus Proyek dari Tim
+     */
+    public function hapusProyek(Tim $tim, $proyekId)
+    {
+        // Hapus relasi Proyek
+        $proyek = Proyek::findOrFail($proyekId);
+
+        // Verifikasi bahwa Proyek terkait dengan Tim ini
+        if ($proyek->rkTim->tim_id != $tim->id) {
+            return redirect()->back()->with('error', 'Proyek tidak terkait dengan Tim ini.');
+        }
+
+        $proyek->delete();
+
+        return redirect()->route('detailtim', $tim->id)
+            ->with('success', 'Proyek berhasil dihapus');
     }
 }
