@@ -291,6 +291,7 @@
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
                                 <tr>
+                                    <th scope="col" class="px-6 py-4">Kode RK Tim</th>
                                     <th scope="col" class="px-6 py-4">Kode Proyek</th>
                                     <th scope="col" class="px-6 py-4">Uraian Proyek</th>
                                     <th scope="col" class="px-6 py-4">IKU Terkait</th>
@@ -303,6 +304,7 @@
                             <tbody>
                                 @foreach($proyeks as $proyek)
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->rkTim->rk_tim_kode }}</td>
                                     <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->proyek_kode }}</td>
                                     <td class="px-6 py-4">{{ $proyek->masterProyek->proyek_urai }}</td>
                                     <td class="px-6 py-4">
@@ -724,7 +726,6 @@
                 <div class="p-6 space-y-6">
                     <form action="{{ route('tim.simpan_proyek', $tim->id) }}" method="POST">
                         @csrf
-                        <input type="hidden" name="rk_tim_id" id="selected_rk_tim_id" value="{{ $rkTims->first()->id ?? '' }}">
                         <div class="mb-6">
                             <label for="proyek_search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1203,6 +1204,22 @@
                     }
                     updateSelectedProyekCount();
                 });
+            }
+
+            const rkTimSelect = document.getElementById('rk_tim_id');
+            if (newProyekCheckbox && rkTimSelect) {
+                newProyekCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        rkTimSelect.required = true; // Wajib diisi kalau centang tambah proyek baru
+                    } else {
+                        rkTimSelect.required = false; // Tidak perlu kalau tidak centang
+                    }
+                });
+
+                // Inisialisasi awal (kalau reload page atau modal buka ulang)
+                if (!newProyekCheckbox.checked) {
+                    rkTimSelect.required = false;
+                }
             }
 
             // Event listener untuk checkbox utama anggota
