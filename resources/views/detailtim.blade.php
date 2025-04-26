@@ -625,8 +625,8 @@
                                     <td class="px-6 py-4">
                                         @php
                                         $picUser = null;
-                                        if ($proyek->pic_id) {
-                                        $picUser = App\Models\User::find($proyek->pic_id);
+                                        if ($proyek->pic) {
+                                        $picUser = App\Models\User::find($proyek->pic);
                                         }
                                         @endphp
 

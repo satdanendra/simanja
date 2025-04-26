@@ -411,7 +411,7 @@ class TimController extends Controller
                     Proyek::create([
                         'rk_tim_id' => $rkTim->id,
                         'master_proyek_id' => $proyekId,
-                        'pic_id' => $picId,
+                        'pic' => $picId,
                     ]);
                 }
             }
@@ -443,7 +443,7 @@ class TimController extends Controller
             Proyek::create([
                 'rk_tim_id' => $rkTim->id,
                 'master_proyek_id' => $masterProyek->id,
-                'pic_id' => $request->new_pic_id,
+                'pic' => $request->new_pic_id,
             ]);
         }
 
@@ -473,7 +473,7 @@ class TimController extends Controller
             'proyek_urai' => 'required|string',
             'rk_anggota' => 'nullable|string',
             'proyek_lapangan' => 'required|in:Ya,Tidak',
-            'pic_id' => 'nullable|exists:users,id',
+            'pic' => 'nullable|exists:users,id',
         ]);
 
         if ($validator->fails()) {
@@ -504,7 +504,7 @@ class TimController extends Controller
         // Update relasi proyek
         $proyek->update([
             'rk_tim_id' => $request->rk_tim_id,
-            'pic_id' => $request->pic_id,
+            'pic' => $request->pic_id,
         ]);
 
         return redirect()->route('detailtim', $tim->id)

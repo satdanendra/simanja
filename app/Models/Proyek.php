@@ -14,7 +14,7 @@ class Proyek extends Model
     protected $fillable = [
         'rk_tim_id',
         'master_proyek_id',
-        'pic_id',
+        'pic',
     ];
     
     /**
@@ -38,7 +38,7 @@ class Proyek extends Model
      */
     public function pic()
     {
-        return $this->belongsTo(User::class, 'pic_id');
+        return $this->belongsTo(User::class, 'pic');
     }
     
     /**
