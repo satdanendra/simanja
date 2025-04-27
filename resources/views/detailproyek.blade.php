@@ -14,11 +14,11 @@
                     </p>
                 </div>
             </div>
-            <a href="{{ route('detailrktim', $proyek->rk_tim_id) }}" class="flex items-center text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition duration-150 ease-in-out">
+            <a href="{{ route('detailtim', $proyek->rkTim->tim_id) }}" class="flex items-center text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition duration-150 ease-in-out">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
                 </svg>
-                Kembali ke Detail RK Tim
+                Kembali ke Detail Tim
             </a>
         </div>
     </x-slot>
@@ -57,8 +57,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold">{{ $proyek->masterProyek->proyek_kode }}</h3>
-                                <p class="text-blue-100 text-sm">{{ $proyek->masterProyek->proyek_urai }}</p>
+                                <h3 class="text-xl font-bold">Detail Proyek</h3>
                             </div>
                         </div>
 
@@ -73,6 +72,7 @@
                             data-rk-anggota="{{ $proyek->masterProyek->rk_anggota }}"
                             data-proyek-lapangan="{{ $proyek->masterProyek->proyek_lapangan }}"
                             data-pic-id="{{ $proyek->pic }}"
+                            data-rktim-id="{{ $proyek->rk_tim_id }}"
                             class="flex items-center px-4 py-2 bg-white text-blue-700 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 font-medium text-sm transition duration-150 ease-in-out edit-proyek-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -82,74 +82,90 @@
                     </div>
                 </div>
 
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                            <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-4 border-b pb-2">Informasi Umum</h4>
-
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">RK Tim</p>
-                                    <p class="font-medium text-gray-900 dark:text-white">{{ $proyek->rkTim->masterRkTim->rk_tim_kode }} - {{ $proyek->rkTim->masterRkTim->rk_tim_urai }}</p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Kode Proyek</p>
-                                    <p class="font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->proyek_kode }}</p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Uraian Proyek</p>
-                                    <p class="font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->proyek_urai }}</p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">IKU</p>
-                                    @if($proyek->masterProyek->iku_kode)
-                                    <p class="font-medium text-gray-900 dark:text-white">
-                                        {{ $proyek->masterProyek->iku_kode }} - {{ $proyek->masterProyek->iku_urai }}
-                                    </p>
-                                    @else
-                                    <p class="text-gray-400 dark:text-gray-500">-</p>
-                                    @endif
-                                </div>
+                <div class="p-10">
+                    <!-- Simple, stylish list instead of card grid -->
+                    <!-- <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 rounded mb-6">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p class="font-medium">RK Tim: {{ $proyek->rkTim->masterRkTim->rk_tim_kode }} - {{ $proyek->rkTim->masterRkTim->rk_tim_urai }}</p>
                             </div>
                         </div>
+                    </div> -->
 
-                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                            <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-4 border-b pb-2">Detail Pengerjaan</h4>
+                    <ul class="space-y-4">
+                        <li class="flex border-b border-gray-100 pb-4">
+                            <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">RK Tim</div>
+                            <div class="w-2/3 font-semibold text-gray-900 dark:text-white">{{ $proyek->rkTim->masterRkTim->rk_tim_kode }} - {{ $proyek->rkTim->masterRkTim->rk_tim_urai }}</div>
+                        </li>
 
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">RK Anggota</p>
-                                    <p class="font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->rk_anggota ?: '-' }}</p>
-                                </div>
+                        <li class="flex border-b border-gray-100 pb-4">
+                            <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">Kode Proyek</div>
+                            <div class="w-2/3 font-semibold text-gray-900 dark:text-white">{{ $proyek->masterProyek->proyek_kode }}</div>
+                        </li>
 
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Proyek Lapangan</p>
-                                    @if($proyek->masterProyek->proyek_lapangan)
-                                    <span class="font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ya</span>
-                                    @else
-                                    <span class="font-medium px-2.5 py-0.5 rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Tidak</span>
-                                    @endif
-                                </div>
+                        <li class="flex border-b border-gray-100 pb-4">
+                            <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">Uraian Proyek</div>
+                            <div class="w-2/3 text-gray-900 dark:text-white">{{ $proyek->masterProyek->proyek_urai }}</div>
+                        </li>
 
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">PIC</p>
-                                    @if($proyek->picUser)
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
-                                            {{ strtoupper(substr($proyek->picUser->name, 0, 1)) }}
-                                        </div>
-                                        <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ $proyek->picUser->name }}</span>
+                        <li class="flex border-b border-gray-100 pb-4">
+                            <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">IKU Terkait</div>
+                            <div class="w-2/3 text-gray-900 dark:text-white">{{ $proyek->masterProyek->iku_kode }} - {{ $proyek->masterProyek->iku_urai }}</div>
+                        </li>
+
+                        <!-- <li class="flex border-b border-gray-100 pb-4">
+                            <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">IKU Terkait</div>
+                            <div class="w-2/3">
+                                @if($proyek->masterProyek->iku_kode)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
+                                    {{ $proyek->masterProyek->iku_kode }}
+                                </span>
+                                <p class="mt-1 text-gray-700 dark:text-gray-300 text-sm">{{ $proyek->masterProyek->iku_urai }}</p>
+                                @else
+                                <span class="text-gray-400 dark:text-gray-500">-</span>
+                                @endif
+                            </div>
+                        </li> -->
+
+                        <li class="flex border-b border-gray-100 pb-4">
+                            <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">RK Anggota</div>
+                            <div class="w-2/3 text-gray-900 dark:text-white">{{ $proyek->masterProyek->rk_anggota ?: '-' }}</div>
+                        </li>
+
+                        <li class="flex border-b border-gray-100 pb-4">
+                            <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">Proyek Lapangan</div>
+                            <div class="w-2/3">
+                                @if($proyek->masterProyek->proyek_lapangan == 'Ya')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-m font-medium bg-green-100 text-green-800">
+                                    Ya
+                                </span>
+                                @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-800">
+                                    Tidak
+                                </span>
+                                @endif
+                            </div>
+                        </li>
+
+                        <li class="flex">
+                            <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">PIC Proyek</div>
+                            <div class="w-2/3">
+                                @if($proyek->picUser)
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+                                        {{ strtoupper(substr($proyek->picUser->name, 0, 1)) }}
                                     </div>
-                                    @else
-                                    <p class="text-gray-400 dark:text-gray-500">-</p>
-                                    @endif
+                                    <span class="ml-3 text-gray-900 dark:text-white">{{ $proyek->picUser->name }}</span>
                                 </div>
+                                @else
+                                <span class="text-gray-400 dark:text-gray-500">-</span>
+                                @endif
                             </div>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
@@ -284,6 +300,17 @@
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="col-span-2">
+                                <label for="edit_rk_tim_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">RK Tim</label>
+                                <select name="rk_tim_id" id="edit_rk_tim_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                                    <option value="">-- Pilih RK Tim --</option>
+                                    @foreach($proyek->rkTim->tim->rkTims as $rkTimItem)
+                                    <option value="{{ $rkTimItem->id }}" {{ $proyek->rk_tim_id == $rkTimItem->id ? 'selected' : '' }}>
+                                        {{ $rkTimItem->masterRkTim->rk_tim_kode }} - {{ $rkTimItem->masterRkTim->rk_tim_urai }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div>
                                 <label for="edit_proyek_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Proyek</label>
                                 <input type="text" name="proyek_kode" id="edit_proyek_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
@@ -587,51 +614,103 @@
                 }
             }
 
-            // Reset modal functions
+            // Reset functions for modals
             function resetKegiatanModal() {
-                if (kegiatanSearch) {
-                    kegiatanSearch.value = '';
+                if (document.getElementById('kegiatan_search')) {
+                    document.getElementById('kegiatan_search').value = '';
                 }
-                if (checkboxAllKegiatan) {
-                    checkboxAllKegiatan.checked = false;
+
+                if (document.getElementById('checkbox-all-kegiatan')) {
+                    document.getElementById('checkbox-all-kegiatan').checked = false;
                 }
-                kegiatanCheckboxes.forEach(checkbox => {
+
+                document.querySelectorAll('.kegiatan-checkbox').forEach(checkbox => {
                     checkbox.checked = false;
                 });
-                if (newKegiatanCheckbox) {
-                    newKegiatanCheckbox.checked = false;
+
+                if (document.querySelector('.new-kegiatan-checkbox')) {
+                    document.querySelector('.new-kegiatan-checkbox').checked = false;
                 }
-                if (newKegiatanForm) {
-                    newKegiatanForm.classList.add('hidden');
+
+                if (document.getElementById('new-kegiatan-form')) {
+                    document.getElementById('new-kegiatan-form').classList.add('hidden');
                 }
+
                 updateSelectedKegiatanCount();
 
                 // Show all rows
-                kegiatanRows.forEach(row => {
+                document.querySelectorAll('.kegiatan-row').forEach(row => {
                     row.style.display = '';
                 });
             }
 
-            // Fungsi untuk mengupdate counter kegiatan
+            // Function to update selected kegiatan count
             function updateSelectedKegiatanCount() {
                 let count = document.querySelectorAll('.kegiatan-checkbox:checked').length;
-                if (newKegiatanCheckbox && newKegiatanCheckbox.checked) {
+                if (document.querySelector('.new-kegiatan-checkbox') &&
+                    document.querySelector('.new-kegiatan-checkbox').checked) {
                     count++;
                 }
 
-                if (selectedKegiatanCount) {
-                    selectedKegiatanCount.textContent = count + ' Kegiatan dipilih';
+                if (document.getElementById('selected-kegiatan-count')) {
+                    document.getElementById('selected-kegiatan-count').textContent = count + ' Kegiatan dipilih';
                     if (count > 0) {
-                        selectedKegiatanCount.classList.add('bg-blue-100', 'text-blue-800');
-                        selectedKegiatanCount.classList.remove('bg-gray-100', 'text-gray-800');
+                        document.getElementById('selected-kegiatan-count').classList.add('bg-blue-100', 'text-blue-800');
+                        document.getElementById('selected-kegiatan-count').classList.remove('bg-gray-100', 'text-gray-800');
                     } else {
-                        selectedKegiatanCount.classList.remove('bg-blue-100', 'text-blue-800');
-                        selectedKegiatanCount.classList.add('bg-gray-100', 'text-gray-800');
+                        document.getElementById('selected-kegiatan-count').classList.remove('bg-blue-100', 'text-blue-800');
+                        document.getElementById('selected-kegiatan-count').classList.add('bg-gray-100', 'text-gray-800');
                     }
                 }
             }
 
-            // Fungsi untuk menampilkan/menyembunyikan form Kegiatan baru
+            // Handle "Tambah Kegiatan" modal
+            const tambahKegiatanModal = document.getElementById('tambahKegiatanModal');
+
+            // Setup search functionality
+            if (kegiatanSearch) {
+                kegiatanSearch.addEventListener('input', function() {
+                    const searchValue = this.value.toLowerCase().trim();
+
+                    kegiatanRows.forEach(row => {
+                        const kodeText = row.getAttribute('data-kode');
+                        const uraiText = row.getAttribute('data-urai');
+
+                        if ((kodeText && kodeText.includes(searchValue)) ||
+                            (uraiText && uraiText.includes(searchValue))) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    // Reset select all checkbox
+                    if (checkboxAllKegiatan) {
+                        checkboxAllKegiatan.checked = false;
+                        updateSelectedKegiatanCount();
+                    }
+                });
+            }
+
+            // Setup "select all" functionality
+            if (checkboxAllKegiatan) {
+                checkboxAllKegiatan.addEventListener('change', function() {
+                    kegiatanCheckboxes.forEach(checkbox => {
+                        // Only check visible rows
+                        if (checkbox.closest('tr').style.display !== 'none') {
+                            checkbox.checked = checkboxAllKegiatan.checked;
+                        }
+                    });
+                    updateSelectedKegiatanCount();
+                });
+            }
+
+            // Setup individual checkboxes
+            kegiatanCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedKegiatanCount);
+            });
+
+            // Setup new kegiatan form toggle
             if (newKegiatanCheckbox && newKegiatanForm) {
                 newKegiatanCheckbox.addEventListener('change', function() {
                     if (this.checked) {
@@ -643,48 +722,22 @@
                 });
             }
 
-            // Event listener untuk checkbox utama Kegiatan
-            if (checkboxAllKegiatan) {
-                checkboxAllKegiatan.addEventListener('change', function() {
-                    kegiatanCheckboxes.forEach(checkbox => {
-                        // Hanya memilih checkbox di baris yang terlihat
-                        if (checkbox.closest('tr').style.display !== 'none') {
-                            checkbox.checked = checkboxAllKegiatan.checked;
-                        }
-                    });
-                    updateSelectedKegiatanCount();
-                });
-            }
+            // Open modal handler
+            document.querySelectorAll('[data-modal-toggle="tambahKegiatanModal"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (tambahKegiatanModal) {
+                        // Reset the modal state
+                        resetKegiatanModal();
 
-            // Event listener untuk checkbox Kegiatan individu
-            kegiatanCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateSelectedKegiatanCount);
-            });
+                        // Show the modal
+                        tambahKegiatanModal.classList.remove('hidden');
+                        tambahKegiatanModal.classList.add('flex');
+                        document.getElementById('modalBackdrop').classList.remove('hidden');
 
-            // Pencarian Kegiatan
-            if (kegiatanSearch) {
-                kegiatanSearch.addEventListener('input', function() {
-                    const searchValue = kegiatanSearch.value.toLowerCase().trim();
-
-                    kegiatanRows.forEach(row => {
-                        const kegiatanKode = row.getAttribute('data-kode');
-                        const kegiatanUrai = row.getAttribute('data-urai');
-
-                        if ((kegiatanKode && kegiatanKode.includes(searchValue)) ||
-                            (kegiatanUrai && kegiatanUrai.includes(searchValue))) {
-                            row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-
-                    // Reset checkbox utama ketika melakukan pencarian
-                    if (checkboxAllKegiatan) {
-                        checkboxAllKegiatan.checked = false;
-                        updateSelectedKegiatanCount();
+                        console.log("Available Kegiatans:", document.querySelectorAll('.kegiatan-row').length);
                     }
                 });
-            }
+            });
 
             // Handle Edit Proyek
             const editProyekButtons = document.querySelectorAll('.edit-proyek-btn');
