@@ -191,7 +191,12 @@ class TimController extends Controller
         // Ambil semua proyek yang terkait dengan Tim ini (dari semua RK Tim)
         $proyeks = Proyek::whereHas('rkTim', function ($query) use ($tim) {
             $query->where('tim_id', $tim->id);
-        })->with(['masterProyek', 'rkTim.masterRkTim'])->get();
+        })
+            ->with(['masterProyek', 'rkTim.masterRkTim'])
+            ->join('master_proyek', 'proyek.master_proyek_id', '=', 'master_proyek.id')
+            ->orderBy('master_proyek.proyek_kode')
+            ->select('proyek.*')
+            ->get();
 
         // Ambil Master Proyek yang tersedia (yang belum ditambahkan ke RK Tim ini)
         $availableProyeks = MasterProyek::whereHas('rkTim', function ($query) use ($tim) {

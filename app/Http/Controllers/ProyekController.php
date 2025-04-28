@@ -31,7 +31,12 @@ class ProyekController extends Controller
             ->get();
 
         // Debug: Check if we're getting data
-        // dd($availableKegiatans);
+        // dd([
+        //     'master_proyek_id' => $proyek->masterProyek->id,
+        //     'existing_kegiatans' => Kegiatan::where('proyek_id', $proyek->id)->pluck('master_kegiatan_id'),
+        //     'all_master_kegiatans' => MasterKegiatan::all()->count(),
+        //     'filtered_master_kegiatans' => MasterKegiatan::where('master_proyek_id', $proyek->masterProyek->id)->count()
+        //  ]);
 
         // Ambil semua data IKU untuk dropdown
         $ikus = \App\Models\Iku::all();
@@ -204,5 +209,25 @@ class ProyekController extends Controller
 
         return redirect()->route('detailproyek', $proyek->id)
             ->with('success', 'Kegiatan berhasil diperbarui');
+    }
+
+    /**
+     * Hapus Kegiatan dari Proyek
+     */
+    public function destroyKegiatan(Proyek $proyek, $kegiatanId)
+    {
+        // Cari kegiatan berdasarkan ID
+        $kegiatan = Kegiatan::findOrFail($kegiatanId);
+
+        // Verifikasi bahwa Kegiatan terkait dengan Proyek ini
+        if ($kegiatan->proyek_id != $proyek->id) {
+            return redirect()->back()->with('error', 'Kegiatan tidak terkait dengan Proyek ini.');
+        }
+
+        // Hapus kegiatan
+        $kegiatan->delete();
+
+        return redirect()->route('detailproyek', $proyek->id)
+            ->with('success', 'Kegiatan berhasil dihapus');
     }
 }

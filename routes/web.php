@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/proyek/{proyek}', [ProyekController::class, 'update'])->name('proyek.update');
     Route::post('/proyek/{proyek}/kegiatan', [ProyekController::class, 'simpanKegiatan'])->name('proyek.simpan_kegiatan');
     Route::put('/proyek/{proyek}/kegiatan/{kegiatan}', [ProyekController::class, 'updateKegiatan'])->name('proyek.kegiatan.update');
+    Route::delete('/proyek/{proyek}/kegiatan/{kegiatan}', [ProyekController::class, 'destroyKegiatan'])->name('proyek.kegiatan.destroy');
     Route::get('/master-pegawai', [MasterPegawaiController::class, 'index'])->name('master-pegawai');
     Route::get('/master-pegawai/{masterPegawai}/edit', [MasterPegawaiController::class, 'edit'])->name('master-pegawai.edit');
     Route::put('/master-pegawai/{masterPegawai}', [MasterPegawaiController::class, 'update'])->name('master-pegawai.update');
