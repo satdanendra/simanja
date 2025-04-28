@@ -240,9 +240,9 @@
                         </svg>
                         Edit Rincian Kegiatan
                     </h3>000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        Edit Kegiatan
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Edit Kegiatan
                     </h3>
                     <button type="button" class="text-white bg-blue-500 hover:bg-blue-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="editKegiatanModal">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -291,4 +291,548 @@
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-600 bg-gradient-to-r from-blue-600 to-indigo-700">
                     <h3 class="text-xl font-semibold text-white flex items-center">
-                        <svg xmlns="http://www.w3.org/2
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit Rincian Kegiatan
+                    </h3>
+                    <button type="button" class="text-white bg-blue-500 hover:bg-blue-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="editRincianKegiatanModal">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <form id="editRincianKegiatanForm" action="{{ route('kegiatan.rincian.update', ['kegiatan' => $kegiatan->id, 'rincian' => '']) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" id="edit_rincian_id" name="rincian_id" value="">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="edit_rincian_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Rincian Kegiatan</label>
+                                <input type="text" name="rincian_kegiatan_kode" id="edit_rincian_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                            </div>
+                            <div>
+                                <label for="edit_rincian_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian Rincian Kegiatan</label>
+                                <input type="text" name="rincian_kegiatan_urai" id="edit_rincian_urai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                            </div>
+                            <div>
+                                <label for="edit_catatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Catatan</label>
+                                <textarea name="catatan" id="edit_catatan" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"></textarea>
+                            </div>
+                            <div>
+                                <label for="edit_satuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Satuan</label>
+                                <input type="text" name="satuan" id="edit_satuan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="edit_volume" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Volume</label>
+                                <input type="number" name="volume" id="edit_volume" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="edit_waktu" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Waktu (jam)</label>
+                                <input type="number" name="waktu" id="edit_waktu" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="edit_deadline" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deadline</label>
+                                <input type="date" name="deadline" id="edit_deadline" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="edit_variabel_kontrol" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Variabel Kontrol</label>
+                                <select name="is_variabel_kontrol" id="edit_variabel_kontrol" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                    <option value="0">Tidak</option>
+                                    <option value="1">Ya</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end space-x-3">
+                            <button type="button" data-modal-hide="editRincianKegiatanModal" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 transition-colors duration-150">
+                                Batal
+                            </button>
+                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-150">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Rincian Kegiatan -->
+    <div id="tambahRincianKegiatanModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-4xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700 animate-fadeIn">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-600 bg-gradient-to-r from-blue-600 to-indigo-700">
+                    <h3 class="text-xl font-semibold text-white flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Tambah Rincian Kegiatan
+                    </h3>
+                    <button type="button" class="text-white bg-blue-500 hover:bg-blue-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="tambahRincianKegiatanModal">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <!-- Kegiatan Info Banner -->
+                    <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 rounded">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p class="font-medium">{{ $kegiatan->masterKegiatan->kegiatan_kode }} - {{ $kegiatan->masterKegiatan->kegiatan_urai }}</p>
+                                <p class="text-sm">{{ $kegiatan->proyek->masterProyek->proyek_kode }} - {{ $kegiatan->proyek->masterProyek->proyek_urai }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form action="{{ route('kegiatan.simpan_rincian', $kegiatan->id) }}" method="POST">
+                        @csrf
+                        <div class="mb-6">
+                            <label for="rincian_search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                Cari Rincian Kegiatan
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <input type="text" id="rincian_search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Cari berdasarkan kode atau uraian...">
+                            </div>
+                        </div>
+
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-6 max-h-96 overflow-y-auto">
+                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300 sticky top-0">
+                                    <tr>
+                                        <th scope="col" class="p-4">
+                                            <div class="flex items-center">
+                                                <input id="checkbox-all-rincian" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <label for="checkbox-all-rincian" class="sr-only">checkbox</label>
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">Kode</th>
+                                        <th scope="col" class="px-6 py-3">Uraian</th>
+                                        <th scope="col" class="px-6 py-3">Catatan</th>
+                                        <th scope="col" class="px-6 py-3">Satuan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(isset($availableRincianKegiatans) && count($availableRincianKegiatans) > 0)
+                                    @foreach($availableRincianKegiatans as $rincian)
+                                    <tr class="rincian-row bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150" data-kode="{{ strtolower($rincian->rincian_kegiatan_kode) }}" data-urai="{{ strtolower($rincian->rincian_kegiatan_urai) }}">
+                                        <td class="w-4 p-4">
+                                            <div class="flex items-center">
+                                                <input id="checkbox-rincian-{{ $rincian->id }}" type="checkbox" name="rincian_ids[]" value="{{ $rincian->id }}" class="rincian-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <label for="checkbox-rincian-{{ $rincian->id }}" class="sr-only">checkbox</label>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $rincian->rincian_kegiatan_kode }}</td>
+                                        <td class="px-6 py-4">{{ $rincian->rincian_kegiatan_urai }}</td>
+                                        <td class="px-6 py-4">{{ $rincian->catatan ?: '-' }}</td>
+                                        <td class="px-6 py-4">{{ $rincian->rincian_kegiatan_satuan ?: '-' }}</td>
+                                    </tr>
+                                    @endforeach
+                                    @endif
+                                    <!-- Row for adding new Rincian Kegiatan -->
+                                    <tr class="bg-gray-50 border-b dark:bg-gray-700 dark:border-gray-600">
+                                        <td class="w-4 p-4">
+                                            <div class="flex items-center">
+                                                <input id="checkbox-new-rincian" type="checkbox" name="add_new_rincian" value="1" class="new-rincian-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <label for="checkbox-new-rincian" class="sr-only">checkbox</label>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4" colspan="4">
+                                            <div class="font-medium text-blue-600 dark:text-blue-500">+ Tambah Rincian Kegiatan baru</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Form for new Rincian Kegiatan (initially hidden) -->
+                        <div id="new-rincian-form" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6 hidden">
+                            <h4 class="text-base font-medium text-gray-900 dark:text-white mb-4">Detail Rincian Kegiatan Baru</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="new_rincian_kegiatan_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Rincian Kegiatan</label>
+                                    <input type="text" name="new_rincian_kegiatan_kode" id="new_rincian_kegiatan_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: RK1.1.1.1">
+                                </div>
+                                <div>
+                                    <label for="new_rincian_kegiatan_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian Rincian Kegiatan</label>
+                                    <input type="text" name="new_rincian_kegiatan_urai" id="new_rincian_kegiatan_urai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan uraian rincian kegiatan">
+                                </div>
+                                <div>
+                                    <label for="new_catatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Catatan</label>
+                                    <textarea name="new_catatan" id="new_catatan" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan catatan (opsional)"></textarea>
+                                </div>
+                                <div>
+                                    <label for="new_satuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Satuan</label>
+                                    <input type="text" name="new_satuan" id="new_satuan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: Dokumen, Orang, Jam">
+                                </div>
+                                <div>
+                                    <label for="new_volume" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Volume</label>
+                                    <input type="number" name="new_volume" id="new_volume" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: 10">
+                                </div>
+                                <div>
+                                    <label for="new_waktu" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Waktu (jam)</label>
+                                    <input type="number" name="new_waktu" id="new_waktu" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: 8">
+                                </div>
+                                <div>
+                                    <label for="new_deadline" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deadline</label>
+                                    <input type="date" name="new_deadline" id="new_deadline" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                </div>
+                                <div>
+                                    <label for="new_variabel_kontrol" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Variabel Kontrol</label>
+                                    <select name="new_is_variabel_kontrol" id="new_variabel_kontrol" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                        <option value="0">Tidak</option>
+                                        <option value="1">Ya</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <div class="flex items-center">
+                                <span id="selected-rincian-count" class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">0 Rincian Kegiatan dipilih</span>
+                            </div>
+                            <div class="flex gap-3">
+                                <button type="button" data-modal-hide="tambahRincianKegiatanModal" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 transition-colors duration-150">
+                                    Batal
+                                </button>
+                                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-150 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    Tambahkan
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalBackdrop = document.getElementById('modalBackdrop');
+
+            // Variabel untuk menangani rincian kegiatan
+            const checkboxAllRincian = document.getElementById('checkbox-all-rincian');
+            const rincianCheckboxes = document.querySelectorAll('.rincian-checkbox');
+            const selectedRincianCount = document.getElementById('selected-rincian-count');
+            const rincianSearch = document.getElementById('rincian_search');
+            const rincianRows = document.querySelectorAll('.rincian-row');
+            const newRincianCheckbox = document.querySelector('.new-rincian-checkbox');
+            const newRincianForm = document.getElementById('new-rincian-form');
+
+            // Fungsi untuk membuka modal
+            function openModal(targetModal) {
+                if (targetModal && modalBackdrop) {
+                    targetModal.classList.remove("hidden");
+                    targetModal.classList.add("flex", "animate-fadeIn");
+                    modalBackdrop.classList.remove("hidden");
+
+                    // Reset search and selection when opening modal
+                    if (targetModal.id === 'tambahRincianKegiatanModal') {
+                        resetRincianModal();
+                    }
+                }
+            }
+
+            // Fungsi untuk menutup modal
+            function closeModal(targetModal) {
+                if (targetModal && modalBackdrop) {
+                    targetModal.classList.add('animate-fadeOut');
+
+                    setTimeout(() => {
+                        targetModal.classList.remove('animate-fadeIn', 'animate-fadeOut');
+                        targetModal.classList.add('hidden');
+                        targetModal.classList.remove('flex');
+                        modalBackdrop.classList.add('hidden');
+                    }, 200);
+                }
+            }
+
+            // Reset modal functions
+            function resetRincianModal() {
+                if (rincianSearch) {
+                    rincianSearch.value = '';
+                }
+                if (checkboxAllRincian) {
+                    checkboxAllRincian.checked = false;
+                }
+                rincianCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                if (newRincianCheckbox) {
+                    newRincianCheckbox.checked = false;
+                }
+                if (newRincianForm) {
+                    newRincianForm.classList.add('hidden');
+                }
+                updateSelectedRincianCount();
+
+                // Show all rows
+                rincianRows.forEach(row => {
+                    row.style.display = '';
+                });
+            }
+
+            // Function to update selected rincian count
+            function updateSelectedRincianCount() {
+                let count = document.querySelectorAll('.rincian-checkbox:checked').length;
+                if (newRincianCheckbox && newRincianCheckbox.checked) {
+                    count++;
+                }
+
+                if (selectedRincianCount) {
+                    selectedRincianCount.textContent = count + ' Rincian Kegiatan dipilih';
+                    if (count > 0) {
+                        selectedRincianCount.classList.add('bg-blue-100', 'text-blue-800');
+                        selectedRincianCount.classList.remove('bg-gray-100', 'text-gray-800');
+                    } else {
+                        selectedRincianCount.classList.remove('bg-blue-100', 'text-blue-800');
+                        selectedRincianCount.classList.add('bg-gray-100', 'text-gray-800');
+                    }
+                }
+            }
+
+            // Set up show/hide for new rincian form
+            if (newRincianCheckbox && newRincianForm) {
+                newRincianCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        newRincianForm.classList.remove('hidden');
+                    } else {
+                        newRincianForm.classList.add('hidden');
+                    }
+                    updateSelectedRincianCount();
+                });
+            }
+
+            // Event listener for checkbox utama
+            if (checkboxAllRincian) {
+                checkboxAllRincian.addEventListener('change', function() {
+                    rincianCheckboxes.forEach(checkbox => {
+                        // Hanya memilih checkbox di baris yang terlihat
+                        if (checkbox.closest('tr').style.display !== 'none') {
+                            checkbox.checked = checkboxAllRincian.checked;
+                        }
+                    });
+                    updateSelectedRincianCount();
+                });
+            }
+
+            // Event listener untuk checkbox individu
+            rincianCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedRincianCount);
+            });
+
+            // Pencarian rincian kegiatan
+            if (rincianSearch) {
+                rincianSearch.addEventListener('input', function() {
+                    const searchValue = this.value.toLowerCase().trim();
+
+                    rincianRows.forEach(row => {
+                        const kodeText = row.getAttribute('data-kode');
+                        const uraiText = row.getAttribute('data-urai');
+
+                        if ((kodeText && kodeText.includes(searchValue)) ||
+                            (uraiText && uraiText.includes(searchValue))) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    // Reset checkbox utama ketika melakukan pencarian
+                    if (checkboxAllRincian) {
+                        checkboxAllRincian.checked = false;
+                        updateSelectedRincianCount();
+                    }
+                });
+            }
+
+            // Handle Edit Kegiatan
+            const editKegiatanButtons = document.querySelectorAll('.edit-kegiatan-btn');
+            const editKegiatanForm = document.getElementById('editKegiatanForm');
+
+            if (editKegiatanButtons.length > 0 && editKegiatanForm) {
+                editKegiatanButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const kegiatanId = this.getAttribute('data-kegiatan-id');
+                        const kegiatanKode = this.getAttribute('data-kegiatan-kode');
+                        const kegiatanUrai = this.getAttribute('data-kegiatan-urai');
+                        const iki = this.getAttribute('data-iki');
+
+                        // Fill form fields
+                        document.getElementById('edit_kegiatan_kode').value = kegiatanKode || '';
+                        document.getElementById('edit_kegiatan_urai').value = kegiatanUrai || '';
+                        document.getElementById('edit_iki').value = iki || '';
+                    });
+                });
+            }
+
+            // Handle Edit Rincian Kegiatan
+            const editRincianButtons = document.querySelectorAll('.edit-rincian-btn');
+            const editRincianForm = document.getElementById('editRincianKegiatanForm');
+
+            if (editRincianButtons.length > 0 && editRincianForm) {
+                editRincianButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const rincianId = this.getAttribute('data-rincian-id');
+                        const rincianKode = this.getAttribute('data-rincian-kode');
+                        const rincianUrai = this.getAttribute('data-rincian-urai');
+                        const catatan = this.getAttribute('data-catatan');
+                        const satuan = this.getAttribute('data-satuan');
+                        const volume = this.getAttribute('data-volume');
+                        const waktu = this.getAttribute('data-waktu');
+                        const deadline = this.getAttribute('data-deadline');
+                        const variabelKontrol = this.getAttribute('data-variabel-kontrol');
+                        const kegiatanId = '{{ $kegiatan->id }}'; // Ambil dari halaman
+
+                        // Update form action URL
+                        const formAction = editRincianForm.action;
+                        editRincianForm.action = formAction.replace('rincian=', 'rincian=' + rincianId);
+
+                        // Set hidden input value
+                        document.getElementById('edit_rincian_id').value = rincianId;
+
+                        // Fill form fields
+                        document.getElementById('edit_rincian_kode').value = rincianKode || '';
+                        document.getElementById('edit_rincian_urai').value = rincianUrai || '';
+                        document.getElementById('edit_catatan').value = catatan || '';
+                        document.getElementById('edit_satuan').value = satuan || '';
+                        document.getElementById('edit_volume').value = volume || '';
+                        document.getElementById('edit_waktu').value = waktu || '';
+
+                        if (deadline) {
+                            // Format tanggal untuk input date
+                            const dateObj = new Date(deadline);
+                            const formattedDate = dateObj.toISOString().split('T')[0];
+                            document.getElementById('edit_deadline').value = formattedDate;
+                        } else {
+                            document.getElementById('edit_deadline').value = '';
+                        }
+
+                        document.getElementById('edit_variabel_kontrol').value = variabelKontrol === '1' ? '1' : '0';
+                    });
+                });
+            }
+
+            // Modal functions for opens and closes
+            const modalButtons = document.querySelectorAll('[data-modal-toggle]');
+            const modalCloseButtons = document.querySelectorAll('[data-modal-hide]');
+
+            modalButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetModalId = button.getAttribute('data-modal-target');
+                    const targetModal = document.getElementById(targetModalId);
+                    openModal(targetModal);
+                });
+            });
+
+            modalCloseButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetModal = button.closest('.fixed.top-0.left-0.right-0.z-50');
+                    closeModal(targetModal);
+                });
+            });
+
+            // Close modal when clicking outside the modal content
+            const modals = document.querySelectorAll('.z-50.fixed');
+            modals.forEach(modal => {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+            });
+
+            // Add keydown event for Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    modals.forEach(modal => {
+                        if (!modal.classList.contains('hidden')) {
+                            closeModal(modal);
+                        }
+                    });
+                }
+            });
+
+            // Handle success popup
+            function closeSuccessPopup() {
+                const popup = document.getElementById('success-popup');
+                if (popup) {
+                    // Add slide-out animation
+                    popup.classList.add('transform', 'translate-x-full');
+                    popup.classList.add('opacity-0');
+
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 300);
+                }
+            }
+
+            // Make closeSuccessPopup function global
+            window.closeSuccessPopup = closeSuccessPopup;
+
+            // Auto close popup after 5 seconds
+            const successPopup = document.getElementById('success-popup');
+            if (successPopup) {
+                setTimeout(() => {
+                    closeSuccessPopup();
+                }, 5000);
+            }
+        });
+    </script>
+
+    <style>
+        /* Animation classes */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+
+        .animate-fadeOut {
+            animation: fadeOut 0.2s ease-in forwards;
+        }
+    </style>
+</x-app-layout>
