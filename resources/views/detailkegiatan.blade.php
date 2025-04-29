@@ -305,7 +305,7 @@
 
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
-                    <form id="editRincianKegiatanForm" action="{{ route('kegiatan.rincian.update', ['kegiatan' => $kegiatan->id, 'rincian' => '']) }}" method="POST">
+                    <form id="editRincianKegiatanForm" method="POST">
                         @csrf
                         @method('PUT')
                         <input type="hidden" id="edit_rincian_id" name="rincian_id" value="">
@@ -539,6 +539,7 @@
             const rincianRows = document.querySelectorAll('.rincian-row');
             const newRincianCheckbox = document.querySelector('.new-rincian-checkbox');
             const newRincianForm = document.getElementById('new-rincian-form');
+            const editButtons = document.querySelectorAll('.edit-rincian-btn');
 
             // Fungsi untuk membuka modal
             function openModal(targetModal) {
@@ -705,9 +706,9 @@
                         const variabelKontrol = this.getAttribute('data-variabel-kontrol');
                         const kegiatanId = '{{ $kegiatan->id }}'; // Ambil dari halaman
 
-                        // Update form action URL
-                        const formAction = editRincianForm.action;
-                        editRincianForm.action = formAction.replace('rincian=', 'rincian=' + rincianId);
+                        // Update form action
+                        const editForm = document.getElementById('editRincianKegiatanForm');
+                        editForm.action = `/kegiatan/${kegiatanId}/rincian/${rincianId}`;
 
                         // Set hidden input value
                         document.getElementById('edit_rincian_id').value = rincianId;

@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TimController;
 use App\Http\Controllers\RkTimController;
 use App\Http\Controllers\ProyekController;
+use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/proyek/{proyek}/kegiatan', [ProyekController::class, 'simpanKegiatan'])->name('proyek.simpan_kegiatan');
     Route::put('/proyek/{proyek}/kegiatan/{kegiatan}', [ProyekController::class, 'updateKegiatan'])->name('proyek.kegiatan.update');
     Route::delete('/proyek/{proyek}/kegiatan/{kegiatan}', [ProyekController::class, 'destroyKegiatan'])->name('proyek.kegiatan.destroy');
+    Route::get('/kegiatan/{kegiatan}', [KegiatanController::class, 'detailKegiatan'])->name('detailkegiatan');
+    Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
+    Route::post('/kegiatan/{kegiatan}/rincian', [KegiatanController::class, 'simpanRincian'])->name('kegiatan.simpan_rincian');
+    Route::put('/kegiatan/{kegiatan}/rincian/{rincian}', [KegiatanController::class, 'updateRincian'])->name('kegiatan.rincian.update');
+    Route::delete('/kegiatan/{kegiatan}/rincian/{rincian}', [KegiatanController::class, 'destroyRincian'])->name('kegiatan.rincian.destroy');
     Route::get('/master-pegawai', [MasterPegawaiController::class, 'index'])->name('master-pegawai');
     Route::get('/master-pegawai/{masterPegawai}/edit', [MasterPegawaiController::class, 'edit'])->name('master-pegawai.edit');
     Route::put('/master-pegawai/{masterPegawai}', [MasterPegawaiController::class, 'update'])->name('master-pegawai.update');
