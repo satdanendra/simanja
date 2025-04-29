@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlokasiRincianKegiatanController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterDirektoratController;
 use App\Http\Controllers\MasterRincianKegiatanController;
@@ -58,6 +59,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/kegiatan/{kegiatan}/rincian', [KegiatanController::class, 'simpanRincian'])->name('kegiatan.simpan_rincian');
     Route::put('/kegiatan/{kegiatan}/rincian/{rincian}', [KegiatanController::class, 'updateRincian'])->name('kegiatan.rincian.update');
     Route::delete('/kegiatan/{kegiatan}/rincian/{rincian}', [KegiatanController::class, 'destroyRincian'])->name('kegiatan.rincian.destroy');
+    Route::get('/rincian-kegiatan/{rincianKegiatan}', [AlokasiRincianKegiatanController::class, 'detailRincianKegiatan'])->name('detailrinciankegiatan');
+    Route::post('/rincian-kegiatan/{rincianKegiatan}/alokasi', [AlokasiRincianKegiatanController::class, 'storeAlokasi'])->name('alokasi.store');
+    Route::put('/alokasi/{alokasi}', [AlokasiRincianKegiatanController::class, 'updateAlokasi'])->name('alokasi.update');
+    Route::delete('/alokasi/{alokasi}', [AlokasiRincianKegiatanController::class, 'destroyAlokasi'])->name('alokasi.destroy');
     Route::get('/master-pegawai', [MasterPegawaiController::class, 'index'])->name('master-pegawai');
     Route::get('/master-pegawai/{masterPegawai}/edit', [MasterPegawaiController::class, 'edit'])->name('master-pegawai.edit');
     Route::put('/master-pegawai/{masterPegawai}', [MasterPegawaiController::class, 'update'])->name('master-pegawai.update');

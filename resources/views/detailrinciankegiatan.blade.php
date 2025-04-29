@@ -84,7 +84,7 @@
 
                 <div class="p-8">
                     <!-- Path information -->
-                    <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-6 rounded">
+                    <!-- <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-6 rounded">
                         <div class="flex items-start">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -98,7 +98,7 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Detail information -->
                     <ul class="space-y-4">
@@ -148,9 +148,9 @@
                             <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">Deadline</div>
                             <div class="w-2/3 text-gray-900 dark:text-white">
                                 @if($rincianKegiatan->deadline)
-                                    {{ $rincianKegiatan->deadline->format('d F Y') }}
+                                {{ $rincianKegiatan->deadline->format('d F Y') }}
                                 @else
-                                    <span class="text-gray-500">Tidak ada</span>
+                                <span class="text-gray-500">Tidak ada</span>
                                 @endif
                             </div>
                         </li>
@@ -166,9 +166,9 @@
                             <div class="w-1/3 font-medium text-gray-600 dark:text-gray-400">Variabel Kontrol</div>
                             <div class="w-2/3">
                                 @if($rincianKegiatan->is_variabel_kontrol)
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ya</span>
+                                <span class="px-2 inline-flex text-m leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ya</span>
                                 @else
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Tidak</span>
+                                <span class="px-2 inline-flex text-m leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Tidak</span>
                                 @endif
                             </div>
                         </li>
@@ -191,14 +191,13 @@
                                 <p class="text-blue-100 text-sm">{{ count($existingAllocations) }} Alokasi</p>
                             </div>
                         </div>
-                        <button 
-                            data-modal-target="tambahAlokasiModal" 
-                            data-modal-toggle="tambahAlokasiModal" 
+                        <button
+                            data-modal-target="tambahAlokasiModal"
+                            data-modal-toggle="tambahAlokasiModal"
                             class="flex items-center px-4 py-2 bg-white text-blue-700 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 font-medium text-sm transition duration-150 ease-in-out"
                             {{ $remainingVolume <= 0 ? 'disabled' : '' }}
                             {{ $remainingVolume <= 0 ? 'title=Volume sudah teralokasi sepenuhnya' : '' }}
-                            {{ $remainingVolume <= 0 ? 'class=flex items-center px-4 py-2 bg-gray-200 text-gray-500 rounded-lg cursor-not-allowed' : '' }}
-                        >
+                            {{ $remainingVolume <= 0 ? 'class=flex items-center px-4 py-2 bg-gray-200 text-gray-500 rounded-lg cursor-not-allowed' : '' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
@@ -232,14 +231,410 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="font-medium">{{ $alokasi->target }}</span> 
+                                        <span class="font-medium">{{ $alokasi->target }}</span>
                                         <span class="text-gray-500">{{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}</span>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="font-medium">{{ $alokasi->realisasi ?? 0 }}</span> 
+                                        <span class="font-medium">{{ $alokasi->realisasi ?? 0 }}</span>
                                         <span class="text-gray-500">{{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}</span>
                                     </td>
                                     <td class="px-6 py-4">
                                         @php
-                                            $percent = ($alokasi->target > 0) ? min(100, ($alokasi->realisasi / $alokasi->target) * 100) : 0;
-                                            $color =
+                                        $percent = ($alokasi->target > 0) ? min(100, ($alokasi->realisasi / $alokasi->target) * 100) : 0;
+                                        @endphp
+                                        <span class="font-medium">{{ number_format($percent, 1) }}%</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button
+                                            data-modal-target="editAlokasiModal"
+                                            data-modal-toggle="editAlokasiModal"
+                                            data-alokasi-id="{{ $alokasi->id }}"
+                                            data-pelaksana-id="{{ $alokasi->pelaksana_id }}"
+                                            data-pelaksana-name="{{ $alokasi->pelaksana->name }}"
+                                            data-target="{{ $alokasi->target }}"
+                                            data-realisasi="{{ $alokasi->realisasi }}"
+                                            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150 mr-2 edit-alokasi-btn">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                            Edit
+                                        </button>
+                                        <form action="{{ route('alokasi.destroy', $alokasi->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus alokasi ini?')" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    @else
+                    <div class="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 p-12">
+                        <div class="h-16 w-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Belum ada alokasi</h3>
+                        <p class="text-center text-gray-500 dark:text-gray-400 mb-6 max-w-md">Rincian kegiatan ini belum memiliki alokasi. Tambahkan alokasi untuk menetapkan volume tugas kepada anggota tim.</p>
+                        <button data-modal-target="tambahAlokasiModal" data-modal-toggle="tambahAlokasiModal" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm transition duration-150 ease-in-out" {{ $remainingVolume <= 0 ? 'disabled' : '' }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Tambah Alokasi
+                        </button>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Alokasi -->
+    <div id="tambahAlokasiModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700 animate-fadeIn">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-600 bg-gradient-to-r from-blue-600 to-indigo-700">
+                    <h3 class="text-xl font-semibold text-white flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Tambah Alokasi
+                    </h3>
+                    <button type="button" class="text-white bg-blue-500 hover:bg-blue-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="tambahAlokasiModal">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <!-- Ringkasan Volume -->
+                    <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 rounded">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p class="font-medium">Informasi Volume</p>
+                                <p class="text-sm">
+                                    Volume Total: <span class="font-semibold">{{ $rincianKegiatan->volume ?? '0' }} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}</span><br>
+                                    Volume Teralokasi: <span class="font-semibold">{{ $totalAllocated }} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}</span><br>
+                                    Sisa Volume: <span class="font-semibold">{{ $remainingVolume }} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form action="{{ route('alokasi.store', $rincianKegiatan->id) }}" method="POST">
+                        @csrf
+                        <div class="space-y-4">
+                            <div>
+                                <label for="pelaksana_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pilih Pelaksana</label>
+                                <select name="pelaksana_id" id="pelaksana_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                                    <option value="">-- Pilih Pelaksana --</option>
+                                    @foreach($timMembers as $member)
+                                    <option value="{{ $member->id }}">{{ $member->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="target" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Target Volume</label>
+                                <div class="flex">
+                                    <input type="number" step="0.01" min="0.01" max="{{ $remainingVolume }}" name="target" id="target" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan target volume" required>
+                                    <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-l-0 border-gray-300 rounded-r-lg dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}
+                                    </span>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Maksimal target: {{ $remainingVolume }} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end space-x-3 mt-6">
+                            <button type="button" data-modal-hide="tambahAlokasiModal" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 transition-colors duration-150">
+                                Batal
+                            </button>
+                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-150">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Alokasi -->
+    <div id="editAlokasiModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700 animate-fadeIn">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-600 bg-gradient-to-r from-blue-600 to-indigo-700">
+                    <h3 class="text-xl font-semibold text-white flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit Alokasi
+                    </h3>
+                    <button type="button" class="text-white bg-blue-500 hover:bg-blue-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="editAlokasiModal">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <!-- Ringkasan Volume -->
+                    <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 rounded">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p class="font-medium">Informasi Volume</p>
+                                <p class="text-sm">
+                                    Volume Total: <span class="font-semibold">{{ $rincianKegiatan->volume ?? '0' }} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}</span><br>
+                                    Volume Teralokasi: <span class="font-semibold">{{ $totalAllocated }} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}</span><br>
+                                    Sisa Volume: <span class="font-semibold">{{ $remainingVolume }} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="editAlokasiForm" action="" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="space-y-4">
+                            <div>
+                                <label for="edit_pelaksana" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pelaksana</label>
+                                <input type="text" id="edit_pelaksana" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400" disabled>
+                            </div>
+
+                            <div>
+                                <label for="edit_target" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Target Volume</label>
+                                <div class="flex">
+                                    <input type="number" step="0.01" min="0.01" name="target" id="edit_target" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                                    <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-l-0 border-gray-300 rounded-r-lg dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}
+                                    </span>
+                                </div>
+                                <p id="edit_max_target" class="mt-1 text-sm text-gray-500">Nilai maksimal akan dihitung berdasarkan alokasi saat ini</p>
+                            </div>
+
+                            <div>
+                                <label for="edit_realisasi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Realisasi Volume</label>
+                                <div class="flex">
+                                    <input type="number" step="0.01" min="0" name="realisasi" id="edit_realisasi" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                    <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-l-0 border-gray-300 rounded-r-lg dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}
+                                    </span>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Masukkan nilai yang sudah terealisasi</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end space-x-3 mt-6">
+                            <button type="button" data-modal-hide="editAlokasiModal" class="text-gray-700 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 transition-colors duration-150">
+                                Batal
+                            </button>
+                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-150">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalBackdrop = document.getElementById('modalBackdrop');
+
+            // Fungsi untuk membuka modal
+            function openModal(targetModal) {
+                if (targetModal && modalBackdrop) {
+                    targetModal.classList.remove("hidden");
+                    targetModal.classList.add("flex", "animate-fadeIn");
+                    modalBackdrop.classList.remove("hidden");
+                }
+            }
+
+            // Fungsi untuk menutup modal
+            function closeModal(targetModal) {
+                if (targetModal && modalBackdrop) {
+                    targetModal.classList.add('animate-fadeOut');
+
+                    setTimeout(() => {
+                        targetModal.classList.remove('animate-fadeIn', 'animate-fadeOut');
+                        targetModal.classList.add('hidden');
+                        targetModal.classList.remove('flex');
+                        modalBackdrop.classList.add('hidden');
+                    }, 200);
+                }
+            }
+
+            // Handle Edit Alokasi
+            const editAlokasiButtons = document.querySelectorAll('.edit-alokasi-btn');
+            const editAlokasiForm = document.getElementById('editAlokasiForm');
+
+            if (editAlokasiButtons.length > 0 && editAlokasiForm) {
+                editAlokasiButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const alokasiId = this.getAttribute('data-alokasi-id');
+                        const pelaksanaName = this.getAttribute('data-pelaksana-name');
+                        const target = this.getAttribute('data-target');
+                        const realisasi = this.getAttribute('data-realisasi');
+                        const currentRemainingVolume = parseFloat('{{ $remainingVolume }}');
+                        const maxTarget = parseFloat(target) + currentRemainingVolume;
+
+                        // Update form action
+                        editAlokasiForm.action = `/alokasi/${alokasiId}`;
+
+                        // Fill form fields
+                        document.getElementById('edit_pelaksana').value = pelaksanaName;
+                        document.getElementById('edit_target').value = target;
+                        document.getElementById('edit_target').max = maxTarget;
+                        document.getElementById('edit_realisasi').value = realisasi;
+                        document.getElementById('edit_realisasi').max = target;
+
+                        // Update max target text
+                        document.getElementById('edit_max_target').textContent = `Nilai maksimal: ${maxTarget} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}`;
+                    });
+                });
+            }
+
+            // Modal functions for opens and closes
+            const modalButtons = document.querySelectorAll('[data-modal-toggle]');
+            const modalCloseButtons = document.querySelectorAll('[data-modal-hide]');
+
+            modalButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetModalId = button.getAttribute('data-modal-target');
+                    const targetModal = document.getElementById(targetModalId);
+                    openModal(targetModal);
+                });
+            });
+
+            modalCloseButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetModal = button.closest('.fixed.top-0.left-0.right-0.z-50');
+                    closeModal(targetModal);
+                });
+            });
+
+            // Close modal when clicking outside the modal content
+            const modals = document.querySelectorAll('.z-50.fixed');
+            modals.forEach(modal => {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+            });
+
+            // Add keydown event for Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    modals.forEach(modal => {
+                        if (!modal.classList.contains('hidden')) {
+                            closeModal(modal);
+                        }
+                    });
+                }
+            });
+
+            // Handle success popup
+            function closeSuccessPopup() {
+                const popup = document.getElementById('success-popup');
+                if (popup) {
+                    // Add slide-out animation
+                    popup.classList.add('transform', 'translate-x-full');
+                    popup.classList.add('opacity-0');
+
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 300);
+                }
+            }
+
+            // Handle error popup
+            function closeErrorPopup() {
+                const popup = document.getElementById('error-popup');
+                if (popup) {
+                    // Add slide-out animation
+                    popup.classList.add('transform', 'translate-x-full');
+                    popup.classList.add('opacity-0');
+
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 300);
+                }
+            }
+
+            // Make closeSuccessPopup and closeErrorPopup functions global
+            window.closeSuccessPopup = closeSuccessPopup;
+            window.closeErrorPopup = closeErrorPopup;
+
+            // Auto close popups after 5 seconds
+            const successPopup = document.getElementById('success-popup');
+            if (successPopup) {
+                setTimeout(() => {
+                    closeSuccessPopup();
+                }, 5000);
+            }
+
+            const errorPopup = document.getElementById('error-popup');
+            if (errorPopup) {
+                setTimeout(() => {
+                    closeErrorPopup();
+                }, 5000);
+            }
+        });
+    </script>
+
+    <style>
+        /* Animation classes */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+
+        .animate-fadeOut {
+            animation: fadeOut 0.2s ease-in forwards;
+        }
+    </style>
+</x-app-layout>
