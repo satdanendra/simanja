@@ -40,4 +40,12 @@ class RincianKegiatan extends Model
     {
         return $this->belongsTo(MasterRincianKegiatan::class, 'master_rincian_kegiatan_id');
     }
+
+    /**
+     * Get the allocations for this RincianKegiatan.
+     */
+    public function alokasi()
+    {
+        return $this->hasMany(AlokasiRincianKegiatan::class, 'rincian_kegiatan_id');
+    }
 }
