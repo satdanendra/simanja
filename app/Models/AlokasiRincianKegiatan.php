@@ -16,11 +16,16 @@ class AlokasiRincianKegiatan extends Model
         'pelaksana_id',
         'target',
         'realisasi',
+        'bukti_dukung_file_id',
+        'bukti_dukung_file_name',
+        'bukti_dukung_link',
+        'bukti_dukung_uploaded_at',
     ];
     
     protected $casts = [
         'target' => 'float',
         'realisasi' => 'float',
+        'bukti_dukung_uploaded_at' => 'datetime',
     ];
     
     /**

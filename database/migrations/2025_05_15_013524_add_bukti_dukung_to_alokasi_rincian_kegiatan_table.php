@@ -6,23 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::table('alokasi_rincian_kegiatan', function (Blueprint $table) {
-            //
+            $table->string('bukti_dukung_file_id')->nullable();
+            $table->string('bukti_dukung_file_name')->nullable();
+            $table->string('bukti_dukung_link')->nullable();
+            $table->timestamp('bukti_dukung_uploaded_at')->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::table('alokasi_rincian_kegiatan', function (Blueprint $table) {
-            //
+            $table->dropColumn([
+                'bukti_dukung_file_id',
+                'bukti_dukung_file_name',
+                'bukti_dukung_link',
+                'bukti_dukung_uploaded_at'
+            ]);
         });
     }
 };

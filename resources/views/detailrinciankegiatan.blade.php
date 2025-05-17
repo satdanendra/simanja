@@ -440,8 +440,14 @@
                                         {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}
                                     </span>
                                 </div>
-                                <p class="mt-1 text-sm text-gray-500">Masukkan nilai yang sudah terealisasi</p>
+                                <p class="mt-1 mb-4 text-sm text-gray-500">Masukkan nilai yang sudah terealisasi</p>
                             </div>
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_import">Upload Bukti Dukung</label>
+                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_import" name="file" type="file" accept=".xlsx, .xls">
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">Format file berupa gambar/dokumen</p>
                         </div>
 
                         <div class="flex items-center justify-end space-x-3 mt-6">
