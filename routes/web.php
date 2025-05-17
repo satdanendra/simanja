@@ -93,6 +93,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-rincian-kegiatan/download-template', [MasterRincianKegiatanController::class, 'downloadTemplate'])->name('master-rincian-kegiatan.template.download');
     Route::delete('/master-rincian-kegiatan/{masterRincianKegiatan}', [MasterRincianKegiatanController::class, 'destroy'])->name('master-rincian-kegiatan.destroy');
     Route::delete('/master-rincian-kegiatan/batch-delete', [MasterRincianKegiatanController::class, 'batchDelete'])->name('master-rincian-kegiatan.batch-delete');
+    Route::get('/alokasi/{alokasi}/download', [AlokasiRincianKegiatanController::class, 'downloadBuktiDukung'])->name('alokasi.download');
 });
 
 require __DIR__ . '/auth.php';

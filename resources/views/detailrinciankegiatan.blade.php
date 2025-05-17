@@ -216,6 +216,7 @@
                                     <th scope="col" class="px-6 py-3">Target</th>
                                     <th scope="col" class="px-6 py-3">Realisasi</th>
                                     <th scope="col" class="px-6 py-3">Progress</th>
+                                    <th scope="col" class="px-6 py-3">Bukti Dukung</th>
                                     <th scope="col" class="px-6 py-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -244,6 +245,26 @@
                                         @endphp
                                         <span class="font-medium">{{ number_format($percent, 1) }}%</span>
                                     </td>
+                                    <!-- Bukti Dukung column -->
+                                    <td class="px-6 py-4">
+                                        @if($alokasi->bukti_dukung_file_id)
+                                        <a href="{{ $alokasi->bukti_dukung_link }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                            Lihat
+                                        </a>
+                                        <a href="{{ route('alokasi.download', $alokasi->id) }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 ml-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                            </svg>
+                                            Unduh
+                                        </a>
+                                        @else
+                                        <span class="text-gray-500">Belum ada</span>
+                                        @endif
+                                    </td>
                                     <td class="px-6 py-4 text-center">
                                         <button
                                             data-modal-target="editAlokasiModal"
@@ -253,6 +274,9 @@
                                             data-pelaksana-name="{{ $alokasi->pelaksana->name }}"
                                             data-target="{{ $alokasi->target }}"
                                             data-realisasi="{{ $alokasi->realisasi }}"
+                                            data-bukti-dukung-file-id="{{ $alokasi->bukti_dukung_file_id }}"
+                                            data-bukti-dukung-file-name="{{ $alokasi->bukti_dukung_file_name }}"
+                                            data-bukti-dukung-link="{{ $alokasi->bukti_dukung_link }}"
                                             class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150 mr-2 edit-alokasi-btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -442,12 +466,24 @@
                                 </div>
                                 <p class="mt-1 mb-4 text-sm text-gray-500">Masukkan nilai yang sudah terealisasi</p>
                             </div>
-                        </div>
 
-                        <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_import">Upload Bukti Dukung</label>
-                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_import" name="file" type="file" accept=".xlsx, .xls">
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">Format file berupa gambar/dokumen</p>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file">Upload Bukti Dukung</label>
+                                <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file" name="file" type="file">
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">Format file berupa gambar/dokumen</p>
+
+                                <!-- Display current file if exists -->
+                                <div id="current_file_container" class="mt-3 hidden">
+                                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300">File Bukti Dukung Saat Ini:</p>
+                                    <div class="flex items-center mt-1 p-2 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <a id="current_file_link" href="#" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 hover:underline truncate max-w-xs"></a>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">Upload file baru akan menggantikan file yang ada</p>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-end space-x-3 mt-6">
@@ -516,6 +552,39 @@
 
                         // Update max target text
                         document.getElementById('edit_max_target').textContent = `Nilai maksimal: ${maxTarget} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}`;
+
+                        // Check if file exists
+                        fetch(`/api/alokasi/${alokasiId}/file-info`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const fileContainer = document.getElementById('current_file_container');
+                                const fileLink = document.getElementById('current_file_link');
+
+                                if (data.has_file) {
+                                    fileContainer.classList.remove('hidden');
+                                    fileLink.href = data.file_link;
+                                    fileLink.textContent = data.file_name;
+                                } else {
+                                    fileContainer.classList.add('hidden');
+                                }
+                            })
+                            .catch(error => console.error('Error fetching file info:', error));
+
+                        // Check and display file information
+                        const buktiDukungFileId = this.getAttribute('data-bukti-dukung-file-id');
+                        const buktiDukungFileName = this.getAttribute('data-bukti-dukung-file-name');
+                        const buktiDukungLink = this.getAttribute('data-bukti-dukung-link');
+
+                        const fileContainer = document.getElementById('current_file_container');
+                        const fileLink = document.getElementById('current_file_link');
+
+                        if (buktiDukungFileId) {
+                            fileContainer.classList.remove('hidden');
+                            fileLink.href = buktiDukungLink;
+                            fileLink.textContent = buktiDukungFileName;
+                        } else {
+                            fileContainer.classList.add('hidden');
+                        }
                     });
                 });
             }
