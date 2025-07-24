@@ -109,8 +109,8 @@
                                             {{ $user->email }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 font-mono text-sm">{{ $user->nip_lama ?: '-' }}</td>
-                                    <td class="px-6 py-4 font-mono text-sm">{{ $user->nip_baru ?: '-' }}</td>
+                                    <td class="px-6 py-4 font-mono text-sm">{{ $user->pegawai->nip_lama ?: '-' }}</td>
+                                    <td class="px-6 py-4 font-mono text-sm">{{ $user->pegawai->nip_baru ?: '-' }}</td>
                                     <td class="px-6 py-4 text-center">
                                         <form action="{{ route('tim.anggota.destroy', ['tim' => $tim->id, 'user' => $user->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini dari tim?')">
                                             @csrf
@@ -296,9 +296,9 @@
                                     <th scope="col" class="px-6 py-4">Kode RK Tim</th>
                                     <th scope="col" class="px-6 py-4">Kode Proyek</th>
                                     <th scope="col" class="px-6 py-4">Uraian Proyek</th>
-                                    <th scope="col" class="px-6 py-4">IKU Terkait</th>
-                                    <th scope="col" class="px-6 py-4">RK Anggota</th>
-                                    <th scope="col" class="px-6 py-4">Lapangan</th>
+                                    <!-- <th scope="col" class="px-6 py-4">IKU Terkait</th> -->
+                                    <!-- <th scope="col" class="px-6 py-4">RK Anggota</th> -->
+                                    <!-- <th scope="col" class="px-6 py-4">Lapangan</th> -->
                                     <th scope="col" class="px-6 py-4">PIC Proyek</th>
                                     <th scope="col" class="px-6 py-4 text-center">Aksi</th>
                                 </tr>
@@ -308,8 +308,8 @@
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                                     <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->rkTim->rk_tim_kode }}</td>
                                     <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $proyek->masterProyek->proyek_kode }}</td>
-                                    <td class="px-6 py-4">{{ $proyek->masterProyek->proyek_urai }}</td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-6 py-4 max-w-xs">{{ $proyek->masterProyek->proyek_urai }}</td>
+                                    <!-- <td class="px-6 py-4">
                                         @if($proyek->masterProyek->iku_kode)
                                         <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-blue-100 text-blue-800">
                                             {{ $proyek->masterProyek->iku_kode }}
@@ -318,15 +318,15 @@
                                         @else
                                         <span class="text-gray-400">-</span>
                                         @endif
-                                    </td>
-                                    <td class="px-6 py-4">{{ $proyek->masterProyek->rk_anggota ?: '-' }}</td>
-                                    <td class="px-6 py-4">
+                                    </td> -->
+                                    <!-- <td class="px-6 py-4">{{ $proyek->masterProyek->rk_anggota ?: '-' }}</td> -->
+                                    <!-- <td class="px-6 py-4">
                                         @if($proyek->masterProyek->proyek_lapangan)
                                         <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800">Ya</span>
                                         @else
                                         <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-gray-100 text-gray-800">Tidak</span>
                                         @endif
-                                    </td>
+                                    </td> -->
                                     <td class="px-6 py-4">
                                         @if($proyek->picUser)
                                         <div class="flex items-center">
@@ -478,8 +478,8 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">{{ $user->email }}</td>
-                                        <td class="px-6 py-4 font-mono text-xs">{{ $user->nip_lama ?: '-' }}</td>
-                                        <td class="px-6 py-4 font-mono text-xs">{{ $user->nip_baru ?: '-' }}</td>
+                                        <td class="px-6 py-4 font-mono text-xs">{{ $user->pegawai->nip_lama ?: '-' }}</td>
+                                        <td class="px-6 py-4 font-mono text-xs">{{ $user->pegawai->nip_baru ?: '-' }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

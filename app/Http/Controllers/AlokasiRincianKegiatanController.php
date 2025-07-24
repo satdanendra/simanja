@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Google\Service\Drive;
 use Google\Service\Drive\DriveFile;
 
@@ -142,17 +143,28 @@ class AlokasiRincianKegiatanController extends Controller
         // Handle file upload if file is present
         if ($request->hasFile('file') && $request->file('file')->isValid()) {
             try {
-                // Upload file to Google Drive
-                $uploadedFile = $this->uploadFileToDrive($request->file('file'), $alokasi);
+                // Simpan file ke penyimpanan lokal terlebih dahulu
+                $file = $request->file('file');
+                $fileName = 'bukti_' . $alokasi->id . '_' . now()->format('YmdHis') . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('bukti_dukung', $fileName, 'public');
 
-                if ($uploadedFile) {
-                    $updateData['bukti_dukung_file_id'] = $uploadedFile['id'];
-                    $updateData['bukti_dukung_file_name'] = $uploadedFile['name'];
-                    $updateData['bukti_dukung_link'] = $uploadedFile['webViewLink'];
-                    $updateData['bukti_dukung_uploaded_at'] = now();
+                $updateData['bukti_dukung_file_name'] = $fileName;
+                $updateData['bukti_dukung_uploaded_at'] = now();
+
+                // Jika ingin tetap mengupload ke Google Drive setelah disimpan lokal
+                if ($this->driveService) {
+                    $uploadedFile = $this->uploadFileToDrive($file, $alokasi, $fileName);
+
+                    if ($uploadedFile) {
+                        $updateData['bukti_dukung_file_id'] = $uploadedFile['id'];
+                        $updateData['bukti_dukung_link'] = $uploadedFile['webViewLink'];
+                    }
+                } else {
+                    // Jika tidak ada Google Drive service, gunakan URL lokal
+                    $updateData['bukti_dukung_link'] = asset('storage/' . $filePath);
                 }
             } catch (\Exception $e) {
-                Log::error('Google Drive upload error: ' . $e->getMessage());
+                Log::error('File upload error: ' . $e->getMessage());
                 return redirect()->back()
                     ->with('error', 'Gagal mengupload file: ' . $e->getMessage())
                     ->withInput();
@@ -167,9 +179,9 @@ class AlokasiRincianKegiatanController extends Controller
     }
 
     /**
-     * Upload file to Google Drive
+     * Upload file to Google Drive (optional after local storage)
      */
-    private function uploadFileToDrive($file, $alokasi)
+    private function uploadFileToDrive($file, $alokasi, $fileName)
     {
         // Check if Drive service is available
         if (!$this->driveService) {
@@ -183,7 +195,7 @@ class AlokasiRincianKegiatanController extends Controller
 
             // Create file metadata
             $fileMetadata = new DriveFile([
-                'name' => 'Bukti_' . $alokasi->id . '_' . now()->format('YmdHis') . '_' . $file->getClientOriginalName(),
+                'name' => $fileName,
                 'parents' => [$folderId]
             ]);
 
@@ -211,7 +223,7 @@ class AlokasiRincianKegiatanController extends Controller
             ];
         } catch (\Exception $e) {
             Log::error('Google Drive upload error: ' . $e->getMessage());
-            throw $e;
+            return null; // Return null instead of throwing, to continue with local storage
         }
     }
 
@@ -223,6 +235,7 @@ class AlokasiRincianKegiatanController extends Controller
         // Get info before deleting
         $rincianKegiatanId = $alokasi->rincian_kegiatan_id;
         $fileId = $alokasi->bukti_dukung_file_id;
+        $fileName = $alokasi->bukti_dukung_file_name;
 
         // Delete file from Google Drive if exists
         if ($fileId && $this->driveService) {
@@ -231,6 +244,14 @@ class AlokasiRincianKegiatanController extends Controller
             } catch (\Exception $e) {
                 Log::error('Google Drive delete error: ' . $e->getMessage());
                 // Continue with deletion even if file delete fails
+            }
+        }
+
+        // Delete file from local storage if exists
+        if ($fileName) {
+            $filePath = 'bukti_dukung/' . $fileName;
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
             }
         }
 
@@ -246,18 +267,29 @@ class AlokasiRincianKegiatanController extends Controller
      */
     public function downloadBuktiDukung(AlokasiRincianKegiatan $alokasi)
     {
-        if (!$alokasi->bukti_dukung_file_id || !$this->driveService) {
-            return redirect()->back()->with('error', 'File tidak ditemukan');
+        // Cek apakah file ada di Google Drive
+        if ($alokasi->bukti_dukung_file_id && $this->driveService) {
+            try {
+                // Redirect langsung ke URL download Google Drive
+                return redirect()->away(
+                    "https://drive.google.com/uc?export=download&id={$alokasi->bukti_dukung_file_id}"
+                );
+            } catch (\Exception $e) {
+                Log::error('Google Drive download error: ' . $e->getMessage());
+                // Jika gagal, coba cek file lokal
+            }
         }
 
-        try {
-            // Redirect langsung ke URL download Google Drive
-            return redirect()->away(
-                "https://drive.google.com/uc?export=download&id={$alokasi->bukti_dukung_file_id}"
+        // Cek dan download dari penyimpanan lokal
+        $filePath = 'bukti_dukung/' . $alokasi->bukti_dukung_file_name;
+
+        if (Storage::disk('public')->exists($filePath)) {
+            return response()->download(
+                storage_path('app/public/' . $filePath),
+                $alokasi->bukti_dukung_file_name
             );
-        } catch (\Exception $e) {
-            Log::error('Google Drive download error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Gagal mengunduh file: ' . $e->getMessage());
         }
+
+        return redirect()->back()->with('error', 'File tidak ditemukan');
     }
 }

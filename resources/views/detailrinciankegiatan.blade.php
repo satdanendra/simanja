@@ -247,8 +247,8 @@
                                     </td>
                                     <!-- Bukti Dukung column -->
                                     <td class="px-6 py-4">
-                                        @if($alokasi->bukti_dukung_file_id)
-                                        <a href="{{ $alokasi->bukti_dukung_link }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400">
+                                        @if($alokasi->bukti_dukung_file_id || $alokasi->bukti_dukung_file_name)
+                                        <a href="{{ $alokasi->bukti_dukung_link ?? asset('storage/bukti_dukung/'.$alokasi->bukti_dukung_file_name) }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -436,7 +436,7 @@
                         </div>
                     </div>
 
-                    <form id="editAlokasiForm" action="" method="POST">
+                    <form id="editAlokasiForm" action="" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="space-y-4">
@@ -453,7 +453,7 @@
                                         {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}
                                     </span>
                                 </div>
-                                <p id="edit_max_target" class="mt-1 text-sm text-gray-500">Nilai maksimal akan dihitung berdasarkan alokasi saat ini</p>
+                                <p id="edit_max_target" class="mt-1 text-sm text-gray-500"></p>
                             </div>
 
                             <div>
@@ -551,7 +551,7 @@
                         document.getElementById('edit_realisasi').max = target;
 
                         // Update max target text
-                        document.getElementById('edit_max_target').textContent = `Nilai maksimal: ${maxTarget} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}`;
+                        //document.getElementById('edit_max_target').textContent = `Nilai maksimal: ${maxTarget} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}`;
 
                         // Check if file exists
                         fetch(`/api/alokasi/${alokasiId}/file-info`)
