@@ -292,4 +292,37 @@ class AlokasiRincianKegiatanController extends Controller
 
         return redirect()->back()->with('error', 'File tidak ditemukan');
     }
+
+    /**
+     * Menampilkan daftar bukti dukung untuk rincian kegiatan tertentu.
+     */
+    public function buktiDukungIndex(RincianKegiatan $rincianKegiatan)
+    {
+        // Memuat relasi yang diperlukan
+        $rincianKegiatan->load([
+            'kegiatan.masterKegiatan',
+            'kegiatan.proyek.masterProyek',
+            'kegiatan.proyek.rkTim.tim',
+            'masterRincianKegiatan'
+        ]);
+
+        // Ambil semua bukti dukung dari alokasi yang terkait dengan rincian kegiatan ini
+        $buktiDukungs = collect();
+
+        foreach ($rincianKegiatan->alokasi as $alokasi) {
+            if ($alokasi->bukti_dukung_file_id) {
+                $buktiDukungs->push((object)[
+                    'id' => $alokasi->bukti_dukung_file_id,
+                    'nama_file' => $alokasi->bukti_dukung_file_name,
+                    'drive_id' => $alokasi->bukti_dukung_file_id,
+                    'keterangan' => 'Bukti dukung untuk alokasi ' . $alokasi->pelaksana->name,
+                    'extension' => pathinfo($alokasi->bukti_dukung_file_name, PATHINFO_EXTENSION),
+                    'created_at' => $alokasi->bukti_dukung_uploaded_at ?? $alokasi->created_at,
+                    'alokasi_id' => $alokasi->id
+                ]);
+            }
+        }
+
+        return view('detailbuktidukung', compact('rincianKegiatan', 'buktiDukungs'));
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlokasiRincianKegiatanController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterDirektoratController;
 use App\Http\Controllers\MasterRincianKegiatanController;
@@ -17,9 +18,9 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -61,6 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/kegiatan/{kegiatan}/rincian/{rincian}', [KegiatanController::class, 'destroyRincian'])->name('kegiatan.rincian.destroy');
     Route::get('/rincian-kegiatan/{rincianKegiatan}', [AlokasiRincianKegiatanController::class, 'detailRincianKegiatan'])->name('detailrinciankegiatan');
     Route::post('/rincian-kegiatan/{rincianKegiatan}/alokasi', [AlokasiRincianKegiatanController::class, 'storeAlokasi'])->name('alokasi.store');
+    Route::get('/rincian-kegiatan/{rincianKegiatan}/bukti-dukung', [AlokasiRincianKegiatanController::class, 'buktiDukungIndex'])->name('detailbuktidukung');
     Route::put('/alokasi/{alokasi}', [AlokasiRincianKegiatanController::class, 'updateAlokasi'])->name('alokasi.update');
     Route::delete('/alokasi/{alokasi}', [AlokasiRincianKegiatanController::class, 'destroyAlokasi'])->name('alokasi.destroy');
     Route::get('/master-pegawai', [MasterPegawaiController::class, 'index'])->name('master-pegawai');

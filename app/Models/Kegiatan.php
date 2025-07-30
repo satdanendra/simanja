@@ -35,8 +35,8 @@ class Kegiatan extends Model
     /**
      * Get the rincian kegiatans for this kegiatan.
      */
-    // public function rincianKegiatans()
-    // {
-    //     return $this->hasMany(RincianKegiatan::class);
-    // }
+    public function rincianKegiatans()
+    {
+        return $this->hasMany(RincianKegiatan::class);
+    }
 }
