@@ -12,6 +12,7 @@ use App\Http\Controllers\RkTimController;
 use App\Http\Controllers\ProyekController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LaporanHarianController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -101,6 +102,24 @@ Route::middleware('auth')->group(function () {
     Route::delete('/master-rincian-kegiatan/{masterRincianKegiatan}', [MasterRincianKegiatanController::class, 'destroy'])->name('master-rincian-kegiatan.destroy');
     Route::delete('/master-rincian-kegiatan/batch-delete', [MasterRincianKegiatanController::class, 'batchDelete'])->name('master-rincian-kegiatan.batch-delete');
     Route::get('/alokasi/{alokasi}/download', [AlokasiRincianKegiatanController::class, 'downloadBuktiDukung'])->name('alokasi.download');
+    // Laporan Harian Routes
+    Route::get('/laporan-harian', [LaporanHarianController::class, 'index'])
+        ->name('laporanharian');
+    
+    Route::get('/rincian-kegiatan/{rincianKegiatan}/laporan-harian/create', [LaporanHarianController::class, 'create'])
+        ->name('laporan-harian.create');
+    
+    Route::post('/rincian-kegiatan/{rincianKegiatan}/laporan-harian', [LaporanHarianController::class, 'store'])
+        ->name('laporan-harian.store');
+    
+    Route::get('/laporan-harian/{laporan}', [LaporanHarianController::class, 'show'])
+        ->name('laporan-harian.show');
+    
+    Route::get('/laporan-harian/{laporan}/download', [LaporanHarianController::class, 'download'])
+        ->name('laporan-harian.download');
+    
+    Route::delete('/laporan-harian/{laporan}', [LaporanHarianController::class, 'destroy'])
+        ->name('laporan-harian.destroy');
 });
 
 require __DIR__ . '/auth.php';

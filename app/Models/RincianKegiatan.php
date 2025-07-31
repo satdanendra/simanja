@@ -56,4 +56,20 @@ class RincianKegiatan extends Model
     {
         return $this->hasMany(BuktiDukung::class);
     }
+
+    /**
+     * Get laporan harians for the rincian kegiatan.
+     */
+    public function laporanHarians()
+    {
+        return $this->hasMany(LaporanHarian::class);
+    }
+
+    /**
+     * Get laporan harians untuk user tertentu
+     */
+    public function laporanHariansForUser($userId)
+    {
+        return $this->laporanHarians()->where('user_id', $userId);
+    }
 }

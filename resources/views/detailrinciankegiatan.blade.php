@@ -217,6 +217,7 @@
                                     <th scope="col" class="px-6 py-3">Realisasi</th>
                                     <th scope="col" class="px-6 py-3">Progress</th>
                                     <th scope="col" class="px-6 py-3">Bukti Dukung</th>
+                                    <th scope="col" class="px-6 py-3">Laporan Harian</th>
                                     <th scope="col" class="px-6 py-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -263,6 +264,46 @@
                                         </a>
                                         @else
                                         <span class="text-gray-500">Belum ada</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        @php
+                                        $laporanHarianCount = $rincianKegiatan->laporanHarians()
+                                        ->where('user_id', $alokasi->pelaksana_id)
+                                        ->count();
+                                        $userHasAlokasi = $alokasi->pelaksana_id == Auth::id();
+                                        @endphp
+
+                                        @if($laporanHarianCount > 0)
+                                        <a href="{{ route('laporanharian') }}"
+                                            class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            </svg>
+                                            Lihat
+                                        </a>
+                                        @if($userHasAlokasi)
+                                        <a href="{{ route('laporan-harian.create', $rincianKegiatan->id) }}"
+                                            class="inline-flex items-center text-green-600 hover:text-green-800 dark:text-green-400 ml-2">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                            </svg>
+                                            Buat
+                                        </a>
+                                        @endif
+                                        @else
+                                        @if($userHasAlokasi)
+                                        <a href="{{ route('laporan-harian.create', $rincianKegiatan->id) }}"
+                                            class="inline-flex items-center text-green-600 hover:text-green-800 dark:text-green-400">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                            </svg>
+                                            Buat
+                                        </a>
+                                        @else
+                                        <span class="text-gray-500">Belum ada</span>
+                                        @endif
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-center">
