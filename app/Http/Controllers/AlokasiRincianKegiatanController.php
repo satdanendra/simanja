@@ -4,20 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\RincianKegiatan;
 use App\Models\AlokasiRincianKegiatan;
+use App\Models\BuktiDukung;
 use App\Models\User;
+use App\Services\GoogleDriveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Google\Service\Drive;
-use Google\Service\Drive\DriveFile;
+use Illuminate\Support\Str;
 
 class AlokasiRincianKegiatanController extends Controller
 {
     protected $driveService;
 
-    public function __construct(?Drive $driveService = null)
+    public function __construct(GoogleDriveService $driveService)
     {
         $this->driveService = $driveService;
     }
@@ -112,7 +112,6 @@ class AlokasiRincianKegiatanController extends Controller
         $validator = Validator::make($request->all(), [
             'target' => 'required|numeric|min:0.01',
             'realisasi' => 'nullable|numeric|min:0',
-            'file' => 'nullable|file|max:10240', // Max 10MB
         ]);
 
         if ($validator->fails()) {
@@ -140,37 +139,6 @@ class AlokasiRincianKegiatanController extends Controller
             'realisasi' => $request->realisasi,
         ];
 
-        // Handle file upload if file is present
-        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            try {
-                // Simpan file ke penyimpanan lokal terlebih dahulu
-                $file = $request->file('file');
-                $fileName = 'bukti_' . $alokasi->id . '_' . now()->format('YmdHis') . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('bukti_dukung', $fileName, 'public');
-
-                $updateData['bukti_dukung_file_name'] = $fileName;
-                $updateData['bukti_dukung_uploaded_at'] = now();
-
-                // Jika ingin tetap mengupload ke Google Drive setelah disimpan lokal
-                if ($this->driveService) {
-                    $uploadedFile = $this->uploadFileToDrive($file, $alokasi, $fileName);
-
-                    if ($uploadedFile) {
-                        $updateData['bukti_dukung_file_id'] = $uploadedFile['id'];
-                        $updateData['bukti_dukung_link'] = $uploadedFile['webViewLink'];
-                    }
-                } else {
-                    // Jika tidak ada Google Drive service, gunakan URL lokal
-                    $updateData['bukti_dukung_link'] = asset('storage/' . $filePath);
-                }
-            } catch (\Exception $e) {
-                Log::error('File upload error: ' . $e->getMessage());
-                return redirect()->back()
-                    ->with('error', 'Gagal mengupload file: ' . $e->getMessage())
-                    ->withInput();
-            }
-        }
-
         // Memperbarui alokasi
         $alokasi->update($updateData);
 
@@ -178,151 +146,167 @@ class AlokasiRincianKegiatanController extends Controller
             ->with('success', 'Alokasi berhasil diperbarui');
     }
 
+    // === BUKTI DUKUNG METHODS ===
+
     /**
-     * Upload file to Google Drive (optional after local storage)
+     * Menampilkan daftar bukti dukung untuk rincian kegiatan.
      */
-    private function uploadFileToDrive($file, $alokasi, $fileName)
+    public function buktiDukungIndex(RincianKegiatan $rincianKegiatan)
     {
-        // Check if Drive service is available
-        if (!$this->driveService) {
-            Log::warning('Google Drive service not available');
-            return null;
-        }
+        $rincianKegiatan->load([
+            'kegiatan.masterKegiatan',
+            'kegiatan.proyek.masterProyek',
+            'kegiatan.proyek.rkTim.tim',
+            'masterRincianKegiatan',
+            'buktiDukungs'
+        ]);
+
+        $buktiDukungs = $rincianKegiatan->buktiDukungs;
+
+        return view('detailbuktidukung', compact('rincianKegiatan', 'buktiDukungs'));
+    }
+
+    /**
+     * Menyimpan bukti dukung baru untuk rincian kegiatan.
+     */
+    public function buktiDukungStore(Request $request, RincianKegiatan $rincianKegiatan)
+    {
+        $request->validate([
+            'files' => 'required|array|min:1',
+            'files.*' => 'required|file|max:10240|mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx,txt',
+            'keterangan' => 'nullable|string|max:255',
+        ]);
+
+        $uploadedFiles = [];
+        $failedFiles = [];
+
+        DB::beginTransaction();
 
         try {
-            // Get folder ID from config
-            $folderId = config('google-drive.folder_id');
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $file) {
+                    try {
+                        $originalName = $file->getClientOriginalName();
+                        $extension = $file->getClientOriginalExtension();
+                        $fileType = $this->determineFileType($extension);
+                        $mimeType = $file->getMimeType();
 
-            // Create file metadata
-            $fileMetadata = new DriveFile([
-                'name' => $fileName,
-                'parents' => [$folderId]
-            ]);
+                        // Generate unique name untuk file
+                        $filename = 'Rincian_' . $rincianKegiatan->id . '_' . time() . '_' . uniqid() . '_' . Str::slug(pathinfo($originalName, PATHINFO_FILENAME)) . '.' . $extension;
 
-            // Upload file to Google Drive
-            $result = $this->driveService->files->create($fileMetadata, [
-                'data' => file_get_contents($file->getRealPath()),
-                'mimeType' => $file->getMimeType(),
-                'uploadType' => 'multipart',
-                'fields' => 'id,name,webViewLink'
-            ]);
+                        // Upload ke Google Drive
+                        $driveId = $this->driveService->uploadFile($file, $filename);
 
-            // Make file publicly accessible for viewing
-            $this->driveService->permissions->create(
-                $result->getId(),
-                new \Google\Service\Drive\Permission([
-                    'type' => 'anyone',
-                    'role' => 'reader',
-                ])
-            );
+                        if ($driveId) {
+                            // Simpan data bukti dukung ke database
+                            BuktiDukung::create([
+                                'rincian_kegiatan_id' => $rincianKegiatan->id,
+                                'nama_file' => $originalName,
+                                'file_path' => 'google_drive',
+                                'drive_id' => $driveId,
+                                'file_type' => $fileType,
+                                'extension' => $extension,
+                                'mime_type' => $mimeType,
+                                'keterangan' => $request->keterangan,
+                            ]);
 
-            return [
-                'id' => $result->getId(),
-                'name' => $result->getName(),
-                'webViewLink' => $result->getWebViewLink()
-            ];
+                            $uploadedFiles[] = $originalName;
+                        } else {
+                            $failedFiles[] = $originalName;
+                        }
+                    } catch (\Exception $e) {
+                        Log::error('Error uploading file: ' . $e->getMessage());
+                        $failedFiles[] = $originalName;
+                    }
+                }
+            }
+
+            if (count($uploadedFiles) > 0) {
+                DB::commit();
+
+                $message = count($uploadedFiles) . ' file berhasil diunggah.';
+                if (count($failedFiles) > 0) {
+                    $message .= ' ' . count($failedFiles) . ' file gagal diunggah: ' . implode(', ', $failedFiles);
+                }
+
+                return redirect()->route('detailbuktidukung', $rincianKegiatan->id)
+                    ->with('success', $message);
+            } else {
+                DB::rollback();
+                return redirect()->back()
+                    ->with('error', 'Semua file gagal diunggah ke Google Drive.')
+                    ->withInput();
+            }
         } catch (\Exception $e) {
-            Log::error('Google Drive upload error: ' . $e->getMessage());
-            return null; // Return null instead of throwing, to continue with local storage
+            DB::rollback();
+            Log::error('Error in bulk upload: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat mengunggah file.')
+                ->withInput();
         }
     }
 
     /**
-     * Menghapus alokasi.
+     * Menampilkan bukti dukung.
      */
-    public function destroyAlokasi(AlokasiRincianKegiatan $alokasi)
+    public function buktiDukungView(BuktiDukung $buktiDukung)
     {
-        // Get info before deleting
-        $rincianKegiatanId = $alokasi->rincian_kegiatan_id;
-        $fileId = $alokasi->bukti_dukung_file_id;
-        $fileName = $alokasi->bukti_dukung_file_name;
-
-        // Delete file from Google Drive if exists
-        if ($fileId && $this->driveService) {
-            try {
-                $this->driveService->files->delete($fileId);
-            } catch (\Exception $e) {
-                Log::error('Google Drive delete error: ' . $e->getMessage());
-                // Continue with deletion even if file delete fails
-            }
+        if ($buktiDukung->drive_id) {
+            $url = $this->driveService->getViewUrl($buktiDukung->drive_id);
+            return redirect()->away($url);
         }
 
-        // Delete file from local storage if exists
-        if ($fileName) {
-            $filePath = 'bukti_dukung/' . $fileName;
-            if (Storage::disk('public')->exists($filePath)) {
-                Storage::disk('public')->delete($filePath);
-            }
-        }
-
-        // Delete allocation
-        $alokasi->delete();
-
-        return redirect()->route('detailrinciankegiatan', $rincianKegiatanId)
-            ->with('success', 'Alokasi berhasil dihapus');
+        return redirect()->back()->with('error', 'File tidak ditemukan.');
     }
 
     /**
      * Download bukti dukung.
      */
-    public function downloadBuktiDukung(AlokasiRincianKegiatan $alokasi)
+    public function buktiDukungDownload(BuktiDukung $buktiDukung)
     {
-        // Cek apakah file ada di Google Drive
-        if ($alokasi->bukti_dukung_file_id && $this->driveService) {
-            try {
-                // Redirect langsung ke URL download Google Drive
-                return redirect()->away(
-                    "https://drive.google.com/uc?export=download&id={$alokasi->bukti_dukung_file_id}"
-                );
-            } catch (\Exception $e) {
-                Log::error('Google Drive download error: ' . $e->getMessage());
-                // Jika gagal, coba cek file lokal
-            }
+        if ($buktiDukung->drive_id) {
+            $url = $this->driveService->getDownloadUrl($buktiDukung->drive_id);
+            return redirect()->away($url);
         }
 
-        // Cek dan download dari penyimpanan lokal
-        $filePath = 'bukti_dukung/' . $alokasi->bukti_dukung_file_name;
-
-        if (Storage::disk('public')->exists($filePath)) {
-            return response()->download(
-                storage_path('app/public/' . $filePath),
-                $alokasi->bukti_dukung_file_name
-            );
-        }
-
-        return redirect()->back()->with('error', 'File tidak ditemukan');
+        return redirect()->back()->with('error', 'File tidak ditemukan.');
     }
 
     /**
-     * Menampilkan daftar bukti dukung untuk rincian kegiatan tertentu.
+     * Menghapus bukti dukung.
      */
-    public function buktiDukungIndex(RincianKegiatan $rincianKegiatan)
+    public function buktiDukungDestroy(BuktiDukung $buktiDukung)
     {
-        // Memuat relasi yang diperlukan
-        $rincianKegiatan->load([
-            'kegiatan.masterKegiatan',
-            'kegiatan.proyek.masterProyek',
-            'kegiatan.proyek.rkTim.tim',
-            'masterRincianKegiatan'
-        ]);
+        $rincianKegiatanId = $buktiDukung->rincian_kegiatan_id;
 
-        // Ambil semua bukti dukung dari alokasi yang terkait dengan rincian kegiatan ini
-        $buktiDukungs = collect();
-
-        foreach ($rincianKegiatan->alokasi as $alokasi) {
-            if ($alokasi->bukti_dukung_file_id) {
-                $buktiDukungs->push((object)[
-                    'id' => $alokasi->bukti_dukung_file_id,
-                    'nama_file' => $alokasi->bukti_dukung_file_name,
-                    'drive_id' => $alokasi->bukti_dukung_file_id,
-                    'keterangan' => 'Bukti dukung untuk alokasi ' . $alokasi->pelaksana->name,
-                    'extension' => pathinfo($alokasi->bukti_dukung_file_name, PATHINFO_EXTENSION),
-                    'created_at' => $alokasi->bukti_dukung_uploaded_at ?? $alokasi->created_at,
-                    'alokasi_id' => $alokasi->id
-                ]);
-            }
+        // Hapus file dari Google Drive jika ada drive_id
+        if ($buktiDukung->drive_id) {
+            $this->driveService->deleteFile($buktiDukung->drive_id);
         }
 
-        return view('detailbuktidukung', compact('rincianKegiatan', 'buktiDukungs'));
+        $buktiDukung->delete();
+
+        return redirect()->route('detailbuktidukung', $rincianKegiatanId)
+            ->with('success', 'Bukti dukung berhasil dihapus.');
+    }
+
+    /**
+     * Menentukan tipe file berdasarkan ekstensi.
+     */
+    private function determineFileType($extension)
+    {
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'];
+        $documentExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'];
+
+        $extension = strtolower($extension);
+
+        if (in_array($extension, $imageExtensions)) {
+            return 'image';
+        } elseif (in_array($extension, $documentExtensions)) {
+            return 'document';
+        } else {
+            return 'other';
+        }
     }
 }

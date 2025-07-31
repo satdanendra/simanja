@@ -63,6 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/rincian-kegiatan/{rincianKegiatan}', [AlokasiRincianKegiatanController::class, 'detailRincianKegiatan'])->name('detailrinciankegiatan');
     Route::post('/rincian-kegiatan/{rincianKegiatan}/alokasi', [AlokasiRincianKegiatanController::class, 'storeAlokasi'])->name('alokasi.store');
     Route::get('/rincian-kegiatan/{rincianKegiatan}/bukti-dukung', [AlokasiRincianKegiatanController::class, 'buktiDukungIndex'])->name('detailbuktidukung');
+    Route::get('/rincian-kegiatan/{rincianKegiatan}/bukti-dukung/create', [AlokasiRincianKegiatanController::class, 'buktiDukungCreate'])->name('bukti-dukung-rincian.create');
+    Route::post('/rincian-kegiatan/{rincianKegiatan}/bukti-dukung', [AlokasiRincianKegiatanController::class, 'buktiDukungStore'])->name('bukti-dukung-rincian.store');
+    Route::get('/bukti-dukung/{buktiDukung}/view', [AlokasiRincianKegiatanController::class, 'buktiDukungView'])->name('bukti-dukung.view');
+    Route::get('/bukti-dukung/{buktiDukung}/download', [AlokasiRincianKegiatanController::class, 'buktiDukungDownload'])->name('bukti-dukung.download');
+    Route::delete('/bukti-dukung/{buktiDukung}', [AlokasiRincianKegiatanController::class, 'buktiDukungDestroy'])->name('bukti-dukung.destroy');
     Route::put('/alokasi/{alokasi}', [AlokasiRincianKegiatanController::class, 'updateAlokasi'])->name('alokasi.update');
     Route::delete('/alokasi/{alokasi}', [AlokasiRincianKegiatanController::class, 'destroyAlokasi'])->name('alokasi.destroy');
     Route::get('/master-pegawai', [MasterPegawaiController::class, 'index'])->name('master-pegawai');

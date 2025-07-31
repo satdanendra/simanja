@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class RincianKegiatan extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'rincian_kegiatan';
-    
+
     protected $fillable = [
         'kegiatan_id',
         'master_rincian_kegiatan_id',
@@ -19,12 +19,12 @@ class RincianKegiatan extends Model
         'deadline',
         'is_variabel_kontrol',
     ];
-    
+
     protected $casts = [
         'deadline' => 'date',
         'is_variabel_kontrol' => 'boolean',
     ];
-    
+
     /**
      * Get the Kegiatan that owns this RincianKegiatan.
      */
@@ -32,7 +32,7 @@ class RincianKegiatan extends Model
     {
         return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
     }
-    
+
     /**
      * Get the MasterRincianKegiatan for this RincianKegiatan.
      */
@@ -47,5 +47,13 @@ class RincianKegiatan extends Model
     public function alokasi()
     {
         return $this->hasMany(AlokasiRincianKegiatan::class, 'rincian_kegiatan_id');
+    }
+
+    /**
+     * Get the bukti dukungs for this RincianKegiatan.
+     */
+    public function buktiDukungs()
+    {
+        return $this->hasMany(BuktiDukung::class);
     }
 }
