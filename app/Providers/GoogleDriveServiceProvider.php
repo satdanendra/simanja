@@ -21,21 +21,21 @@ class GoogleDriveServiceProvider extends ServiceProvider
             return;
         }
 
-        if (!config('google-drive.client_id') || !config('google-drive.client_secret')) {
+        if (!config('services.google.client_id') || !config('services.google.client_secret')) {
             return;
         }
 
         $this->app->singleton(\Google\Client::class, function ($app) {
             $client = new \Google\Client();
-            $client->setClientId(config('google-drive.client_id'));
-            $client->setClientSecret(config('google-drive.client_secret'));
+            $client->setClientId(config('services.google.client_id'));
+            $client->setClientSecret(config('services.google.client_secret'));
             $client->setRedirectUri(url('/auth/google/callback'));
             $client->setScopes([\Google\Service\Drive::DRIVE]);
             $client->setAccessType('offline');
             $client->setPrompt('consent');
 
-            if (config('google-drive.refresh_token')) {
-                $client->refreshToken(config('google-drive.refresh_token'));
+            if (config('services.google.refresh_token')) {
+                $client->refreshToken(config('services.google.refresh_token'));
             }
 
             return $client;
@@ -60,22 +60,22 @@ class GoogleDriveServiceProvider extends ServiceProvider
         }
 
         // Check if config is available
-        if (!config('google-drive.client_id') || !config('google-drive.client_secret')) {
+        if (!config('services.google.client_id') || !config('services.google.client_secret')) {
             return;
         }
 
         // Register Google Client as a singleton
         $this->app->singleton(\Google\Client::class, function ($app) {
             $client = new \Google\Client();
-            $client->setClientId(config('google-drive.client_id'));
-            $client->setClientSecret(config('google-drive.client_secret'));
+            $client->setClientId(config('services.google.client_id'));
+            $client->setClientSecret(config('services.google.client_secret'));
             $client->setRedirectUri(url('/auth/google/callback'));
             $client->setScopes([\Google\Service\Drive::DRIVE]);
             $client->setAccessType('offline');
             $client->setPrompt('consent');
 
-            if (config('google-drive.refresh_token')) {
-                $client->refreshToken(config('google-drive.refresh_token'));
+            if (config('services.google.refresh_token')) {
+                $client->refreshToken(config('services.google.refresh_token'));
             }
 
             return $client;

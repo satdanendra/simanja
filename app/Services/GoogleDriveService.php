@@ -15,21 +15,52 @@ class GoogleDriveService
 
     public function __construct()
     {
-        // Inisialisasi Google Client
-        $this->client = new Google_Client();
-        $this->client->setClientId(config('services.google.client_id'));
-        $this->client->setClientSecret(config('services.google.client_secret'));
+        // DEBUGGING - hapus setelah masalah teratasi
+        $clientId = config('services.google.client_id');
+        $clientSecret = config('services.google.client_secret');
+        $refreshToken = config('services.google.refresh_token');
+        $folderId = config('services.google.folder_id');
 
-        // Autentikasi dengan refresh token
-        $this->client->fetchAccessTokenWithRefreshToken(config('services.google.refresh_token'));
-        $this->client->setAccessType('offline');
-        $this->client->setScopes([
-            Google_Service_Drive::DRIVE,
-            Google_Service_Drive::DRIVE_FILE
+        Log::info('GoogleDriveService Debug', [
+            'client_id' => $clientId ? 'SET' : 'NULL',
+            'client_secret' => $clientSecret ? 'SET' : 'NULL',
+            'refresh_token' => $refreshToken ? 'SET' : 'NULL',
+            'folder_id' => $folderId ? 'SET' : 'NULL',
+            'refresh_token_length' => $refreshToken ? strlen($refreshToken) : 0
         ]);
 
-        $this->service = new Google_Service_Drive($this->client);
-        $this->folderId = config('services.google.folder_id');
+        if (empty($clientId)) {
+            Log::error('Google Drive refresh token is empty or null');
+            throw new \Exception('Ada error');
+        }
+
+        // Lanjutkan dengan inisialisasi normal...
+        $this->client = new Google_Client();
+        $this->client->setClientId($clientId);
+        $this->client->setClientSecret($clientSecret);
+
+        try {
+            $accessToken = $this->client->fetchAccessTokenWithRefreshToken($refreshToken);
+
+            if (isset($accessToken['error'])) {
+                Log::error('Google Drive token refresh failed', $accessToken);
+                throw new \Exception('Failed to refresh access token: ' . $accessToken['error']);
+            }
+
+            $this->client->setAccessType('offline');
+            $this->client->setScopes([
+                Google_Service_Drive::DRIVE,
+                Google_Service_Drive::DRIVE_FILE
+            ]);
+
+            $this->service = new Google_Service_Drive($this->client);
+            $this->folderId = $folderId;
+
+            Log::info('GoogleDriveService initialized successfully');
+        } catch (\Exception $e) {
+            Log::error('GoogleDriveService initialization failed: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     /**
