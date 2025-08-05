@@ -4,7 +4,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
-            {{ __('Manajemen Iku') }}
+            {{ __('Manajemen IKU') }}
         </h2>
     </x-slot>
 
@@ -39,7 +39,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
-                            Daftar Iku
+                            Daftar IKU
                         </h3>
 
                         <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-3 w-full md:w-auto">
@@ -50,7 +50,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                                 </svg>
-                                <span>Import Iku</span>
+                                <span>Import IKU</span>
                             </button>
 
                             <div class="relative w-full md:w-64">
@@ -116,7 +116,7 @@
                                 <td class="px-4 py-3">{{ $iku->iku_satuan }}</td>
                                 <td class="px-4 py-3">{{ $iku->iku_target }}</td>
                                 <td class="px-6 py-4">
-                                    <button type="button" data-modal-target="editIkuModal" data-modal-show="editIkuModal" data-iku-id="{{ $iku->id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline me-3 edit-iku-btn">Edit</button>
+                                    <!-- <button type="button" data-modal-target="editIkuModal" data-modal-show="editIkuModal" data-iku-id="{{ $iku->id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline me-3 edit-iku-btn">Edit</button> -->
                                     <a href="#" data-iku-id="{{ $iku->id }}" class="delete-iku font-medium text-red-600 hover:underline">Hapus</a>
                                 </td>
                             </tr>

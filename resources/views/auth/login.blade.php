@@ -8,7 +8,7 @@
                         <path fill="currentColor" d="M50,5 L95,25 L95,75 L50,95 L5,75 L5,25 Z"></path>
                     </svg>
                 </div>
-                
+
                 <div class="flex items-center space-x-4 mb-8 relative">
                     <div class="bg-white p-2 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -20,17 +20,17 @@
                         <div class="text-sm opacity-75">Kota Magelang</div>
                     </div>
                 </div>
-                
+
                 <div class="mb-8 relative">
                     <h1 class="text-3xl font-bold mb-4">Sistem Informasi Manajemen Pekerjaan (SiManja)</h1>
                     <p class="opacity-80">Portal resmi untuk meningkatkan pelayanan publik dan efisiensi kinerja aparatur negara dalam mendukung tata kelola pemerintahan yang baik.</p>
                 </div>
-                
+
                 <div class="absolute bottom-8 left-8 right-8 text-sm opacity-70">
                     <p>© 2025 BPS Kota Magelang</p>
                 </div>
             </div>
-            
+
             <!-- Right Panel - Login Form -->
             <div class="p-8 md:p-12 md:w-3/5">
                 <!-- Mobile Logo -->
@@ -42,12 +42,12 @@
                     </div>
                     <div class="text-lg font-bold text-gray-800">INSTANSI PEMERINTAH</div>
                 </div>
-                
+
                 <div class="text-center mb-10">
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang</h2>
                     <p class="text-gray-600">Silakan masuk untuk mengakses sistem</p>
                 </div>
-                
+
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -64,7 +64,7 @@
                                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                 </svg>
                             </div>
-                            <x-text-input id="email" class="block mt-1 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="nama@bps.go.id" />
+                            <x-text-input id="email" class="block mt-1 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="Masukkan email Anda" />
                         </div>
                         <x-input-error :messages="$errors->get('email')" class="mt-2 text-sm text-red-600" />
                     </div>
@@ -81,6 +81,13 @@
                                 </svg>
                             </div>
                             <x-text-input id="password" class="block mt-1 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" type="password" name="password" required autocomplete="current-password" placeholder="Masukkan password Anda" />
+                            <!-- Tombol Eye -->
+                            <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                                <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12a5 5 0 110-10 5 5 0 010 10z" />
+                                    <path d="M10 7a3 3 0 100 6 3 3 0 000-6z" />
+                                </svg>
+                            </button>
                         </div>
                         <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-red-600" />
                     </div>
@@ -95,16 +102,16 @@
 
                     <div class="flex items-center justify-between mb-6">
                         @if (Route::has('password.request'))
-                            <a class="text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out" href="{{ route('password.request') }}">
-                                {{ __('Forgot your password?') }}
-                            </a>
+                        <a class="text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out" href="{{ route('password.request') }}">
+                            {{ __('Forgot your password?') }}
+                        </a>
                         @endif
 
                         <x-primary-button class="bg-blue-700 hover:bg-blue-800 transition duration-150 ease-in-out text-white font-medium py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             {{ __('Log in') }}
                         </x-primary-button>
                     </div>
-                    
+
                     <div class="mt-8 pt-6 border-t border-gray-200">
                         <p class="text-center text-sm text-gray-600">
                             Mengalami kesulitan login? Hubungi <span class="text-blue-600">Admin SiManja</span>
@@ -114,4 +121,18 @@
             </div>
         </div>
     </div>
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('fill', '#1D4ED8'); // Biru saat aktif
+            } else {
+                input.type = 'password';
+                icon.setAttribute('fill', 'currentColor'); // Kembali default
+            }
+        }
+    </script>
 </x-guest-layout>

@@ -248,23 +248,13 @@
                                     </td>
                                     <!-- Bukti Dukung column -->
                                     <td class="px-6 py-4">
-                                        @if($alokasi->bukti_dukung_file_id || $alokasi->bukti_dukung_file_name)
                                         <a href="{{ route('detailbuktidukung', $rincianKegiatan->id) }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
-                                            Lihat
+                                            Lihat ({{ $rincianKegiatan->buktiDukungs->count() }})
                                         </a>
-                                        <a href="{{ route('alokasi.download', $alokasi->id) }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 ml-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                            </svg>
-                                            Unduh
-                                        </a>
-                                        @else
-                                        <span class="text-gray-500">Belum ada</span>
-                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         @php
@@ -508,12 +498,12 @@
                                 <p class="mt-1 mb-4 text-sm text-gray-500">Masukkan nilai yang sudah terealisasi</p>
                             </div>
 
-                            <div>
+                            <!-- <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file">Upload Bukti Dukung</label>
                                 <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file" name="file" type="file">
                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">Format file berupa gambar/dokumen</p>
 
-                                <!-- Display current file if exists -->
+                                Display current file if exists
                                 <div id="current_file_container" class="mt-3 hidden">
                                     <p class="text-sm font-medium text-gray-700 dark:text-gray-300">File Bukti Dukung Saat Ini:</p>
                                     <div class="flex items-center mt-1 p-2 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600">
@@ -524,7 +514,7 @@
                                     </div>
                                     <p class="text-xs text-gray-500 mt-1">Upload file baru akan menggantikan file yang ada</p>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="flex items-center justify-end space-x-3 mt-6">

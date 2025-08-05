@@ -86,13 +86,36 @@
                         <div class="p-5">
                             <div class="flex items-center mb-4">
                                 <div class="flex -space-x-3">
-                                    <!-- Placeholder avatars - in real app, these would be actual team members -->
-                                    <div class="w-8 h-8 rounded-full bg-blue-200 border-2 border-white flex items-center justify-center text-blue-600 text-xs font-bold">AB</div>
-                                    <div class="w-8 h-8 rounded-full bg-green-200 border-2 border-white flex items-center justify-center text-green-600 text-xs font-bold">CD</div>
-                                    <div class="w-8 h-8 rounded-full bg-yellow-200 border-2 border-white flex items-center justify-center text-yellow-600 text-xs font-bold">EF</div>
-                                    <div class="w-8 h-8 rounded-full bg-indigo-200 border-2 border-white flex items-center justify-center text-indigo-600 text-xs font-bold">+3</div>
+                                    @php
+                                    $colors = ['blue', 'green', 'yellow', 'indigo', 'purple', 'pink', 'red'];
+                                    $maxShow = 3; // Maksimal avatar yang ditampilkan
+                                    $totalMembers = $tim->users->count();
+                                    $remainingMembers = $totalMembers - $maxShow;
+                                    @endphp
+
+                                    @foreach($tim->users->take($maxShow) as $index => $user)
+                                    @php
+                                    $color = $colors[$index % count($colors)];
+                                    $initials = strtoupper(substr($user->name, 0, 1));
+                                    if (str_word_count($user->name) > 1) {
+                                    $words = explode(' ', $user->name);
+                                    $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                                    }
+                                    @endphp
+                                    <div class="w-8 h-8 rounded-full bg-{{ $color }}-200 border-2 border-white flex items-center justify-center text-{{ $color }}-600 text-xs font-bold"
+                                        title="{{ $user->name }}">
+                                        {{ $initials }}
+                                    </div>
+                                    @endforeach
+
+                                    @if($remainingMembers > 0)
+                                    <div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-bold"
+                                        title="{{ $remainingMembers }} anggota lainnya">
+                                        +{{ $remainingMembers }}
+                                    </div>
+                                    @endif
                                 </div>
-                                <span class="text-xs text-gray-500 ml-2">7 Anggota</span>
+                                <span class="text-xs text-gray-500 ml-2">{{ $tim->users->count() }} Anggota</span>
                             </div>
 
                             <div class="flex justify-between items-center">
@@ -100,7 +123,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
-                                    <span>5 Pekerjaan</span>
+                                    <span></span>
                                 </div>
                                 <a href="{{ route('detailtim', $tim->id) }}" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors duration-150">
                                     <span>Detail</span>

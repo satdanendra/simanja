@@ -14,7 +14,7 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-6 sm:items-center sm:-my-px sm:ms-10 sm:flex">
+                <div class="flex space-x-6 sm:items-center sm:-my-px sm:ms-10">
                     <div class="relative">
                         <div>
                             <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white opacity-90 hover:opacity-100 rounded-md hover:bg-blue-500 focus:outline-none transition duration-150 ease-in-out">
@@ -90,7 +90,7 @@
             </div>
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-blue-500 hover:bg-blue-400 focus:outline-none transition ease-in-out duration-150">

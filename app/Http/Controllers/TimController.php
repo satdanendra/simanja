@@ -21,7 +21,7 @@ class TimController extends Controller
     public function index()
     {
         // Mengambil semua data tim dengan relasi
-        $tims = Tim::with(['direktorat', 'masterTim', 'ketuaTim'])
+        $tims = Tim::with(['direktorat', 'masterTim', 'ketuaTim', 'users'])
             ->join('master_tim', 'tims.master_tim_id', '=', 'master_tim.id')
             ->orderBy('master_tim.tim_kode')
             ->orderBy('tims.tahun')

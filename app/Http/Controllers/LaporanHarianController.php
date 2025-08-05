@@ -216,7 +216,8 @@ class LaporanHarianController extends Controller
         if ($laporan->file_path === 'google_drive' && $laporan->drive_id) {
             try {
                 $driveService = app(\App\Services\GoogleDriveService::class);
-                $tempPath = $driveService->downloadFileContent($laporan->drive_id);
+                $tempPath = storage_path('app/temp/laporan-harian/' . uniqid() . '_' . $laporan->id . '.pdf');
+                $downloadedPath = $driveService->downloadFileContent($laporan->drive_id, $tempPath);
 
                 if ($tempPath && file_exists($tempPath)) {
                     return response()->download($tempPath, $filename)->deleteFileAfterSend(true);

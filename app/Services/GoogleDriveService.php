@@ -131,10 +131,9 @@ class GoogleDriveService
      * @param string $fileId
      * @return string|null Binary content dari file
      */
-    public function downloadFileContent(string $fileId): ?string
+    public function downloadFileContent(string $fileId, string $destinationPath): ?string
     {
         try {
-            // Metode alternatif menggunakan cURL
             $accessToken = $this->client->getAccessToken();
 
             if (!$accessToken || !isset($accessToken['access_token'])) {
@@ -156,7 +155,9 @@ class GoogleDriveService
             curl_close($ch);
 
             if ($httpCode === 200 && $content !== false) {
-                return $content;
+                // ✅ Simpan ke file tujuan
+                file_put_contents($destinationPath, $content);
+                return $destinationPath;
             } else {
                 throw new \Exception("Failed to download file: HTTP {$httpCode}");
             }
@@ -165,6 +166,7 @@ class GoogleDriveService
             return null;
         }
     }
+
 
     public function getViewUrl(string $fileId): string
     {
