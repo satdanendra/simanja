@@ -87,22 +87,30 @@
                             <div class="flex items-center mb-4">
                                 <div class="flex -space-x-3">
                                     @php
-                                    $colors = ['blue', 'green', 'yellow', 'indigo', 'purple', 'pink', 'red'];
-                                    $maxShow = 3; // Maksimal avatar yang ditampilkan
+                                    $avatarClasses = [
+                                    ['bg' => 'bg-blue-200', 'text' => 'text-blue-600'],
+                                    ['bg' => 'bg-green-200', 'text' => 'text-green-600'],
+                                    ['bg' => 'bg-yellow-200', 'text' => 'text-yellow-600'],
+                                    ['bg' => 'bg-indigo-200', 'text' => 'text-indigo-600'],
+                                    ['bg' => 'bg-purple-200', 'text' => 'text-purple-600'],
+                                    ['bg' => 'bg-pink-200', 'text' => 'text-pink-600'],
+                                    ['bg' => 'bg-red-200', 'text' => 'text-red-600'],
+                                    ];
+                                    $maxShow = 3;
                                     $totalMembers = $tim->users->count();
                                     $remainingMembers = $totalMembers - $maxShow;
                                     @endphp
 
                                     @foreach($tim->users->take($maxShow) as $index => $user)
                                     @php
-                                    $color = $colors[$index % count($colors)];
+                                    $colorClass = $avatarClasses[$index % count($avatarClasses)];
                                     $initials = strtoupper(substr($user->name, 0, 1));
                                     if (str_word_count($user->name) > 1) {
                                     $words = explode(' ', $user->name);
                                     $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
                                     }
                                     @endphp
-                                    <div class="w-8 h-8 rounded-full bg-{{ $color }}-200 border-2 border-white flex items-center justify-center text-{{ $color }}-600 text-xs font-bold"
+                                    <div class="w-8 h-8 rounded-full {{ $colorClass['bg'] }} border-2 border-white flex items-center justify-center {{ $colorClass['text'] }} text-xs font-bold"
                                         title="{{ $user->name }}">
                                         {{ $initials }}
                                     </div>
