@@ -40,4 +40,9 @@ class Proyek extends Model
     {
         return $this->belongsTo(User::class, 'pic');
     }
+
+    public function kegiatans()
+    {
+        return $this->hasMany(Kegiatan::class, 'proyek_id');
+    }
 }

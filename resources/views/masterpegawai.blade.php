@@ -35,6 +35,7 @@
                             </h3>
 
                             <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-3 w-full md:w-auto">
+                                @if(Auth::user()->isSuperadmin())
                                 <button
                                     data-modal-target="createPegawaiModal"
                                     data-modal-show="createPegawaiModal"
@@ -44,7 +45,7 @@
                                     </svg>
                                     <span>Tambah Pegawai</span>
                                 </button>
-
+                                
                                 <button
                                     data-modal-target="importPegawaiModal"
                                     data-modal-show="importPegawaiModal"
@@ -54,6 +55,7 @@
                                     </svg>
                                     <span>Import Pegawai</span>
                                 </button>
+                                @endif
 
                                 <div class="relative w-full md:w-64">
                                     <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -80,7 +82,9 @@
                                     <th scope="col" class="px-6 py-3">Pangkat</th>
                                     <th scope="col" class="px-6 py-3">Pendidikan</th>
                                     <th scope="col" class="px-6 py-3">Status</th>
+                                    @if(Auth::user()->isSuperadmin())
                                     <th scope="col" class="px-6 py-3">Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -110,6 +114,7 @@
                                         <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Nonaktif</span>
                                         @endif
                                     </td>
+                                    @if(Auth::user()->isSuperadmin())
                                     <td class="px-6 py-4">
                                         <button type="button" data-modal-target="editPegawaiModal" data-modal-show="editPegawaiModal" data-pegawai-id="{{ $pegawai->id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline me-3 edit-pegawai-btn">Edit</button>
                                         <!-- <form class="inline" action="{{ route('master-pegawai.destroy', $pegawai->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pegawai ini?')">
@@ -123,6 +128,7 @@
                                         <a href="#" data-pegawai-id="{{ $pegawai->id }}" class="activate-pegawai font-medium text-green-600 hover:underline">Aktifkan</a>
                                         @endif
                                     </td>
+                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>

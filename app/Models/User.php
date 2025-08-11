@@ -22,6 +22,7 @@ class User extends Authenticatable
     protected $fillable = [
         'pegawai_id',
         'name',
+        'role_id',
         'email',
         'password',
     ];
@@ -73,5 +74,32 @@ class User extends Authenticatable
     public function tims()
     {
         return $this->belongsToMany(Tim::class, 'user_tim');
+    }
+
+    // Relasi ke tabel roles
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    // Helper methods untuk check role
+    public function isSuperadmin()
+    {
+        return $this->role_id === 1;
+    }
+
+    public function isKepalaBps()
+    {
+        return $this->role_id === 2;
+    }
+
+    public function isPegawai()
+    {
+        return $this->role_id === 3;
+    }
+
+    public function hasRole($roleId)
+    {
+        return $this->role_id === $roleId;
     }
 }

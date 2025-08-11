@@ -33,6 +33,7 @@ class UserController extends Controller
             'pegawai_id' => 'required|exists:master_pegawais,id|unique:users,pegawai_id',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'role_id' => 'sometimes|exists:roles,id',
         ]);
 
         // Ambil data pegawai untuk mendapatkan nama
@@ -44,6 +45,7 @@ class UserController extends Controller
             'name' => $pegawai->alias,
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'role_id' => $validated['role_id'] ?? 3,
         ]);
 
         return redirect()->route('user')

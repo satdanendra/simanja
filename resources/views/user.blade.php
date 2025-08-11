@@ -45,6 +45,7 @@
                         </h3>
 
                         <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-3 w-full md:w-auto">
+                            @if(Auth::user()->isSuperadmin())
                             <button
                                 data-modal-target="createUserModal"
                                 data-modal-show="createUserModal"
@@ -54,6 +55,7 @@
                                 </svg>
                                 <span>Buat User Baru</span>
                             </button>
+                            @endif
                             <div class="relative w-full md:w-64">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg class="w-5 h-5 text-blue-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,7 +75,9 @@
                             <tr>
                                 <th scope="col" class="px-6 py-4">Nama & Email</th>
                                 <th scope="col" class="px-6 py-4">Status</th>
+                                @if(Auth::user()->isSuperadmin())
                                 <th scope="col" class="px-6 py-4">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -97,6 +101,7 @@
                                     <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Nonaktif</span>
                                     @endif
                                 </td>
+                                @if(Auth::user()->isSuperadmin())
                                 <td class="px-6 py-4">
                                     <button type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" data-user-id="{{ $user->id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline me-3 edit-user-btn">Edit</button>
                                     @if($user->is_active)
@@ -105,6 +110,7 @@
                                     <a href="#" data-user-id="{{ $user->id }}" class="activate-user font-medium text-green-600 hover:underline">Aktifkan</a>
                                     @endif
                                 </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>
@@ -157,7 +163,7 @@
                         </div>
                         <div class="col-span-6">
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="email" name="email" id="email" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="email@example.com" readonly required >
+                            <input type="email" name="email" id="email" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="email@example.com" readonly required>
                             <p class="mt-1 text-sm text-gray-500">Email akan terisi otomatis sesuai dengan pegawai yang dipilih</p>
                         </div>
                         <div class="col-span-6">
@@ -426,52 +432,52 @@
 
         // Handle activate button
         const activateButtons = document.querySelectorAll(".activate-user");
-            activateButtons.forEach(button => {
-                button.addEventListener("click", function(e) {
-                    e.preventDefault();
-                    const userId = this.getAttribute("data-user-id");
-                    if (confirm("Apakah Anda yakin ingin mengaktifkan kembali user ini?")) {
-                        // Buat form data dengan CSRF token
-                        const formData = new FormData();
-                        formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+        activateButtons.forEach(button => {
+            button.addEventListener("click", function(e) {
+                e.preventDefault();
+                const userId = this.getAttribute("data-user-id");
+                if (confirm("Apakah Anda yakin ingin mengaktifkan kembali user ini?")) {
+                    // Buat form data dengan CSRF token
+                    const formData = new FormData();
+                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
-                        // Tampilkan indikator loading pada tombol
-                        const clickedButton = this;
-                        const originalText = clickedButton.textContent;
-                        clickedButton.textContent = "Memproses...";
-                        clickedButton.disabled = true;
+                    // Tampilkan indikator loading pada tombol
+                    const clickedButton = this;
+                    const originalText = clickedButton.textContent;
+                    clickedButton.textContent = "Memproses...";
+                    clickedButton.disabled = true;
 
-                        // Kirim request dengan FormData
-                        fetch(`/users/${userId}/activate`, {
-                                method: 'POST',
-                                body: formData,
-                                credentials: 'same-origin'
-                            })
-                            .then(function(response) {
-                                // Kembalikan tombol ke keadaan semula
-                                clickedButton.textContent = originalText;
-                                clickedButton.disabled = false;
+                    // Kirim request dengan FormData
+                    fetch(`/users/${userId}/activate`, {
+                            method: 'POST',
+                            body: formData,
+                            credentials: 'same-origin'
+                        })
+                        .then(function(response) {
+                            // Kembalikan tombol ke keadaan semula
+                            clickedButton.textContent = originalText;
+                            clickedButton.disabled = false;
 
-                                if (response.ok) {
-                                    // Simpan pesan sukses di localStorage
-                                    localStorage.setItem('successMessage', 'User berhasil diaktifkan');
-                                    // Reload halaman
-                                    window.location.reload();
-                                } else {
-                                    alert("Gagal mengaktifkan user");
-                                }
-                            })
-                            .catch(function(error) {
-                                // Kembalikan tombol ke keadaan semula
-                                clickedButton.textContent = originalText;
-                                clickedButton.disabled = false;
+                            if (response.ok) {
+                                // Simpan pesan sukses di localStorage
+                                localStorage.setItem('successMessage', 'User berhasil diaktifkan');
+                                // Reload halaman
+                                window.location.reload();
+                            } else {
+                                alert("Gagal mengaktifkan user");
+                            }
+                        })
+                        .catch(function(error) {
+                            // Kembalikan tombol ke keadaan semula
+                            clickedButton.textContent = originalText;
+                            clickedButton.disabled = false;
 
-                                console.error('Error:', error);
-                                alert("Terjadi kesalahan saat mengaktifkan user");
-                            });
-                    }
-                });
+                            console.error('Error:', error);
+                            alert("Terjadi kesalahan saat mengaktifkan user");
+                        });
+                }
             });
+        });
     </script>
 
     <style>

@@ -43,6 +43,7 @@
                         </h3>
 
                         <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-3 w-full md:w-auto">
+                            @if(Auth::user()->isSuperadmin())
                             <button
                                 data-modal-target="importIkuModal"
                                 data-modal-show="importIkuModal"
@@ -52,6 +53,7 @@
                                 </svg>
                                 <span>Import IKU</span>
                             </button>
+                            @endif
 
                             <div class="relative w-full md:w-64">
                                 <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -77,19 +79,23 @@
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
                             <tr>
+                                @if(Auth::user()->isSuperadmin())
                                 <th scope="col" class="px-4 py-3">
                                     <div class="flex items-center">
                                         <input id="checkbox-all" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
                                         <label for="checkbox-all" class="sr-only">checkbox</label>
                                     </div>
                                 </th>
+                                @endif 
                                 <th scope="col" class="px-4 py-3">Tujuan</th>
                                 <th scope="col" class="px-4 py-3">Sasaran</th>
                                 <th scope="col" class="px-6 py-4">Kode IKU</th>
                                 <th scope="col" class="px-6 py-4">Uraian IKU</th>
                                 <th scope="col" class="px-4 py-3">Satuan</th>
                                 <th scope="col" class="px-4 py-3">Target</th>
+                                @if(Auth::user()->isSuperadmin())
                                 <th scope="col" class="px-6 py-4">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -97,12 +103,14 @@
                             <tr class="iku-row bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150" 
                                 data-urai="{{ strtolower($iku->iku_urai) }}" 
                                 data-kode="{{ strtolower($iku->iku_kode) }}">
+                                @if(Auth::user()->isSuperadmin())
                                 <td class="w-4 p-4">
                                     <div class="flex items-center">
                                         <input id="checkbox-{{ $iku->id }}" type="checkbox" class="iku-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" data-id="{{ $iku->id }}">
                                         <label for="checkbox-{{ $iku->id }}" class="sr-only">checkbox</label>
                                     </div>
                                 </td>
+                                @endif
                                 <td class="px-4 py-3">
                                     <div class="font-medium text-gray-900 dark:text-white">{{ $iku->sasaran->tujuan->tujuan_kode }}</div>
                                     <div class="text-xs text-gray-500">{{ Str::limit($iku->sasaran->tujuan->tujuan_urai, 50) }}</div>
@@ -115,10 +123,12 @@
                                 <td class="px-6 py-4">{{ $iku->iku_urai }}</td>
                                 <td class="px-4 py-3">{{ $iku->iku_satuan }}</td>
                                 <td class="px-4 py-3">{{ $iku->iku_target }}</td>
+                                @if(Auth::user()->isSuperadmin())
                                 <td class="px-6 py-4">
                                     <!-- <button type="button" data-modal-target="editIkuModal" data-modal-show="editIkuModal" data-iku-id="{{ $iku->id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline me-3 edit-iku-btn">Edit</button> -->
                                     <a href="#" data-iku-id="{{ $iku->id }}" class="delete-iku font-medium text-red-600 hover:underline">Hapus</a>
                                 </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

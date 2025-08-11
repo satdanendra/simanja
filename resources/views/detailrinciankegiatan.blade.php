@@ -26,6 +26,14 @@
     <div id="modalBackdrop" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 hidden"></div>
 
     <div class="py-6">
+        <div id="app-data"
+            data-current-user-id="{{ Auth::id() }}"
+            data-user-role-id="{{ Auth::user()->role_id ?? 0 }}"
+            data-pic-id="{{ $rincianKegiatan->kegiatan->proyek->pic ?? 0 }}"
+            data-remaining-volume="{{ $remainingVolume }}"
+            data-satuan="{{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}"
+            style="display: none;">
+        </div>
         @if(session('success'))
         <div id="success-popup" class="fixed top-4 right-4 z-50 bg-green-100 border-l-4 border-green-500 text-green-700 px-6 py-3 rounded-md shadow-lg flex items-center transition-all duration-300 transform translate-x-0">
             <div class="mr-3">
@@ -191,6 +199,7 @@
                                 <p class="text-blue-100 text-sm">{{ count($existingAllocations) }} Alokasi</p>
                             </div>
                         </div>
+                        @if(Auth::id() == $rincianKegiatan->kegiatan->proyek->pic)
                         <button
                             data-modal-target="tambahAlokasiModal"
                             data-modal-toggle="tambahAlokasiModal"
@@ -203,6 +212,7 @@
                             </svg>
                             Tambah Alokasi
                         </button>
+                        @endif
                     </div>
                 </div>
 
@@ -218,7 +228,10 @@
                                     <th scope="col" class="px-6 py-3">Progress</th>
                                     <th scope="col" class="px-6 py-3">Bukti Dukung</th>
                                     <th scope="col" class="px-6 py-3">Laporan Harian</th>
+                                    <th scope="col" class="px-6 py-3">Nilai</th>
+                                    @if($userHasAccess)
                                     <th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -296,7 +309,23 @@
                                         @endif
                                         @endif
                                     </td>
+                                    <td class="px-6 py-4">
+                                        @if($alokasi->nilai !== null)
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                            @if($alokasi->nilai >= 85) bg-green-100 text-green-800
+                                            @elseif($alokasi->nilai >= 70) bg-yellow-100 text-yellow-800
+                                            @elseif($alokasi->nilai >= 60) bg-orange-100 text-orange-800
+                                            @else bg-red-100 text-red-800
+                                            @endif">
+                                            {{ $alokasi->nilai }}
+                                        </span>
+                                        @else
+                                        <span class="text-gray-500 text-sm">Belum dinilai</span>
+                                        @endif
+                                    </td>
+                                    @if($userHasAccess)
                                     <td class="px-6 py-4 text-center">
+                                        @if(Auth::id() == $rincianKegiatan->kegiatan->proyek->pic || Auth::id() == $alokasi->pelaksana_id || Auth::user()->role_id == 2)
                                         <button
                                             data-modal-target="editAlokasiModal"
                                             data-modal-toggle="editAlokasiModal"
@@ -305,6 +334,7 @@
                                             data-pelaksana-name="{{ $alokasi->pelaksana->name }}"
                                             data-target="{{ $alokasi->target }}"
                                             data-realisasi="{{ $alokasi->realisasi }}"
+                                            data-nilai="{{ $alokasi->nilai }}"
                                             data-bukti-dukung-file-id="{{ $alokasi->bukti_dukung_file_id }}"
                                             data-bukti-dukung-file-name="{{ $alokasi->bukti_dukung_file_name }}"
                                             data-bukti-dukung-link="{{ $alokasi->bukti_dukung_link }}"
@@ -314,6 +344,8 @@
                                             </svg>
                                             Edit
                                         </button>
+                                        @endif
+                                        @if(Auth::id() == $rincianKegiatan->kegiatan->proyek->pic)
                                         <form action="{{ route('alokasi.destroy', $alokasi->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus alokasi ini?')" class="inline">
                                             @csrf
                                             @method('DELETE')
@@ -324,7 +356,9 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                        @endif
                                     </td>
+                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -495,7 +529,31 @@
                                         {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}
                                     </span>
                                 </div>
+                                @if(Auth::id() == $alokasi->pelaksana_id)
                                 <p class="mt-1 mb-4 text-sm text-gray-500">Masukkan nilai yang sudah terealisasi</p>
+                                @endif
+                            </div>
+
+                            <div>
+                                <label for="edit_nilai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Nilai Penilaian
+                                    <span class="text-red-500">*</span>
+                                    <span class="text-xs text-gray-500">(Hanya Kepala BPS)</span>
+                                </label>
+                                <div class="flex">
+                                    <input type="number"
+                                        step="0.01"
+                                        min="0"
+                                        max="100"
+                                        name="nilai"
+                                        id="edit_nilai"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white edit-nilai-input"
+                                        placeholder="0-100">
+                                    <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-l-0 border-gray-300 rounded-r-lg dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        /100
+                                    </span>
+                                </div>
+                                <p class="mt-1 mb-4 text-sm text-gray-500">Masukkan nilai penilaian (0-100)</p>
                             </div>
 
                             <!-- <div>
@@ -534,6 +592,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             const modalBackdrop = document.getElementById('modalBackdrop');
 
+            // Ambil data dari attributes
+            const appData = document.getElementById('app-data');
+            const currentUserId = parseInt(appData.dataset.currentUserId);
+            const userRoleId = parseInt(appData.dataset.userRoleId);
+            const picId = parseInt(appData.dataset.picId);
+            const remainingVolume = parseFloat(appData.dataset.remainingVolume);
+            const satuan = appData.dataset.satuan;
+
             // Fungsi untuk membuka modal
             function openModal(targetModal) {
                 if (targetModal && modalBackdrop) {
@@ -547,7 +613,6 @@
             function closeModal(targetModal) {
                 if (targetModal && modalBackdrop) {
                     targetModal.classList.add('animate-fadeOut');
-
                     setTimeout(() => {
                         targetModal.classList.remove('animate-fadeIn', 'animate-fadeOut');
                         targetModal.classList.add('hidden');
@@ -560,48 +625,46 @@
             // Handle Edit Alokasi
             const editAlokasiButtons = document.querySelectorAll('.edit-alokasi-btn');
             const editAlokasiForm = document.getElementById('editAlokasiForm');
+            const editTargetInput = document.getElementById('edit_target');
+            const editRealisasiInput = document.getElementById('edit_realisasi');
+            const editNilaiInput = document.getElementById('edit_nilai');
 
             if (editAlokasiButtons.length > 0 && editAlokasiForm) {
                 editAlokasiButtons.forEach(button => {
                     button.addEventListener('click', function() {
                         const alokasiId = this.getAttribute('data-alokasi-id');
                         const pelaksanaName = this.getAttribute('data-pelaksana-name');
+                        const pelaksanaId = parseInt(this.getAttribute('data-pelaksana-id'));
                         const target = this.getAttribute('data-target');
                         const realisasi = this.getAttribute('data-realisasi');
-                        const currentRemainingVolume = parseFloat('{{ $remainingVolume }}');
-                        const maxTarget = parseFloat(target) + currentRemainingVolume;
+                        const nilai = this.getAttribute('data-nilai');
+                        const maxTarget = parseFloat(target) + remainingVolume;
 
                         // Update form action
                         editAlokasiForm.action = `/alokasi/${alokasiId}`;
 
                         // Fill form fields
                         document.getElementById('edit_pelaksana').value = pelaksanaName;
-                        document.getElementById('edit_target').value = target;
-                        document.getElementById('edit_target').max = maxTarget;
-                        document.getElementById('edit_realisasi').value = realisasi;
-                        document.getElementById('edit_realisasi').max = target;
+                        editTargetInput.value = target;
+                        editTargetInput.max = maxTarget;
+                        editRealisasiInput.value = realisasi;
+                        editRealisasiInput.max = target;
+                        editNilaiInput.value = nilai || '';
 
                         // Update max target text
-                        //document.getElementById('edit_max_target').textContent = `Nilai maksimal: ${maxTarget} {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_satuan }}`;
+                        document.getElementById('edit_max_target').textContent = `Maksimal target: ${maxTarget} ${satuan}`;
 
-                        // Check if file exists
-                        fetch(`/api/alokasi/${alokasiId}/file-info`)
-                            .then(response => response.json())
-                            .then(data => {
-                                const fileContainer = document.getElementById('current_file_container');
-                                const fileLink = document.getElementById('current_file_link');
+                        // Reset classes terlebih dahulu
+                        editTargetInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                        editRealisasiInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                        editNilaiInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                        editTargetInput.disabled = false;
+                        editRealisasiInput.disabled = false;
+                        editNilaiInput.disabled = false;
 
-                                if (data.has_file) {
-                                    fileContainer.classList.remove('hidden');
-                                    fileLink.href = data.file_link;
-                                    fileLink.textContent = data.file_name;
-                                } else {
-                                    fileContainer.classList.add('hidden');
-                                }
-                            })
-                            .catch(error => console.error('Error fetching file info:', error));
+                        
 
-                        // Check and display file information
+                        // Handle file bukti dukung
                         const buktiDukungFileId = this.getAttribute('data-bukti-dukung-file-id');
                         const buktiDukungFileName = this.getAttribute('data-bukti-dukung-file-name');
                         const buktiDukungLink = this.getAttribute('data-bukti-dukung-link');
@@ -609,18 +672,20 @@
                         const fileContainer = document.getElementById('current_file_container');
                         const fileLink = document.getElementById('current_file_link');
 
-                        if (buktiDukungFileId) {
-                            fileContainer.classList.remove('hidden');
-                            fileLink.href = buktiDukungLink;
-                            fileLink.textContent = buktiDukungFileName;
-                        } else {
-                            fileContainer.classList.add('hidden');
+                        if (fileContainer && fileLink) {
+                            if (buktiDukungFileId) {
+                                fileContainer.classList.remove('hidden');
+                                fileLink.href = buktiDukungLink;
+                                fileLink.textContent = buktiDukungFileName;
+                            } else {
+                                fileContainer.classList.add('hidden');
+                            }
                         }
                     });
                 });
             }
 
-            // Modal functions for opens and closes
+            // Modal functions
             const modalButtons = document.querySelectorAll('[data-modal-toggle]');
             const modalCloseButtons = document.querySelectorAll('[data-modal-hide]');
 
@@ -639,7 +704,7 @@
                 });
             });
 
-            // Close modal when clicking outside the modal content
+            // Close modal when clicking outside
             const modals = document.querySelectorAll('.z-50.fixed');
             modals.forEach(modal => {
                 modal.addEventListener('click', function(event) {
@@ -649,7 +714,7 @@
                 });
             });
 
-            // Add keydown event for Escape key
+            // ESC key handler
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
                     modals.forEach(modal => {
@@ -660,51 +725,40 @@
                 }
             });
 
-            // Handle success popup
+            // Popup handlers
             function closeSuccessPopup() {
                 const popup = document.getElementById('success-popup');
                 if (popup) {
-                    // Add slide-out animation
-                    popup.classList.add('transform', 'translate-x-full');
-                    popup.classList.add('opacity-0');
-
+                    popup.classList.add('transform', 'translate-x-full', 'opacity-0');
                     setTimeout(() => {
                         popup.style.display = 'none';
                     }, 300);
                 }
             }
 
-            // Handle error popup
             function closeErrorPopup() {
                 const popup = document.getElementById('error-popup');
                 if (popup) {
-                    // Add slide-out animation
-                    popup.classList.add('transform', 'translate-x-full');
-                    popup.classList.add('opacity-0');
-
+                    popup.classList.add('transform', 'translate-x-full', 'opacity-0');
                     setTimeout(() => {
                         popup.style.display = 'none';
                     }, 300);
                 }
             }
 
-            // Make closeSuccessPopup and closeErrorPopup functions global
+            // Make functions global
             window.closeSuccessPopup = closeSuccessPopup;
             window.closeErrorPopup = closeErrorPopup;
 
-            // Auto close popups after 5 seconds
+            // Auto close popups
             const successPopup = document.getElementById('success-popup');
             if (successPopup) {
-                setTimeout(() => {
-                    closeSuccessPopup();
-                }, 5000);
+                setTimeout(closeSuccessPopup, 5000);
             }
 
             const errorPopup = document.getElementById('error-popup');
             if (errorPopup) {
-                setTimeout(() => {
-                    closeErrorPopup();
-                }, 5000);
+                setTimeout(closeErrorPopup, 5000);
             }
         });
     </script>

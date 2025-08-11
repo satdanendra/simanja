@@ -18,4 +18,9 @@ class Role extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    // Constants untuk role IDs
+    const SUPERADMIN = 1;
+    const KEPALA_BPS = 2;
+    const KETUA_TIM = 3;
 }

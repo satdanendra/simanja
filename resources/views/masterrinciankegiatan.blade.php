@@ -43,6 +43,7 @@
                         </h3>
 
                         <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-3 w-full md:w-auto">
+                            @if(Auth::user()->isSuperadmin())
                             <button
                                 data-modal-target="importRincianKegiatanModal"
                                 data-modal-show="importRincianKegiatanModal"
@@ -52,6 +53,7 @@
                                 </svg>
                                 <span>Import Rincian Kegiatan</span>
                             </button>
+                            @endif
 
                             <div class="relative w-full md:w-64">
                                 <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -79,19 +81,23 @@
                             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
                                     <tr>
+                                        @if(Auth::user()->isSuperadmin())
                                         <th scope="col" class="px-4 py-3">
                                             <div class="flex items-center">
                                                 <input id="checkbox-all" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
                                                 <label for="checkbox-all" class="sr-only">checkbox</label>
                                             </div>
                                         </th>
+                                        @endif
                                         <th scope="col" class="px-4 py-3">Tim / RK Tim</th>
                                         <th scope="col" class="px-4 py-3">Proyek</th>
                                         <th scope="col" class="px-4 py-3">Kegiatan</th>
                                         <th scope="col" class="px-4 py-3">Rincian Kegiatan</th>
                                         <th scope="col" class="px-4 py-3">Catatan</th>
                                         <th scope="col" class="px-4 py-3">Satuan</th>
+                                        @if(Auth::user()->isSuperadmin())
                                         <th scope="col" class="px-4 py-3">Aksi</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -99,12 +105,14 @@
                                     <tr class="rincian-kegiatan-row bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150" 
                                         data-urai="{{ strtolower($rincian->rincian_kegiatan_urai) }}" 
                                         data-kode="{{ strtolower($rincian->rincian_kegiatan_kode) }}">
+                                        @if(Auth::user()->isSuperadmin())
                                         <td class="w-4 p-4">
                                             <div class="flex items-center">
                                                 <input id="checkbox-{{ $rincian->id }}" type="checkbox" class="rincian-kegiatan-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" data-id="{{ $rincian->id }}">
                                                 <label for="checkbox-{{ $rincian->id }}" class="sr-only">checkbox</label>
                                             </div>
                                         </td>
+                                        @endif
                                         <td class="px-4 py-3">
                                             <div class="font-medium text-gray-900 dark:text-white">{{ $rincian->kegiatan->proyek->rkTim->tim->tim_kode ?? 'N/A' }}</div>
                                             <div class="text-xs text-gray-500">{{ Str::limit($rincian->kegiatan->proyek->rkTim->rk_tim_kode, 30) ?? 'N/A' }}</div>
@@ -123,9 +131,11 @@
                                         </td>
                                         <td class="px-4 py-3">{{ Str::limit($rincian->catatan, 30) }}</td>
                                         <td class="px-4 py-3">{{ $rincian->rincian_kegiatan_satuan }}</td>
+                                        @if(Auth::user()->isSuperadmin())
                                         <td class="px-4 py-3 text-right">
                                             <a href="#" data-rincian-id="{{ $rincian->id }}" class="delete-rincian font-medium text-red-600 hover:underline">Hapus</a>
                                         </td>
+                                        @endif
                                     </tr>
                                     @endforeach
                                 </tbody>

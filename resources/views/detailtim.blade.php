@@ -62,6 +62,7 @@
                                 <p class="text-blue-100 text-sm">{{ $tim->users->count() }} Anggota</p>
                             </div>
                         </div>
+                        @if(Auth::id() == $tim->tim_ketua)
                         <button
                             data-modal-target="tambahAnggotaModal"
                             data-modal-toggle="tambahAnggotaModal"
@@ -71,6 +72,7 @@
                             </svg>
                             Tambah Anggota
                         </button>
+                        @endif
                     </div>
                 </div>
 
@@ -85,7 +87,9 @@
                                     <th scope="col" class="px-6 py-4">Email</th>
                                     <th scope="col" class="px-6 py-4">NIP Lama</th>
                                     <th scope="col" class="px-6 py-4">NIP Baru</th>
+                                    @if(Auth::id() == $tim->tim_ketua)
                                     <th scope="col" class="px-6 py-4 text-center">Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,12 +119,14 @@
                                         <form action="{{ route('tim.anggota.destroy', ['tim' => $tim->id, 'user' => $user->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini dari tim?')">
                                             @csrf
                                             @method('DELETE')
+                                            @if(Auth::id() == $tim->tim_ketua)
                                             <button type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" />
                                                 </svg>
                                                 Hapus
                                             </button>
+                                            @endif
                                         </form>
                                     </td>
                                 </tr>
@@ -137,12 +143,14 @@
                         </div>
                         <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Belum ada anggota</h3>
                         <p class="text-center text-gray-500 dark:text-gray-400 mb-6 max-w-md">Tim ini belum memiliki anggota. Tambahkan anggota untuk mulai berkolaborasi dan mengelola pekerjaan bersama.</p>
+                        @if(Auth::id() == $tim->tim_ketua)
                         <button data-modal-target="tambahAnggotaModal" data-modal-toggle="tambahAnggotaModal" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm transition duration-150 ease-in-out">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                             </svg>
                             Tambah Anggota Tim
                         </button>
+                        @endif
                     </div>
                     @endif
                 </div>
@@ -168,6 +176,7 @@
                                 <p class="text-blue-100 text-sm">{{ isset($rkTims) ? count($rkTims) : 0 }} RK Tim</p>
                             </div>
                         </div>
+                        @if(Auth::id() == $tim->tim_ketua)
                         <button
                             data-modal-target="tambahRkTimModal"
                             data-modal-toggle="tambahRkTimModal"
@@ -177,6 +186,7 @@
                             </svg>
                             Tambah RK Tim
                         </button>
+                        @endif
                     </div>
                 </div>
 
@@ -189,7 +199,9 @@
                                 <tr>
                                     <th scope="col" class="px-6 py-4">Kode RK Tim</th>
                                     <th scope="col" class="px-6 py-4">Uraian RK Tim</th>
+                                    @if(Auth::id() == $tim->tim_ketua)
                                     <th scope="col" class="px-6 py-4 text-center">Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -207,6 +219,7 @@
                                         </a>
                                     </td>
                                     <td class="px-6 py-4 text-center">
+                                        @if(Auth::id() == $tim->tim_ketua)
                                         <button
                                             data-modal-target="editRkTimModal"
                                             data-modal-toggle="editRkTimModal"
@@ -229,6 +242,7 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -244,12 +258,14 @@
                         </div>
                         <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Belum ada RK Tim</h3>
                         <p class="text-center text-gray-500 dark:text-gray-400 mb-6 max-w-md">Tim ini belum memiliki RK Tim. Tambahkan RK Tim untuk mulai mengelola pekerjaan.</p>
+                        @if(Auth::id() == $tim->tim_ketua)
                         <button data-modal-target="tambahRkTimModal" data-modal-toggle="tambahRkTimModal" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm transition duration-150 ease-in-out">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
                             Tambah RK Tim
                         </button>
+                        @endif
                     </div>
                     @endif
                 </div>
@@ -274,6 +290,7 @@
                                 <p class="text-blue-100 text-sm">{{ isset($proyeks) ? count($proyeks) : 0 }} Proyek</p>
                             </div>
                         </div>
+                        @if(Auth::id() == $tim->tim_ketua)
                         <button
                             data-modal-target="tambahProyekModal"
                             data-modal-toggle="tambahProyekModal"
@@ -283,6 +300,7 @@
                             </svg>
                             Tambah Proyek
                         </button>
+                        @endif
                     </div>
                 </div>
 
@@ -347,6 +365,7 @@
                                             </svg>
                                             Detail
                                         </a>
+                                        @if(Auth::id() == $tim->tim_ketua)
                                         <button
                                             data-modal-target="editProyekModal"
                                             data-modal-toggle="editProyekModal"
@@ -375,6 +394,7 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -390,12 +410,14 @@
                         </div>
                         <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Belum ada proyek</h3>
                         <p class="text-center text-gray-500 dark:text-gray-400 mb-6 max-w-md">RK Tim ini belum memiliki proyek. Tambahkan proyek untuk mulai mengelola kegiatan.</p>
+                        @if(Auth::id() == $tim->tim_ketua)
                         <button data-modal-target="tambahProyekModal" data-modal-toggle="tambahProyekModal" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm transition duration-150 ease-in-out">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
                             Tambah Proyek
                         </button>
+                        @endif
                     </div>
                     @endif
                 </div>

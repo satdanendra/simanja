@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class AlokasiRincianKegiatanController extends Controller
 {
@@ -47,12 +48,27 @@ class AlokasiRincianKegiatanController extends Controller
         // Mendapatkan alokasi yang sudah ada
         $existingAllocations = $rincianKegiatan->alokasi;
 
+        // Cek apakah user adalah PIC
+        $isPic = Auth::id() == $rincianKegiatan->kegiatan->proyek->pic;
+
+        // Cek apakah user adalah salah satu pelaksana
+        $isAnyPelaksana = $rincianKegiatan->alokasi->contains('pelaksana_id', Auth::id());
+
+        // Cek apakah user adalah Kepala BPS
+        $isKepalaBps = Auth::user()->role_id == 2;
+
+        // User memiliki akses jika PIC, salah satu pelaksana, atau Kepala BPS
+        $userHasAccess = $isPic || $isAnyPelaksana || $isKepalaBps;
+
         return view('detailrinciankegiatan', compact(
             'rincianKegiatan',
             'timMembers',
             'totalAllocated',
             'remainingVolume',
-            'existingAllocations'
+            'existingAllocations',
+            'userHasAccess',
+            'isPic',
+            'isKepalaBps'
         ));
     }
 
@@ -112,6 +128,7 @@ class AlokasiRincianKegiatanController extends Controller
         $validator = Validator::make($request->all(), [
             'target' => 'required|numeric|min:0.01',
             'realisasi' => 'nullable|numeric|min:0',
+            'nilai' => 'nullable|numeric|min:0|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -138,6 +155,11 @@ class AlokasiRincianKegiatanController extends Controller
             'target' => $request->target,
             'realisasi' => $request->realisasi,
         ];
+
+        // Hanya kepala BPS (role_id = 2) yang bisa mengubah nilai
+        if (Auth::user()->role_id == 2 && $request->has('nilai')) {
+            $updateData['nilai'] = $request->nilai;
+        }
 
         // Memperbarui alokasi
         $alokasi->update($updateData);

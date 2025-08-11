@@ -61,6 +61,7 @@
                             </div>
                         </div>
 
+                        @if(Auth::id() == $kegiatan->proyek->pic)
                         <button
                             data-modal-target="editKegiatanModal"
                             data-modal-toggle="editKegiatanModal"
@@ -74,6 +75,7 @@
                             </svg>
                             Edit Kegiatan
                         </button>
+                        @endif
                     </div>
                 </div>
 
@@ -123,6 +125,7 @@
                                 <p class="text-blue-100 text-sm">{{ isset($rincianKegiatans) ? count($rincianKegiatans) : 0 }} Rincian Kegiatan</p>
                             </div>
                         </div>
+                        @if(Auth::id() == $kegiatan->proyek->pic)
                         <button
                             data-modal-target="tambahRincianKegiatanModal"
                             data-modal-toggle="tambahRincianKegiatanModal"
@@ -132,6 +135,7 @@
                             </svg>
                             Tambah Rincian Kegiatan
                         </button>
+                        @endif
                     </div>
                 </div>
 
@@ -178,6 +182,7 @@
                                             </svg>
                                             Detail
                                         </a>
+                                        @if(Auth::id() == $kegiatan->proyek->pic)
                                         <button
                                             data-modal-target="editRincianKegiatanModal"
                                             data-modal-toggle="editRincianKegiatanModal"
@@ -206,6 +211,7 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -221,12 +227,14 @@
                         </div>
                         <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Belum ada rincian kegiatan</h3>
                         <p class="text-center text-gray-500 dark:text-gray-400 mb-6 max-w-md">Kegiatan ini belum memiliki rincian kegiatan. Tambahkan rincian kegiatan untuk mulai mendokumentasikan detail pekerjaan.</p>
+                        @if(Auth::id() == $kegiatan->proyek->pic)
                         <button data-modal-target="tambahRincianKegiatanModal" data-modal-toggle="tambahRincianKegiatanModal" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm transition duration-150 ease-in-out">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
                             Tambah Rincian Kegiatan
                         </button>
+                        @endif
                     </div>
                     @endif
                 </div>

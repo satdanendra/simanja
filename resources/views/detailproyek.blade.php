@@ -61,6 +61,7 @@
                             </div>
                         </div>
 
+                        @if(Auth::id() == $proyek->rkTim->tim->tim_ketua)
                         <button
                             data-modal-target="editProyekModal"
                             data-modal-toggle="editProyekModal"
@@ -79,6 +80,7 @@
                             </svg>
                             Edit Proyek
                         </button>
+                        @endif
                     </div>
                 </div>
 
@@ -184,6 +186,7 @@
                                 <p class="text-blue-100 text-sm">{{ isset($kegiatans) ? count($kegiatans) : 0 }} Kegiatan</p>
                             </div>
                         </div>
+                        @if(Auth::id() == $proyek->pic)
                         <button
                             data-modal-target="tambahKegiatanModal"
                             data-modal-toggle="tambahKegiatanModal"
@@ -193,6 +196,7 @@
                             </svg>
                             Tambah Kegiatan
                         </button>
+                        @endif
                     </div>
                 </div>
 
@@ -223,6 +227,7 @@
                                             </svg>
                                             Detail
                                         </a>
+                                        @if(Auth::id() == $proyek->pic)
                                         <button
                                             data-modal-target="editKegiatanModal"
                                             data-modal-toggle="editKegiatanModal"
@@ -246,6 +251,7 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -261,12 +267,14 @@
                         </div>
                         <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Belum ada kegiatan</h3>
                         <p class="text-center text-gray-500 dark:text-gray-400 mb-6 max-w-md">Proyek ini belum memiliki kegiatan. Tambahkan kegiatan untuk mulai mengelola rincian kegiatan.</p>
+                        @if(Auth::id() == $proyek->pic)
                         <button data-modal-target="tambahKegiatanModal" data-modal-toggle="tambahKegiatanModal" class="flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm transition duration-150 ease-in-out">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
                             Tambah Kegiatan
                         </button>
+                        @endif
                     </div>
                     @endif
                 </div>

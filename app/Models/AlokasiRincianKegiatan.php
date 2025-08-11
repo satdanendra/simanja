@@ -16,6 +16,7 @@ class AlokasiRincianKegiatan extends Model
         'pelaksana_id',
         'target',
         'realisasi',
+        'nilai',
         'bukti_dukung_file_id',
         'bukti_dukung_file_name',
         'bukti_dukung_link',
