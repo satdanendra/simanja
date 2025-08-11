@@ -146,6 +146,42 @@ class AlokasiRincianKegiatanController extends Controller
             ->with('success', 'Alokasi berhasil diperbarui');
     }
 
+    /**
+     * Menghapus alokasi.
+     */
+    public function destroyAlokasi(AlokasiRincianKegiatan $alokasi)
+    {
+        try {
+            // Simpan rincian kegiatan ID untuk redirect
+            $rincianKegiatanId = $alokasi->rincian_kegiatan_id;
+
+            // Optional: Validasi apakah user berhak menghapus alokasi
+            // Misalnya hanya pelaksana atau admin yang bisa menghapus
+            // $currentUser = auth()->user();
+            // if ($alokasi->pelaksana_id !== $currentUser->id && !$currentUser->isAdmin()) {
+            //     return redirect()->back()
+            //         ->with('error', 'Anda tidak memiliki hak untuk menghapus alokasi ini');
+            // }
+
+            // Cek apakah sudah ada realisasi
+            if ($alokasi->realisasi > 0) {
+                return redirect()->back()
+                    ->with('error', 'Tidak dapat menghapus alokasi yang sudah memiliki realisasi');
+            }
+
+            // Hapus alokasi
+            $alokasi->delete();
+
+            return redirect()->route('detailrinciankegiatan', $rincianKegiatanId)
+                ->with('success', 'Alokasi berhasil dihapus');
+        } catch (\Exception $e) {
+            Log::error('Error deleting alokasi: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menghapus alokasi');
+        }
+    }
+
     // === BUKTI DUKUNG METHODS ===
 
     /**

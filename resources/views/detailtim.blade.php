@@ -210,9 +210,9 @@
                                         <button
                                             data-modal-target="editRkTimModal"
                                             data-modal-toggle="editRkTimModal"
-                                            data-rktim-id="{{ $rkTim->id }}"
-                                            data-rktim-kode="{{ $rkTim->rk_tim_kode }}"
-                                            data-rktim-urai="{{ $rkTim->rk_tim_urai }}"
+                                            data-rktim-id="{{ $rkTim->masterRkTim->id }}"
+                                            data-rktim-kode="{{ $rkTim->masterRkTim->rk_tim_kode }}"
+                                            data-rktim-urai="{{ $rkTim->masterRkTim->rk_tim_urai }}"
                                             class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150 mr-2 edit-rktim-btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -358,6 +358,7 @@
                                             data-iku-urai="{{ $proyek->masterProyek->iku_urai }}"
                                             data-rk-anggota="{{ $proyek->masterProyek->rk_anggota }}"
                                             data-proyek-lapangan="{{ $proyek->masterProyek->proyek_lapangan }}"
+                                            data-pic-id="{{ $proyek->pic }}"
                                             class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 inline-flex items-center transition-colors duration-150 mr-2 edit-proyek-btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -849,7 +850,7 @@
                                 </div>
                                 <div>
                                     <label for="new_proyek_kode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Proyek</label>
-                                    <input type="text" name="new_proyek_kode" id="new_proyek_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: P1.1.1">
+                                    <input type="text" name="new_proyek_kode" id="new_proyek_kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Contoh: P1111">
                                 </div>
                                 <div>
                                     <label for="new_proyek_urai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uraian Proyek</label>
@@ -940,6 +941,7 @@
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-2 gap-4 mb-4">
+                            <input type="hidden" name="tim_id" id="tim_id" value="{{ $tim->id }}">
                             <div class="col-span-2">
                                 <label for="edit_rk_tim_id" class="block mb-2 text-sm font-medium text-gray-900">RK Tim</label>
                                 <select name="rk_tim_id" id="edit_rk_tim_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
@@ -1443,21 +1445,54 @@
             // Handle Edit RK Tim
             const editRkTimButtons = document.querySelectorAll('.edit-rktim-btn');
             const editRkTimForm = document.getElementById('editRkTimForm');
+            const editRkTimModal = document.getElementById('editRkTimModal');
 
             if (editRkTimButtons.length > 0 && editRkTimForm) {
                 editRkTimButtons.forEach(button => {
-                    button.addEventListener('click', function() {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+
+                        // Debug: log data yang diambil
                         const rkTimId = this.getAttribute('data-rktim-id');
                         const rkTimKode = this.getAttribute('data-rktim-kode');
                         const rkTimUrai = this.getAttribute('data-rktim-urai');
-                        const timId = document.querySelector('input[name="tim_id"]') ? document.querySelector('input[name="tim_id"]').value : '';
+
+                        console.log('RK Tim Data:', {
+                            id: rkTimId,
+                            kode: rkTimKode,
+                            urai: rkTimUrai
+                        });
+
+                        // Pastikan data tidak null/undefined
+                        if (!rkTimId || !rkTimKode || !rkTimUrai) {
+                            console.error('Data RK Tim tidak lengkap');
+                            return;
+                        }
+
+                        const timId = document.querySelector('input[name="tim_id"]') ?
+                            document.querySelector('input[name="tim_id"]').value : '{{ $tim->id }}';
 
                         // Set form action
                         editRkTimForm.action = `/tim/${timId}/rktim/${rkTimId}`;
 
-                        // Fill form fields
-                        document.getElementById('edit_rk_tim_kode').value = rkTimKode;
-                        document.getElementById('edit_rk_tim_urai').value = rkTimUrai;
+                        // Tunggu sampai modal terbuka, lalu isi form
+                        setTimeout(() => {
+                            // Fill form fields
+                            const kodeInput = document.getElementById('edit_rk_tim_kode');
+                            const uraiInput = document.getElementById('edit_rk_tim_urai');
+
+                            if (kodeInput && uraiInput) {
+                                kodeInput.value = rkTimKode || '';
+                                uraiInput.value = rkTimUrai || '';
+
+                                console.log('Form filled:', {
+                                    kode: kodeInput.value,
+                                    urai: uraiInput.value
+                                });
+                            } else {
+                                console.error('Form elements not found');
+                            }
+                        }, 100);
                     });
                 });
             }
@@ -1493,7 +1528,9 @@
                         const rkAnggota = this.getAttribute('data-rk-anggota');
                         const proyekLapangan = this.getAttribute('data-proyek-lapangan');
                         const picId = this.getAttribute('data-pic-id');
-                        const timId = document.querySelector('input[name="tim_id"]') ? document.querySelector('input[name="tim_id"]').value : '';
+                        const timId = document.querySelector('input[name="tim_id"]') ?
+                            document.querySelector('input[name="tim_id"]').value :
+                            '{{ $tim->id }}';
 
                         // Set form action - Adapt to the appropriate route
                         editProyekForm.action = `/tim/${timId}/proyek/${proyekId}`;

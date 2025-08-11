@@ -17,10 +17,16 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('pegawai')->get();
-        $pegawais = MasterPegawai::all();
+
+        // Ambil ID pegawai yang sudah terdaftar sebagai user
+        $registeredPegawaiIds = User::pluck('pegawai_id')->toArray();
+
+        // Ambil pegawai yang belum terdaftar sebagai user
+        $pegawais = MasterPegawai::whereNotIn('id', $registeredPegawaiIds)->get();
+
         return view('user', compact('users', 'pegawais'));
     }
-
+    
     public function store(Request $request)
     {
         $validated = $request->validate([

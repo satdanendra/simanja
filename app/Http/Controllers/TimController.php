@@ -12,6 +12,7 @@ use App\Models\MasterRkTim;
 use App\Models\MasterDirektorat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class TimController extends Controller
 {
@@ -310,15 +311,35 @@ class TimController extends Controller
     /**
      * Hapus RK Tim dari tim
      */
-    public function hapusRkTim(Tim $tim, $rkTimId)
+    /**
+     * Hapus RK Tim dari tim
+     */
+    public function hapusRkTim(Tim $tim, RkTim $rktim)
     {
-        // Hapus relasi RK Tim dengan Tim
-        RkTim::where('tim_id', $tim->id)
-            ->where('master_rk_tim_id', $rkTimId)
-            ->delete();
+        try {
+            // Verifikasi bahwa RK Tim terkait dengan Tim ini
+            if ($rktim->tim_id !== $tim->id) {
+                return redirect()->back()
+                    ->with('error', 'RK Tim tidak terkait dengan Tim ini.');
+            }
 
-        return redirect()->route('detailtim', $tim->id)
-            ->with('success', 'RK Tim berhasil dihapus dari tim');
+            // Cek apakah RK Tim masih memiliki proyek
+            if ($rktim->proyeks()->count() > 0) {
+                return redirect()->back()
+                    ->with('error', 'Tidak dapat menghapus RK Tim yang masih memiliki proyek. Hapus semua proyek terlebih dahulu.');
+            }
+
+            // Hapus RK Tim
+            $rktim->delete();
+
+            return redirect()->route('detailtim', $tim->id)
+                ->with('success', 'RK Tim berhasil dihapus dari tim');
+        } catch (\Exception $e) {
+            Log::error('Error deleting RK Tim: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menghapus RK Tim.');
+        }
     }
 
     /**

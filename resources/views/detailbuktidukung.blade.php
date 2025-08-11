@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Bukti Dukung') }} - {{ $rincianKegiatan->masterRincianKegiatan->rincian_kegiatan_urai }}
             </h2>
-            
+
             <a href="#" data-modal-target="uploadBuktiDukungModal" data-modal-toggle="uploadBuktiDukungModal" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -192,4 +192,111 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('files');
+            const form = document.querySelector('form[action*="bukti-dukung.store"]');
+            const maxFileSize = 10 * 1024 * 1024; // 10MB dalam bytes
+
+            // Validasi saat file dipilih
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const files = e.target.files;
+                    const errorContainer = document.getElementById('file-error');
+
+                    // Hapus error message sebelumnya
+                    if (errorContainer) {
+                        errorContainer.remove();
+                    }
+
+                    let hasError = false;
+                    let errorMessages = [];
+
+                    // Cek setiap file
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+
+                        if (file.size > maxFileSize) {
+                            hasError = true;
+                            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                            errorMessages.push(`File "${file.name}" berukuran ${fileSizeMB}MB (melebihi batas 10MB)`);
+                        }
+                    }
+
+                    // Tampilkan error jika ada
+                    if (hasError) {
+                        showFileError(errorMessages);
+                        // Reset file input
+                        e.target.value = '';
+                    }
+                });
+            }
+
+            // Validasi saat form submit
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const files = fileInput.files;
+                    let hasError = false;
+                    let errorMessages = [];
+
+                    // Cek setiap file
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+
+                        if (file.size > maxFileSize) {
+                            hasError = true;
+                            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                            errorMessages.push(`File "${file.name}" berukuran ${fileSizeMB}MB (melebihi batas 10MB)`);
+                        }
+                    }
+
+                    if (hasError) {
+                        e.preventDefault();
+                        showFileError(errorMessages);
+                        return false;
+                    }
+                });
+            }
+
+            // Fungsi untuk menampilkan error
+            function showFileError(messages) {
+                const fileInput = document.getElementById('files');
+                const existingError = document.getElementById('file-error');
+
+                if (existingError) {
+                    existingError.remove();
+                }
+
+                const errorDiv = document.createElement('div');
+                errorDiv.id = 'file-error';
+                errorDiv.className = 'mt-2 p-3 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800';
+
+                const errorContent = `
+            <div class="flex items-start">
+                <svg class="flex-shrink-0 w-4 h-4 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                    <span class="font-medium">Error Upload File:</span>
+                    <ul class="mt-1 list-disc list-inside">
+                        ${messages.map(msg => `<li>${msg}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        `;
+
+                errorDiv.innerHTML = errorContent;
+
+                // Insert error setelah file input
+                fileInput.parentNode.insertBefore(errorDiv, fileInput.nextSibling);
+
+                // Auto hide setelah 10 detik
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 10000);
+            }
+        });
+    </script>
 </x-app-layout>
