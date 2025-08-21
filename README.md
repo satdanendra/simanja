@@ -1,4 +1,4 @@
-# 📊 SIMANJA - Sistem Informasi Manajemen Jadwal
+# 📊 SiMantap - Sistem Informasi Manajemen Tugas dan Pekerjaan BPS Kota Magelang
 
 ## 🎓 **Informasi Skripsi**
 
