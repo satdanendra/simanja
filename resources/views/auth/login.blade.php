@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="mb-8 relative">
-                    <h1 class="text-3xl font-bold mb-4">Sistem Informasi Manajemen Pekerjaan (SiManja)</h1>
+                    <h1 class="text-3xl font-bold mb-4">Sistem Informasi Manajemen Tugas dan Pekerjaan (SiMantap)</h1>
                     <p class="opacity-80">Portal resmi untuk meningkatkan pelayanan publik dan efisiensi kinerja aparatur negara dalam mendukung tata kelola pemerintahan yang baik.</p>
                 </div>
 
@@ -114,7 +114,7 @@
 
                     <div class="mt-8 pt-6 border-t border-gray-200">
                         <p class="text-center text-sm text-gray-600">
-                            Mengalami kesulitan login? Hubungi <span class="text-blue-600">Admin SiManja</span>
+                            Mengalami kesulitan login? Hubungi <span class="text-blue-600">Admin SiMantap</span>
                         </p>
                     </div>
                 </form>

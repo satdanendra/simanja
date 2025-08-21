@@ -9,7 +9,7 @@
 
                         <x-application-logo class="block h-8 w-auto fill-current text-blue-700" />
 
-                        <span class="text-white font-semibold text-lg">SiManja</span>
+                        <span class="text-white font-semibold text-lg">SiMantap</span>
                     </a>
                 </div>
 

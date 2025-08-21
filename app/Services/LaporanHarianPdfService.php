@@ -43,7 +43,7 @@ class LaporanHarianPdfService
             $pdf = new Fpdi('P', 'mm', 'A4', true, 'UTF-8', false);
 
             // Set document information
-            $pdf->SetCreator('SiManja - BPS Kota Magelang');
+            $pdf->SetCreator('SiMantap - BPS Kota Magelang');
             $pdf->SetAuthor($laporan->user->name);
             $pdf->SetTitle('Laporan Harian Pelaksanaan Pekerjaan');
 
