@@ -1,66 +1,284 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📊 SIMANJA - Sistem Informasi Manajemen Jadwal
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 🎓 **Informasi Skripsi**
 
-## About Laravel
+| **Field** | **Detail** |
+|-----------|------------|
+| **NIM** | 222112354 |
+| **Nama Mahasiswa** | Satrio Putyo Danendra |
+| **Judul Skripsi** | Pembangunan Sistem Informasi Manajemen Tugas dan Pekerjaan (SiManja) BPS Kota Magelang |
+| **Dosen Pembimbing** | Dr. Rindang Bangun Prasetyo, S.S.T., M.Si. |
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 **Deskripsi Singkat**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**SiMantap** adalah sistem informasi berbasis web yang dirancang khusus untuk mengelola jadwal kegiatan statistik di BPS (Badan Pusat Statistik) Kota Magelang. Sistem ini memungkinkan manajemen yang efisien terhadap berbagai kegiatan survei statistik, alokasi pegawai, dan monitoring progress proyek statistik dengan interface yang user-friendly dan fitur yang komprehensif.
 
-## Learning Laravel
+### 🎯 **Tujuan Utama**
+- Mengoptimalkan pengelolaan jadwal kegiatan statistik
+- Meningkatkan koordinasi antar tim dalam pelaksanaan survei
+- Menyediakan dashboard monitoring real-time untuk keperluan manajemen
+- Mendigitalkan proses administratif yang sebelumnya manual
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### ✨ **Fitur Utama**
+- 👥 **Manajemen Pegawai**: CRUD data pegawai dengan informasi lengkap
+- 📊 **Manajemen Proyek**: Pengelolaan proyek statistik berdasarkan IKU (Indikator Kinerja Utama)
+- 📅 **Penjadwalan**: Sistem penjadwalan kegiatan dengan alokasi SDM
+- 📈 **Dashboard Analytics**: Visualisasi data dan progress monitoring
+- 📄 **Export/Import**: Fitur export ke PDF dan import dari Excel
+- 🔐 **Multi-role Authentication**: Sistem login dengan berbagai level akses
+- 📱 **Responsive Design**: Interface yang optimal di berbagai device
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ **Teknologi yang Digunakan**
 
-## Laravel Sponsors
+### **Backend**
+- **Framework**: Laravel 11.31 (PHP 8.2+)
+- **Database**: MySQL
+- **Authentication**: Laravel Breeze
+- **API Integration**: Google Drive API
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### **Frontend**
+- **CSS Framework**: Tailwind CSS 3.1.0
+- **JavaScript**: Alpine.js 3.4.2
+- **Icons**: Various icon libraries
+- **Build Tool**: Vite 6.0
 
-### Premium Partners
+### **Libraries & Dependencies**
+- **Excel Processing**: PhpSpreadsheet, Maatwebsite Excel
+- **PDF Generation**: TCPDF, FPDI
+- **Cloud Storage**: Google Cloud Storage integration
+- **Development Tools**: Laravel Pail, Laravel Sail
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## 📁 **Struktur Folder Project**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+simanja/
+├── 📁 app/                          # Core aplikasi Laravel
+│   ├── 📁 Http/
+│   │   ├── 📁 Controllers/          # Controller untuk logika bisnis
+│   │   │   ├── MasterPegawaiController.php    # Manajemen data pegawai
+│   │   │   ├── MasterDirektoratController.php # Manajemen direktorat
+│   │   │   ├── ProyekController.php           # Manajemen proyek statistik
+│   │   │   └── DashboardController.php        # Dashboard analytics
+│   │   ├── 📁 Middleware/           # Middleware untuk autentikasi
+│   │   └── 📁 Requests/             # Form request validation
+│   ├── 📁 Models/                   # Eloquent models
+│   │   ├── MasterPegawai.php        # Model data pegawai
+│   │   ├── MasterProyek.php         # Model proyek statistik
+│   │   ├── MasterDirektorat.php     # Model direktorat
+│   │   └── User.php                 # Model user authentication
+│   ├── 📁 Services/                 # Business logic services
+│   └── 📁 Providers/                # Service providers
+│
+├── 📁 bootstrap/                    # Bootstrap Laravel
+│   └── 📁 cache/                    # Cache file aplikasi
+│
+├── 📁 config/                       # Konfigurasi aplikasi
+│   ├── app.php                      # Konfigurasi aplikasi utama
+│   ├── database.php                 # Konfigurasi database
+│   └── services.php                 # Konfigurasi service external
+│
+├── 📁 database/                     # Database related files
+│   ├── 📁 migrations/               # Database migrations
+│   ├── 📁 seeders/                  # Database seeders
+│   └── 📁 factories/                # Model factories
+│
+├── 📁 public/                       # Public assets
+│   ├── 📁 css/                      # Compiled CSS files
+│   ├── 📁 js/                       # Compiled JavaScript files
+│   ├── 📁 images/                   # Static images
+│   └── index.php                    # Entry point aplikasi
+│
+├── 📁 resources/                    # Resources dan views
+│   ├── 📁 views/                    # Blade templates
+│   │   ├── 📁 layouts/              # Layout templates
+│   │   ├── 📁 components/           # Reusable components
+│   │   ├── 📁 dashboard/            # Dashboard views
+│   │   ├── 📁 master-pegawai/       # Views manajemen pegawai
+│   │   └── 📁 master-proyek/        # Views manajemen proyek
+│   ├── 📁 css/                      # Source CSS files
+│   └── 📁 js/                       # Source JavaScript files
+│
+├── 📁 routes/                       # Route definitions
+│   ├── web.php                      # Web routes
+│   ├── api.php                      # API routes
+│   └── console.php                  # Artisan commands
+│
+├── 📁 storage/                      # Storage untuk files
+│   ├── 📁 app/                      # Application storage
+│   ├── 📁 framework/                # Framework storage
+│   └── 📁 logs/                     # Application logs
+│
+├── 📁 tests/                        # Test files
+│   ├── 📁 Feature/                  # Feature tests
+│   └── 📁 Unit/                     # Unit tests
+│
+├── 📁 vendor/                       # Composer dependencies
+│
+├── .env.example                     # Environment configuration template
+├── .gitignore                       # Git ignore file
+├── artisan                          # Laravel Artisan CLI
+├── composer.json                    # Composer dependencies
+├── package.json                     # NPM dependencies
+├── tailwind.config.js               # Tailwind CSS configuration
+├── vite.config.js                   # Vite build configuration
+└── README.md                        # This file
+```
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🚀 **Instalasi dan Setup**
 
-## Security Vulnerabilities
+### **Prerequisites**
+- PHP >= 8.2
+- Composer
+- Node.js & NPM
+- MySQL/MariaDB
+- Git
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### **Langkah Instalasi**
 
-## License
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/satdanendra/simanja.git
+   cd simanja
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+2. **Install Dependencies**
+   ```bash
+   # Install PHP dependencies
+   composer install
+   
+   # Install Node.js dependencies
+   npm install
+   ```
+
+3. **Environment Setup**
+   ```bash
+   # Copy environment file
+   cp .env.example .env
+   
+   # Generate application key
+   php artisan key:generate
+   ```
+
+4. **Database Configuration**
+   ```bash
+   # Edit .env file dengan konfigurasi database Anda
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=your_database
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
+
+5. **Database Migration & Seeding**
+   ```bash
+   # Run migrations
+   php artisan migrate
+   
+   # Run seeders (optional)
+   php artisan db:seed
+   ```
+
+6. **Build Assets**
+   ```bash
+   # Development
+   npm run dev
+   
+   # Production
+   npm run build
+   ```
+
+7. **Start Development Server**
+   ```bash
+   # Method 1: Laravel built-in server
+   php artisan serve
+   
+   # Method 2: Using Laravel Sail (Docker)
+   ./vendor/bin/sail up
+   
+   # Method 3: All services (recommended for development)
+   composer dev
+   ```
+
+---
+
+## 🔧 **Konfigurasi Tambahan**
+
+### **Google Drive Integration**
+```env
+GOOGLE_DRIVE_CLIENT_ID=your_client_id
+GOOGLE_DRIVE_CLIENT_SECRET=your_client_secret
+GOOGLE_DRIVE_REFRESH_TOKEN=your_refresh_token
+GOOGLE_DRIVE_FOLDER_ID=your_folder_id
+```
+
+## 📊 **Database Schema**
+
+### **Tabel Utama**
+- **master_pegawai**: Data pegawai BPS
+- **master_proyek**: Data proyek statistik
+- **master_direktorat**: Data direktorat/unit kerja
+- **master_rk_tim**: Data rencana kerja tim
+- **master_generic_activity**: Aktivitas generik
+- **alokasi**: Alokasi pegawai ke proyek
+- **users**: Data pengguna sistem
+
+### **Relasi Utama**
+- Pegawai ↔ Alokasi ↔ Proyek
+- Proyek ↔ RK Tim ↔ Direktorat
+- Generic Activity ↔ Proyek
+
+---
+
+## 🎨 **Fitur-Fitur Unggulan**
+
+### **1. Dashboard Analytics** 📈
+- Statistik pegawai aktif/non-aktif
+- Progress proyek real-time
+- Grafik alokasi SDM
+- Summary kegiatan per direktorat
+
+### **2. Manajemen Pegawai** 👥
+- CRUD data pegawai lengkap
+- Import/Export Excel
+- Filter dan pencarian advanced
+- Tracking status aktif/non-aktif
+
+### **3. Manajemen Proyek** 📊
+- Pengelolaan proyek berdasarkan IKU
+- Alokasi anggota tim
+- Tracking kegiatan lapangan
+- Integration dengan Generic Activity
+
+### **4. Export/Import System** 📄
+- Export data ke PDF format
+- Import data dari Excel/CSV
+- Template download
+- Validation data import
+
+### **5. Responsive Design** 📱
+- Mobile-first approach
+- Tailwind CSS framework
+- Alpine.js interactions
+- Cross-browser compatibility
+
+---
+
+## 📞 **Contact & Support**
+
+- **Developer**: [Satrio Putyo Danendra]
+- **Email**: [222112354@stis.ac.id]
+- **GitHub**: [@satdanendra](https://github.com/satdanendra)
+- **Project Link**: [https://github.com/satdanendra/simanja](https://github.com/satdanendra/simanja)
+
+---
+
+**✨ Terima kasih telah menggunakan SIMANJA! ✨**
